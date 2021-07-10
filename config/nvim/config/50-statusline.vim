@@ -226,6 +226,32 @@ function! s:ale() abort " {{{
   return printf('%d: %s', l:firstError.lnum, l:firstError.text)
 endfunction " }}}
 
+function! s:coc() abort " {{{
+	  let l:info = get(b:, 'coc_diagnostic_info', {})
+
+	  if empty(l:info)
+      return ''
+    endif
+
+	  let msgs = []
+	  if get(l:info, 'error', 0)
+	    call add(msgs, get(g:, 'coc_status_error_sign', 'E') . l:info['error'])
+	  endif
+
+	  if get(l:info, 'warning', 0)
+	    call add(msgs, get(g:, 'coc_status_warning_sign', 'E') . l:info['warning'])
+	  endif
+
+    let l:coc_satus = get(g:, 'coc_status', '')
+    if !empty(l:coc_satus)
+	    call add(msgs, l:coc_satus)
+    endif
+
+	  return join(msgs, ' ')
+
+  return printf('%d: %s', l:firstError.lnum, l:firstError.text)
+endfunction " }}}
+
 " }}}
 
 " }}}
@@ -255,7 +281,7 @@ let g:lightline = {
       \ ['truncate', 'filename', 'modified', 'readonly'],
     \ ],
     \ 'right': [
-      \ ['errors', 'ale', 'lineinfo'],
+      \ ['errors', 'coc', 'ale', 'lineinfo'],
       \ ['percent', 'maxline'],
       \ ['hexchar', 'fileformat', 'fileencoding', 'filetype'],
     \ ],
@@ -283,6 +309,7 @@ let g:lightline = {
     \ 'tabWindows': s:SID('tabWindows'),
     \ 'errors': s:SID('errors'),
     \ 'ale': s:SID('ale'),
+    \ 'coc': s:SID('coc'),
   \ },
   \ 'component': {
     \ 'readonly': "%#LightlineMiddle_red_0#%{ &readonly ? '' : '' }",
@@ -295,6 +322,7 @@ let g:lightline = {
     \ 'close': 'raw',
     \ 'errors': 'error',
     \ 'ale': 'error',
+    \ 'coc': 'error',
   \ },
   \ 'component_visible_condition': {
       \ 'truncate': '0',

@@ -1,14 +1,10 @@
-if 0 == exists(':CocAction')
+if !exists('g:loaded_lightline')
   finish
 endif
 
 " Add error highlight {{{
 
 function! s:addErrorHighlight() abort " {{{
-  if !exists('g:loaded_lightline')
-    return
-  endif
-
   let l:normalPalette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette.normal
   let l:guifg = l:normalPalette.error[0][0]
   let l:ctermfg = l:normalPalette.error[0][2]
@@ -53,6 +49,7 @@ endfunction " }}}
 augroup ely_statusline
   autocmd!
   " autocmd CursorHold,BufWritePost * call s:refreshStatusLine()
+  autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 augroup END
 
 " }}}
