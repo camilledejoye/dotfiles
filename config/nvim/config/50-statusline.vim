@@ -179,6 +179,14 @@ function! s:tabIcon(tabNumber) abort " {{{
   return WebDevIconsGetFileTypeSymbol(bufname(winbufnr(tabpagewinnr(a:tabNumber))))
 endfunction " }}}
 
+function! s:spell() abort " {{{
+	if 0 == &spell
+		return ''
+	endif
+
+  return printf('[%s]', &spelllang)
+endfunction " }}}
+
 " Errors handling {{{
 
 function! s:checkForTrailingSpaces() abort " {{{
@@ -276,7 +284,7 @@ let g:lightline = {
   \ },
   \ 'active': {
     \ 'left': [
-      \ ['mode', 'paste'],
+      \ ['mode', 'spell', 'paste'],
       \ ['gitbranch'],
       \ ['truncate', 'filename', 'modified', 'readonly'],
     \ ],
@@ -307,6 +315,7 @@ let g:lightline = {
   \ 'component_expand': {
     \ 'tabs': s:SID('tabs'),
     \ 'tabWindows': s:SID('tabWindows'),
+    \ 'spell': s:SID('spell'),
     \ 'errors': s:SID('errors'),
     \ 'ale': s:SID('ale'),
     \ 'coc': s:SID('coc'),
