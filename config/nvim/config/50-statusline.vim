@@ -180,9 +180,9 @@ function! s:tabIcon(tabNumber) abort " {{{
 endfunction " }}}
 
 function! s:spell() abort " {{{
-	if 0 == &spell
-		return ''
-	endif
+  if 0 == &spell
+    return ''
+  endif
 
   return printf('[%s]', &spelllang)
 endfunction " }}}
@@ -235,29 +235,27 @@ function! s:ale() abort " {{{
 endfunction " }}}
 
 function! s:coc() abort " {{{
-	  let l:info = get(b:, 'coc_diagnostic_info', {})
+  let l:info = get(b:, 'coc_diagnostic_info', {})
 
-	  if empty(l:info)
-      return ''
-    endif
+  if empty(l:info)
+    return ''
+  endif
 
-	  let msgs = []
-	  if get(l:info, 'error', 0)
-	    call add(msgs, get(g:, 'coc_status_error_sign', 'E') . l:info['error'])
-	  endif
+  let msgs = []
+  if get(l:info, 'error', 0)
+    call add(msgs, get(g:, 'coc_status_error_sign', 'E') . l:info['error'])
+  endif
 
-	  if get(l:info, 'warning', 0)
-	    call add(msgs, get(g:, 'coc_status_warning_sign', 'E') . l:info['warning'])
-	  endif
+  if get(l:info, 'warning', 0)
+    call add(msgs, get(g:, 'coc_status_warning_sign', 'E') . l:info['warning'])
+  endif
 
-    let l:coc_satus = get(g:, 'coc_status', '')
-    if !empty(l:coc_satus)
-	    call add(msgs, l:coc_satus)
-    endif
+  let l:coc_satus = get(g:, 'coc_status', '')
+  if !empty(l:coc_satus)
+    call add(msgs, l:coc_satus)
+  endif
 
-	  return join(msgs, ' ')
-
-  return printf('%d: %s', l:firstError.lnum, l:firstError.text)
+  return join(msgs, ' ')
 endfunction " }}}
 
 " }}}
@@ -358,4 +356,4 @@ let g:lightline = {
 
 " }}}
 
-" vim: ts=2 sw=2 fdm=marker
+" vim: ts=2 sw=2 et fdm=marker
