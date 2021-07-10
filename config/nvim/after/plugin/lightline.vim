@@ -48,7 +48,7 @@ endfunction " }}}
 
 augroup ely_statusline
   autocmd!
-  " autocmd CursorHold,BufWritePost * call s:refreshStatusLine()
+  autocmd CursorHold,BufWritePost * call s:refreshStatusLine()
   autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
   autocmd OptionSet spell call lightline#update()
 augroup END
