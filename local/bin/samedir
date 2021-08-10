@@ -1,12 +1,29 @@
 #!/bin/sh
-# Source: https://github.com/LukeSmithxyz/voidrice
 
-PID=$(xprop -id "$(xprop -root | awk '/_NET_ACTIVE_WINDOW\(WINDOW\)/{print $NF}')" | grep -m 1 PID | cut -d " " -f 3)
-if [ "alacritty" = "$TERMINAL" ]; then
-    PID=$(pstree -TlpA "$PID")
-else
-    PID=$(pstree -lpA "$PID")
+currentWindowPid=$(
+    xprop -id "$(xprop -root | awk '/_NET_ACTIVE_WINDOW\(WINDOW\)/{print $NF}')" | \
+        grep -m 1 PID | \
+        cut -d " " -f 3
+)
+
+processName="$(ps -q $currentWindowPid -o comm=)"
+
+if [ "alacritty" = "$processName" ]; then
+    # Alacritty start it's own process first but the one we want is its child
+    currentWindowPid=$(ps --ppid $currentWindowPid -o pid= | sed -e 's/^[[:space:]]*//')
 fi
-PID="$(echo "$PID" | tail -n 1 | awk -F'---' '{print $NF}' | sed -re 's/[^0-9]//g')"
-cd "$(readlink /proc/"$PID"/cwd)" || return 1
+
+# I'm don't yet understand the full thing like why split with ---
+# So I comment this, for my current tests getting the root process
+# is enough for now so I will keep the simpliest logic in order to see
+# when it fails and how the following code could help
+# lastProcessInfo="$(pstree -lpA $currentWindowPid | tail -n 1)"
+# currentWindowPid=$(
+#     echo "$lastProcessInfo" | \
+#         awk -F'---' '{print $NF}' | \
+#         sed -re 's/[^0-9]//g'
+# )
+
+currentDirectory="$(readlink /proc/$currentWindowPid/cwd)"
+cd "$currentDirectory"
 "$TERMINAL"
