@@ -13,6 +13,10 @@
 # Change the argument to True to still load settings configured via autoconfig.yml
 config.load_autoconfig(False)
 config.source("themes/default.py")
+c.colors.tabs.selected.odd.bg = "#81a2be"
+c.colors.tabs.selected.even.bg = "#81a2be"
+c.colors.tabs.selected.odd.fg = "#282a2e"
+c.colors.tabs.selected.even.fg = "#282a2e"
 
 config.set('content.cookies.accept', 'all', 'chrome-devtools://*')
 config.set('content.cookies.accept', 'all', 'devtools://*')
