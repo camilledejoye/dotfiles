@@ -14,6 +14,7 @@ endif
     \ 'coc-json',
     \ 'coc-vimlsp',
     \ 'coc-phpactor',
+    \ 'coc-snippets',
   \ ]
 
 " }}}
