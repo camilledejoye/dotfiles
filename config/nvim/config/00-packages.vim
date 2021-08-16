@@ -41,6 +41,8 @@ if exists('*packager#init')
 
   " }}}
 
+  call packager#add('cespare/vim-toml')
+
   " Adds a bunch of text objects, especially argument text object
   call packager#add('wellle/targets.vim')
 endif
