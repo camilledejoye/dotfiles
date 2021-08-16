@@ -33,5 +33,6 @@
     - [UDisks](utilities/udisks)
     - [Share keyboard over SSH](x2x)
     - [Pass](pass)
+    - [VLC](vlc)
 9. [Fonts](fonts)
 10. [Docker](docker)
