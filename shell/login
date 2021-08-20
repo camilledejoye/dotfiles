@@ -1,4 +1,4 @@
-# Register default keys into the agent
-ssh-add
+# Register default keys into the agent - Disable because using Gnome keyring now
+# ssh-add
 
 # vim: ft=sh

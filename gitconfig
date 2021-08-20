@@ -94,3 +94,5 @@
     fallbackToNoIndex = true
 [remote]
     pushDefault = origin
+[credential]
+	helper = /usr/lib/git-core/git-credential-libsecret

@@ -17,10 +17,13 @@ export EDITOR="nvim"
 export TERMINAL="alacritty"
 export BROWSER="qutebrowser"
 
-# For the ssh-agent to work
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-# To ask the passphrase in GUI if no terminal is available
-export SSH_ASKPASS=/usr/lib/ssh/gnome-ssh-askpass2
+# SSH agent
+# export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+# export SSH_ASKPASS=/usr/lib/ssh/gnome-ssh-askpass2
+
+# Gnome keyring as SSH agent
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
+export SSH_ASKPASS=/usr/lib/seahorse/ssh-askpass
 
 # PATH
 . ~/.shell/functions.sh

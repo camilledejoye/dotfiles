@@ -20,7 +20,10 @@
     - Try Awesome Window Manager
 7. Terminal emulators
     - [Alacritty](terminal-emulators/alacritty)
-8. Utilities
+8. Password management
+    - [Gnome keyring](gnome-keyring)
+    - [Pass](pass)
+10. Utilities
     - [OpenSSH](openssh)
     - [Desktop notifications](utilities/desktop-notifications)
     - [Brightness](utilities/brightness)
@@ -32,7 +35,6 @@
     - [Screen locker](utilities/screen-locker)
     - [UDisks](utilities/udisks)
     - [Share keyboard over SSH](x2x)
-    - [Pass](pass)
     - [VLC](vlc)
-9. [Fonts](fonts)
-10. [Docker](docker)
+11. [Fonts](fonts)
+12. [Docker](docker)

@@ -1,0 +1,6 @@
+{
+	"auths": {
+		"docker-push.wynd.eu": {}
+	},
+	"credsStore": "secretservice"
+}
