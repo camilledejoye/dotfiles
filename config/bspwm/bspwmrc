@@ -81,6 +81,7 @@ bspc rule -a qutebrowser desktop='^1' follow=true
 bspc rule -a Pavucontrol state=floating
 bspc rule -a feh state=floating
 bspc rule -a Alacritty --one-shot desktop='^4' follow=true
+bspc rule -a Slack desktop='^9' follow=true
 
 # }}}
 
@@ -93,6 +94,8 @@ bspc rule -a Alacritty --one-shot desktop='^4' follow=true
 bspc config pointer_modifier mod1
 
 # }}}
+
+wmname LG3D
 
 # Starts programs
 $HOME/.local/bin/startup
