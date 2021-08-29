@@ -9,6 +9,8 @@ setlocal iskeyword=a-z,A-Z,48-57,_,128-255
 " foldlevelstart doesn't work for ftplugin
 setlocal foldlevel=1 " To automaticaly open classes folds
 
+setlocal cms=//%s
+
 " }}}
 
 " Mappings {{{
