@@ -11,7 +11,7 @@
 #   qute://help/settings.html
 
 # Change the argument to True to still load settings configured via autoconfig.yml
-config.load_autoconfig(False)
+config.load_autoconfig(True)
 config.source("themes/default.py")
 c.colors.tabs.selected.odd.bg = "#81a2be"
 c.colors.tabs.selected.even.bg = "#81a2be"
