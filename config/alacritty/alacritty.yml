@@ -17,8 +17,6 @@ font:
 # To find a the decimal value for a scancode use
 # `sudo showkey` and type the char you want
 key_bindings:
-  - { key: F11, action: ToggleFullscreen }
-
   # Sends byte sequence expected by vim to understand those key bindings
   - { key: Return, mods: Shift, chars: "\x1b[13;2u" }
   - { key: Return, mods: Control, chars: "\x1b[13;5u" }
