@@ -13,6 +13,22 @@
 " g:base16_gui0E #b294bb
 " g:base16_gui0F #a3685a
 
+lua << EOF
+for name, hex_color in pairs(require('colors.tomorrow-night')) do
+  gui_name = 'base16_gui' .. name:sub(5)
+
+  vim.g[gui_name] = hex_color
+end
+EOF
+let g:base16_cterm01 = 10
+let g:base16_cterm02 = 11
+let g:base16_cterm03 = 08
+let g:base16_cterm04 = 12
+let g:base16_cterm05 = 07
+let g:base16_cterm08 = 01
+let g:base16_cterm0A = 03
+let g:base16_cterm0D = 04
+
 let s:base16_gui00 = '#'.g:base16_gui00
 let s:base16_gui01 = '#'.g:base16_gui01
 let s:base16_gui02 = '#'.g:base16_gui02

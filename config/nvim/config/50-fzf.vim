@@ -1,6 +1,6 @@
-if exists('*packager#init')
-  call packager#add('junegunn/fzf.vim')
-endif
+lua << EOF
+require('packer').use('junegunn/fzf.vim')
+EOF
 
 " Helpers {{{
 
@@ -64,6 +64,8 @@ nmap <Leader>sf :GFiles<CR>
 nmap <Leader>sF :Files<CR>
 nmap <Leader>sb :Buffers<CR>
 nmap <Leader>sc :Commits<CR>
+
+nnoremap <silent> <Leader>rg :Rg \b<C-R>=expand('<cword>')<CR>\b<CR>
 
 " }}}
 

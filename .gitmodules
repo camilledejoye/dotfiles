@@ -10,9 +10,9 @@
 [submodule "fzf"]
 	path = fzf
 	url = https://github.com/junegunn/fzf.git
-[submodule "config/nvim/pack/packager/opt/vim-packager"]
-	path = config/nvim/pack/packager/opt/vim-packager
-	url = https://github.com/kristijanhusak/vim-packager
 [submodule "zsh/plugins/zsh-vim-mode"]
 	path = zsh/oh-my-zsh/plugins/zsh-vim-mode
 	url = https://github.com/softmoth/zsh-vim-mode
+[submodule "config/nvim/pack/packer/start/packer.nvim"]
+	path = config/nvim/pack/packer/start/packer.nvim
+	url = https://github.com/wbthomason/packer.nvim.git

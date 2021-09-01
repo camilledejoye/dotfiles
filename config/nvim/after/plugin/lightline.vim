@@ -30,7 +30,7 @@ function! s:addErrorHighlight() abort " {{{
   endfor
 endfunction " }}}
 
-call s:addErrorHighlight()
+" call s:addErrorHighlight()
 
 " }}}
 

@@ -1,6 +1,9 @@
-if exists('*packager#init')
-  call packager#add('itchyny/lightline.vim')
-endif
+" TODO check this example of lua statusline: https://github.com/wbthomason/dotfiles/blob/linux/neovim/.config/nvim/lua/statusline.lua
+" https://github.com/wbthomason/dotfiles/blob/linux/neovim/.config/nvim/plugin/statusline.vim
+" To add symbols near the buffer name in the top bar: https://github.com/akinsho/bufferline.nvim
+lua << EOF
+require('packer').use('itchyny/lightline.vim')
+EOF
 
 " Configuration {{{
 
