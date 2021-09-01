@@ -62,6 +62,7 @@ require('cdejoye/editorconfig')
 require('cdejoye/explorer')
 -- vim.cmd [[source /home/cdejoye/.config/nvim/config/50-fzf.vim]]
 require('cdejoye/gitgutter')
+require('cdejoye/git-messenger')
 require('cdejoye/mappings')
 require('cdejoye/nvim-lsp')
 -- TODO test it to make sure it's correctly configured
