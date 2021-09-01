@@ -22,6 +22,7 @@ augroup ely_argwrap
 
   " Enable tail comma in Lua
   autocmd FileType lua let b:argwrap_tail_comma_braces = g:argwrap_tail_comma_braces .'{'
+  autocmd FileType lua let b:argwrap_padded_braces = g:argwrap_tail_comma_braces .'{['
 augroup END
 ]])
 
