@@ -57,6 +57,7 @@ require('cdejoye/auto-pairs')
 require('cdejoye/colorizer')
 require('cdejoye/colorscheme')
 require('cdejoye/command')
+require('cdejoye/debug')
 require('cdejoye/editorconfig')
 require('cdejoye/explorer')
 -- vim.cmd [[source /home/cdejoye/.config/nvim/config/50-fzf.vim]]

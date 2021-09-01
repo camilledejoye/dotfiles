@@ -21,8 +21,6 @@ return require('packer').startup({ function(use)
   }
   -- }}}
 
-  use { 'vim-vdebug/vdebug', opt = true }
-
   -- Language related (syntax, completion,e tc.) {{{
   use {
     'elzr/vim-json',
