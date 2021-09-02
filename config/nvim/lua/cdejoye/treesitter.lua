@@ -6,8 +6,19 @@ require('packer').use {
   'nvim-treesitter/nvim-treesitter-textobjects',
 }
 
+-- To run before require('nvim-treesitter.configs').setup()
+-- https://github.com/vhyrro/neorg#setting-up-treesitter
+local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
+parser_configs.norg = {
+    install_info = {
+        url = 'https://github.com/vhyrro/tree-sitter-norg',
+        files = { 'src/parser.c', 'src/scanner.cc' },
+        branch = 'main'
+    },
+}
+
 require('nvim-treesitter.configs').setup {
-  ensure_installed = 'maintained', -- Install all maintained modules
+  ensure_installed = 'all', -- Install all modules, allows to include norg which is not part of maintained
   highlight = {
     enable = true,
      -- Needed for PHP correct indentation of method calls on multiple lines

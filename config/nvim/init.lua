@@ -62,6 +62,7 @@ require('cdejoye/explorer')
 require('cdejoye/gitgutter')
 require('cdejoye/git-messenger')
 require('cdejoye/mappings')
+require('cdejoye/neorg')
 require('cdejoye/nvim-lsp')
 -- TODO test it to make sure it's correctly configured
 -- require('cdejoye/diagnosticls')
