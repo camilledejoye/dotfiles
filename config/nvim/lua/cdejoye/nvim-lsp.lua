@@ -103,99 +103,107 @@ require('lspconfig').sumneko_lua.setup {
 
 -- nvim-cmp {{{
 
--- luasnip setup
 use {
   'hrsh7th/nvim-cmp',
   requires = {
     'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-path',
     'onsails/lspkind-nvim',
     'hrsh7th/cmp-nvim-lsp',
-    'saadparwaiz1/cmp_luasnip',
-    'L3MON4D3/LuaSnip',
+    -- Use UltiSnips instead until I fixed the mappings and adapt all my snippets
+    -- 'saadparwaiz1/cmp_luasnip',
+    -- 'L3MON4D3/LuaSnip',
+    'quangnguyen30192/cmp-nvim-ultisnips',
+    'hrsh7th/cmp-emoji',
+    'f3fora/cmp-spell',
   },
 }
 
-local luasnip = require('luasnip')
-
--- nvim-cmp setup
-
 local cmp = require('cmp')
+-- local luasnip = require('luasnip')
 
-local function luasnip_jump_prev()
-  return function(fallback)
-    if not luasnip.jump(-1) then
-      fallback()
-    end
-  end
-end
+-- local function luasnip_jump_prev()
+--   return function(fallback)
+--     if not luasnip.jump(-1) then
+--       fallback()
+--     end
+--   end
+-- end
 
-local function luasnip_jump_next()
-  return function(fallback)
-    if not luasnip.jump(1) then
-      fallback()
-    end
-  end
-end
+-- local function luasnip_jump_next()
+--   return function(fallback)
+--     if not luasnip.jump(1) then
+--       fallback()
+--     end
+--   end
+-- end
 
-local function select_or_jump_prev()
-  return function(fallback)
-    if not cmp.select_prev_item() then
-      luasnip_jump_prev()(fallback)
-    end
-  end
-end
+-- local function select_or_jump_prev()
+--   return function(fallback)
+--     if not cmp.select_prev_item() then
+--       luasnip_jump_prev()(fallback)
+--     end
+--   end
+-- end
 
-local function select_or_jump_next()
-  return function(fallback)
-    if not cmp.select_next_item() then
-      luasnip_jump_next()(fallback)
-    end
-  end
-end
+-- local function select_or_jump_next()
+--   return function(fallback)
+--     if not cmp.select_next_item() then
+--       luasnip_jump_next()(fallback)
+--     end
+--   end
+-- end
 
 vim.o.completeopt = 'menu,menuone,noselect'
 
+local sources = {
+  buffer = '[Buffer]',
+  path = '[Path]',
+  neorg = '[Neorg]',
+  -- luasnip = '[LuaSnip]',
+  ultisnips = '[UltiSnips]',
+  nvim_lsp = '[LSP]',
+  emoji = '[Emoji]',
+  spell = '[Spell]',
+}
 cmp.setup {
   snippet = {
     expand = function(args)
-      require('luasnip').lsp_expand(args.body)
+      -- require('luasnip').lsp_expand(args.body)
+      vim.fn['UltiSnips#Anon'](args.body)
     end,
   },
   mapping = {
-    ['<C-p>'] = cmp.mapping(select_or_jump_prev(), { 'i', 's' }),
-    ['<C-n>'] = cmp.mapping(select_or_jump_next(), { 'i', 's' }),
+    -- ['<C-p>'] = cmp.mapping(select_or_jump_prev(), { 'i', 's' }),
+    -- ['<C-n>'] = cmp.mapping(select_or_jump_next(), { 'i', 's' }),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+      select = false,
     },
-    ['<Tab>'] = function(fallback)
-      if not luasnip.expand() then
-        fallback()
-      end
-    end,
-    ['<C-k>'] = cmp.mapping(luasnip_jump_prev(), { 's' }),
-    ['<C-j>'] = cmp.mapping(luasnip_jump_next(), { 's' }),
+    -- ['<Tab>'] = function(fallback)
+    --   if not luasnip.expand() then
+    --     fallback()
+    --   end
+    -- end,
+    -- ['<C-k>'] = cmp.mapping(luasnip_jump_prev(), { 'i', 's' }),
+    -- ['<C-j>'] = cmp.mapping(luasnip_jump_next(), { 'i', 's' }),
   },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-    { name = 'buffer' },
-  },
+  sources = vim.tbl_map(function(source)
+    return { name = source }
+  end, vim.tbl_keys(sources)),
   formatting = {
     format = function(entry, vim_item)
       -- fancy icons and a name of kind
       vim_item.kind = require('lspkind').presets.default[vim_item.kind] .. ' ' .. vim_item.kind
 
       -- set a name for each source
-      vim_item.menu = ({
-        buffer = '[Buffer]',
-        nvim_lsp = '[LSP]',
-        luasnip = '[Snip]',
-      })[entry.source.name]
+      vim_item.menu = sources[entry.source.name]
 
       -- set the detail as menu
       if 'nvim_lsp' == entry.source.name then
