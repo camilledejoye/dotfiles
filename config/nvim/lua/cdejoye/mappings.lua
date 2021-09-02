@@ -19,9 +19,9 @@ vim.opt.pastetoggle = '<F12>'
   map('n', '<Leader>w', ':w<CR>', { noremap = true, silent = true })
   map('n', '<Leader>x', ':x<CR>', { noremap = true, silent = true })
   map('n', '<Leader>q', ':q<CR>', { noremap = true, silent = true })
-  map('i', '<Leader>w', '<Esc>:w<CR>', { noremap = true, silent = true })
-  map('i', '<Leader>x', '<Esc>:x<CR>', { noremap = true, silent = true })
-  map('i', '<Leader>q', '<Esc>:q<CR>', { noremap = true, silent = true })
+  map('i', ',w', '<Esc>:w<CR>', { noremap = true, silent = true })
+  map('i', ',x', '<Esc>:x<CR>', { noremap = true, silent = true })
+  map('i', ',q', '<Esc>:q<CR>', { noremap = true, silent = true })
 -- }}}
 
 -- Commands {{{

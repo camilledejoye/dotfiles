@@ -16,7 +16,7 @@ end
 cmd('filetype plugin indent on')
 cmd('syntax on')
 
-g.mapleader = ','
+g.mapleader = ' '
 g.my_vim_dir = vimDirectory
 
 opt.runtimepath:append({ vimDirectory .. '/templates' })
