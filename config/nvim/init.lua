@@ -96,13 +96,10 @@ use 'nanotee/luv-vimdocs'
 use 'milisims/nvim-luaref'
 
 -- To use icons from nonicons font
--- TODO: error for installing the font with pacman, compiler it myself but I'm missing
--- some icons.
--- I hate fonts!
--- use {
---   'yamatsum/nvim-nonicons',
---   requires = {'kyazdani42/nvim-web-devicons'}
--- }
+use {
+  'yamatsum/nvim-nonicons',
+  requires = {'kyazdani42/nvim-web-devicons'}
+}
 
 use 'monaqa/dial.nvim' -- Improved increment/decrement (including markdown titles)
 
