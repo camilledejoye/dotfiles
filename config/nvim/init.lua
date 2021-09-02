@@ -5,8 +5,6 @@ local opt = vim.opt
 local cmd = vim.cmd
 local vimDirectory = vim.api.nvim_eval("fnamemodify(resolve(expand('<sfile>')), ':p:h')")
 
-_G.cdejoye = { lsp = require('cdejoye.lsp') }
-
 function _G.dump(...)
   local args = {...}
 
