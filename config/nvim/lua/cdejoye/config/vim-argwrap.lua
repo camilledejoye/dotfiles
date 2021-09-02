@@ -1,7 +1,5 @@
 local g = vim.g
 
-require('packer').use('FooSoft/vim-argwrap')
-
 vim.api.nvim_set_keymap('n', 'gaw', '<Plug>(ArgWrapToggle)', { silent = true })
 
 -- Also add a comma to the last item after wrapping for the listed pairs
@@ -25,5 +23,3 @@ augroup ely_argwrap
   autocmd FileType lua let b:argwrap_padded_braces = g:argwrap_tail_comma_braces .'{['
 augroup END
 ]])
-
--- vim: ts=2 sw=2 et fdm=marker

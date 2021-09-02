@@ -1,11 +1,6 @@
 local g = vim.g
 local map = require('cdejoye.utils').map
 
-require('packer').use {
-  'vim-test/vim-test',
-  { "rcarriga/vim-ultest", requires = {"vim-test/vim-test"}, run = ":UpdateRemotePlugins" },
-}
-
 -- Disabled the possibility to run a test from it's source file
 -- g['test#no_alternate'] = 1 " Ex.: Don't run tests on save from the sources
 g['test#php#behat#use_suite_in_args'] = 1

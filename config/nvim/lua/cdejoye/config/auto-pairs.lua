@@ -1,7 +1,5 @@
 local g = vim.g
 
-require('packer').use('jiangmiao/auto-pairs')
-
 -- Mappings
 -- '' to disable the mapping
 g.AutoPairsShortcutToggle = ''
@@ -21,8 +19,8 @@ g.AutoPairsCenterLine = 0 -- Prevent `zz` when splitting pairs on multiple lines
 
 vim.cmd([[
 augroup cdejoye_autopairs
-autocmd!
-" Disable autopairs in telescope prompt
-autocmd FileType TelescopePrompt let b:autopairs_enabled = 0
+  autocmd!
+  " Disable autopairs in telescope prompt
+  autocmd FileType TelescopePrompt let b:autopairs_enabled = 0
 augroup END
 ]])

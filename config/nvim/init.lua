@@ -1,10 +1,10 @@
--- vim: ts=2 sw=2 et
-
 local g = vim.g
 local opt = vim.opt
 local cmd = vim.cmd
-local vimDirectory = vim.api.nvim_eval("fnamemodify(resolve(expand('<sfile>')), ':p:h')")
+local fn = vim.fn
+local vim_dir = fn.fnamemodify(vim.env.MYVIMRC, ':h')
 
+-- Add global dump() function for debug purpose
 function _G.dump(...)
   local args = {...}
 
@@ -17,9 +17,8 @@ cmd('filetype plugin indent on')
 cmd('syntax on')
 
 g.mapleader = ' '
-g.my_vim_dir = vimDirectory
 
-opt.runtimepath:append({ vimDirectory .. '/templates' })
+opt.runtimepath:append({ vim_dir .. '/templates' })
 opt.path:append({ '**' })
 opt.autochdir = false
 opt.wildignore:append({'*/.git/*', '*/vendor/*', '*/node_modules/*', '*/var/*', '*/web/build/*'})
@@ -47,69 +46,22 @@ opt.wildmenu = true
 opt.inccommand = 'nosplit'
 opt.termguicolors = true
 
--- Load the plugins
-require('cdejoye/plugins')
-require('cdejoye/ale')
-require('cdejoye/alignment')
-require('cdejoye/auto-pairs')
-require('cdejoye/colorizer')
-require('cdejoye/colorscheme')
-require('cdejoye/command')
-require('cdejoye/debug')
-require('cdejoye/editorconfig')
-require('cdejoye/explorer')
--- vim.cmd [[source /home/cdejoye/.config/nvim/config/50-fzf.vim]]
-require('cdejoye/gitgutter')
-require('cdejoye/git-messenger')
-require('cdejoye/mappings')
-require('cdejoye/neorg')
-require('cdejoye/nvim-lsp')
--- TODO test it to make sure it's correctly configured
--- require('cdejoye/diagnosticls')
-require('cdejoye/php')
-require('cdejoye/phpactor')
-require('cdejoye/snippets')
-vim.cmd [[source /home/cdejoye/.config/nvim/config/50-statusline.vim]]
-require('cdejoye/telescope')
-require('cdejoye/tpope')
-require('cdejoye/treesitter')
-require('cdejoye/vim-argwrap')
-require('cdejoye/vim-closetag')
-require('cdejoye/vim-javascript')
-require('cdejoye/vim-plugin-viewdoc')
-require('cdejoye/vim-test')
-require('cdejoye/vim-vimwiki')
+-- Setup packer command to use it as an optional plugin
+cmd [[command! PackerInstall packadd packer.nvim | lua require('cdejoye.plugins').install()]]
+cmd [[command! PackerUpdate packadd packer.nvim | lua require('cdejoye.plugins').update()]]
+cmd [[command! PackerSync packadd packer.nvim | lua require('cdejoye.plugins').sync()]]
+cmd [[command! PackerClean packadd packer.nvim | lua require('cdejoye.plugins').clean()]]
+cmd [[command! PackerCompile packadd packer.nvim | lua require('cdejoye.plugins').compile()]]
 
-local use = require('packer').use
+-- cmd([[source /home/cdejoye/.config/nvim/config/50-fzf.vim]])
+require('cdejoye.mappings') -- Load custom mappings
 
--- Plugin to fix CursorHold performance issue on Neovim:
--- https://github.com/antoinemadec/FixCursorHold.nvim
--- See: https://github.com/neovim/neovim/issues/12587
-use {
-  "antoinemadec/FixCursorHold.nvim",
-  run = function()
-    vim.g.curshold_updatime = 1000
-  end,
-}
+-- TODO redo the status line with a Lua plugin and remove this
+cmd([[source /home/cdejoye/.config/nvim/config/50-statusline.vim]])
 
--- Add documentation around Lua
-use 'nanotee/luv-vimdocs'
-use 'milisims/nvim-luaref'
-
--- To use icons from nonicons font
-use {
-  'yamatsum/nvim-nonicons',
-  requires = {'kyazdani42/nvim-web-devicons'}
-}
-
-use 'monaqa/dial.nvim' -- Improved increment/decrement (including markdown titles)
-
--- TODO check https://github.com/lukas-reineke/indent-blankline.nvim
--- TODO check https://github.com/folke/trouble.nvim
--- To add floating signature when typing: https://github.com/ray-x/lsp_signature.nvim
--- Add info from LSP to status bar: https://github.com/nvim-lua/lsp-status.nvim
--- TODO check https://github.com/ms-jpq/coq_nvim (completion supposed to be fast)
-
--- Could be interesting:
--- https://github.com/folke/zen-mode.nvim
--- https://github.com/folke/twilight.nvim
+-- Jump to the last position we were when we closed the file the last time
+cmd([[
+augroup cdejoye_custom_commands
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute "keepjumps normal g`\"" | endif
+augroup END
+]])

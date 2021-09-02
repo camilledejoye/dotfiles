@@ -1,15 +1,3 @@
--- https://github.com/mfussenegger/nvim-dap
--- PHP adapter installation: https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#PHP
--- TODO create a script using plenary.nvim to install it automatically ?
-
--- require('packer').use { 'vim-vdebug/vdebug', opt = true }
-require('packer').use {
-  'mfussenegger/nvim-dap',
-  'rcarriga/nvim-dap-ui',
-  'theHamsta/nvim-dap-virtual-text',
-  { 'nvim-telescope/telescope-dap.nvim', require = 'nvim-telescope/telescope.nvim' },
-}
-
 local dap = require('dap') -- Must be before overriding the signs
 local dapui = require('dapui')
 local g = vim.g
@@ -70,9 +58,9 @@ map('<F8>', [[
   <cmd>lua require('dapui').close()<CR>
   <cmd>echohl ModeMsg | echom 'Debugger closed' | echohl None<CR>
 ]])
-map('<F10>', [[<cmd>lua require('dap').step_over()<CR>]])
-map('<F11>', [[<cmd>lua require('dap').step_into()<CR>]])
-map('<F12>', [[<cmd>lua require('dap').step_out()<CR>]])
+map('<F09>', [[<cmd>lua require('dap').step_over()<CR>]])
+map('<F10>', [[<cmd>lua require('dap').step_into()<CR>]])
+map('<F11>', [[<cmd>lua require('dap').step_out()<CR>]])
 map('<Leader>db', [[<cmd>lua require('dap').toggle_breakpoint()<CR>]])
 map('<Leader>dr', [[<cmd>lua require('dap').repl_open()<CR>]])
 map('<Leader>de', [[<cmd>lua require('dapui').eval()<CR>]], 'nv')

@@ -1,60 +1,51 @@
 -- Telescope: https://github.com/nvim-telescope/telescope.nvim
-
-local map = require('cdejoye.utils').map
-
-require('packer').use {
-  'nvim-telescope/telescope.nvim',
-  requires = {
-    'nvim-lua/plenary.nvim',
-    'kyazdani42/nvim-web-devicons',
+require('telescope').setup {
+  defaults = {
+    prompt_prefix = '❯ ',
+    selection_caret = '❯ ',
+    -- file_sorter =  require'telescope.sorters'.get_fzy_sorter,
+    -- generic_sorter =  require'telescope.sorters'.get_fzy_sorter,
+    sorting_strategy = 'ascending',
   },
-  config = require('telescope').setup {
-    defaults = {
-      prompt_prefix = '❯ ',
-      selection_caret = '❯ ',
-      -- file_sorter =  require'telescope.sorters'.get_fzy_sorter,
-      -- generic_sorter =  require'telescope.sorters'.get_fzy_sorter,
-    },
-    pickers = {
-      buffers = {
-        sort_lastused = true,
-        -- theme = 'ivy',
-        mappings = {
-            n = {
-                ['dd'] = 'delete_buffer',
-            },
-            i = {
-                ['<C-d>'] = 'delete_buffer',
-            },
+
+  pickers = {
+    buffers = {
+      sort_lastused = true,
+      -- theme = 'ivy',
+      mappings = {
+        n = {
+          ['dd'] = 'delete_buffer',
+        },
+        i = {
+          ['<C-d>'] = 'delete_buffer',
         },
       },
-      grep_string = { theme = 'ivy' },
-      spell_suggest = { theme = 'cursor' }
     },
-    extensions = {
-      fzf = {
-        fuzzy = true,
-        override_generic_sorter = true,
-        override_file_sorter = true,
-        case_mode = 'smart_case',
-      },
-      -- TODO rewrite them to work for my taste with possibility to easily add --no-ignore
-      -- and/or --hidden
-      fzf_writer = {
-        use_highlighter = true,
-      },
+
+    grep_string = { theme = 'ivy' },
+    spell_suggest = { theme = 'cursor' }
+  },
+
+  extensions = {
+    fzf = {
+      fuzzy = true,
+      override_generic_sorter = true,
+      override_file_sorter = true,
+      case_mode = 'smart_case',
     },
+    -- -- TODO rewrite them to work for my taste with possibility to easily add --no-ignore
+    -- -- and/or --hidden
+    -- fzf_writer = {
+    --   use_highlighter = true,
+    -- },
   },
 }
 
-require('packer').use {
-  "nvim-telescope/telescope-fzf-native.nvim",
-  run = "make",
-}
-require('telescope').load_extension('fzf')
+local map = require('cdejoye.utils').map
+local cmd = vim.cmd
 
-require('packer').use('nvim-telescope/telescope-fzf-writer.nvim')
-require('telescope').load_extension('fzf_writer')
+require('telescope').load_extension('fzf')
+-- require('telescope').load_extension('fzf_writer')
 
 map('<Leader>sf', [[<cmd>lua require('telescope.builtin').git_files()<CR>]])
 map('<Leader>sF', [[<cmd>lua require('telescope.builtin').find_files({ no_ignore = true })<CR>]])
@@ -62,25 +53,28 @@ map('<Leader>sb', [[<cmd>lua require('telescope.builtin').buffers()<CR>]])
 map('<Leader>sc', [[<cmd>lua require('telescope.builtin').git_commits()<CR>]])
 
 map('<Leader>rg', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]])
-map('<Leader>Rg', [[<cmd>lua require('cdejoye/telescope').rg({ no_ignore = true })<CR>]])
+map('<Leader>Rg', [[<cmd>lua require('cdejoye.telescope').rg({ no_ignore = true })<CR>]])
 
-vim.cmd([[command! -complete=dir -nargs=* Rg lua require('telescope.builtin').live_grep({ search_dirs = { unpack({<f-args>}) } })]])
-vim.cmd([[command! H lua require('telescope.builtin').help_tags()]])
-map('z=', [[<cmd>lua require('telescope.builtin').spell_suggest()<CR>]])
+cmd([[command! -complete=dir -nargs=* Rg lua require('telescope.builtin').live_grep({ search_dirs = { unpack({<f-args>}) } })]])
+cmd([[command! H lua require('telescope.builtin').help_tags()]])
+
+-- TODO need work because it replace propose the suggestion for the word under the cursor
+-- but insert the choice at the position of the first invalid word in the buffer ><
+-- map('z=', [[<cmd>lua require('telescope.builtin').spell_suggest()<CR>]])
 
 -- Highlights
-vim.cmd('hi! def link TelescopeBorder Directory')
-vim.cmd('hi! def link TelescopePromptPrefix String')
-vim.cmd('hi! def link TelescopeSelectionCaret String')
+cmd('hi! def link TelescopeBorder Directory')
+cmd('hi! def link TelescopePromptPrefix String')
+cmd('hi! def link TelescopeSelectionCaret String')
 
 -- Custom pickers/writers
 local M = {}
-local Job = require('plenary.job')
 
+local Job = require('plenary.job')
 local conf = require('telescope.config').values
-local finders = require "telescope.finders"
-local make_entry = require "telescope.make_entry"
-local pickers = require "telescope.pickers"
+local finders = require('telescope.finders')
+local make_entry = require('telescope.make_entry')
+local pickers = require('telescope.pickers')
 local sorters = require('telescope.sorters')
 
 local flatten = vim.tbl_flatten

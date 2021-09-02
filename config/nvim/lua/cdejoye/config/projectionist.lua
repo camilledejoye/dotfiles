@@ -1,44 +1,7 @@
-local map = vim.api.nvim_set_keymap
+local map = require('cdejoye.utils').map
 
-require('packer').use {
-  'tpope/vim-surround',
-  'tpope/vim-commentary',
-  'tpope/vim-scriptease',
-  'tpope/vim-unimpaired',
-  -- 'tpope/vim-endwise',
-  -- 'tpope/vim-speeddating',
-  'tpope/vim-abolish',
-  -- Lua alternative to check: https://github.com/TimUntersberger/neogit
-  'tpope/vim-fugitive',
-  'tpope/vim-repeat',
-  'tpope/vim-dispatch',
-  'radenling/vim-dispatch-neovim',
-  'tpope/vim-projectionist',
-  'tpope/vim-eunuch',
-  'tpope/vim-sleuth',
-}
-
-map('n', '<Leader>gb', ':Git blame<CR>', { noremap = true, silent = true })
-map('n', '<Leader>gs', ':Gtabedit :<CR>', { noremap = true, silent = true })
-
--- Unimpaired {{{
--- Disable some mappings because I don't use them and they conflict with others
-vim.g.nremap = {
-  ['=p'] = '<skip>',
-  ['=P'] = '<skip>',
-  ['[u'] = '<skip>',
-  [']u'] = '<skip>',
-  ['[uu'] = '<skip>',
-  [']uu'] = '<skip>',
-}
-
--- =o and =op mappings could not be removed this way so I had to deal with them
--- in ../after/plugin/conflicting-mappings.vim
--- }}}
-
--- Projectionist {{{
-
--- Heuristics {{{
+map('<Leader>a', ':A<CR>')
+map('<Leader>va', ':AV<CR>')
 
 vim.g.projectionist_heuristics = {
     ['composer.json&src/&tests/'] = {
@@ -220,12 +183,3 @@ vim.g.projectionist_heuristics = {
         },
     },
 }
-
--- }}}
-
-map('n', '<Leader>a', ':A<CR>', { noremap = true, silent = true })
-map('n', '<Leader>va', ':AV<CR>', { noremap = true, silent = true })
-
--- }}}
-
--- vim: ts=2 sw=2 et fdm=marker

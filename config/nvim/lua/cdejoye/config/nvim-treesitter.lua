@@ -1,24 +1,16 @@
--- Treesitter: https://github.com/nvim-treesitter/nvim-treesitter
--- TODO to auto close tags check: https://github.com/windwp/nvim-ts-autotag
-require('packer').use {
-  { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' },
-  'JoosepAlviste/nvim-ts-context-commentstring',
-  'nvim-treesitter/nvim-treesitter-textobjects',
-}
-
--- To run before require('nvim-treesitter.configs').setup()
+-- To run before: require('nvim-treesitter.configs').setup()
 -- https://github.com/vhyrro/neorg#setting-up-treesitter
-local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
-parser_configs.norg = {
-    install_info = {
-        url = 'https://github.com/vhyrro/tree-sitter-norg',
-        files = { 'src/parser.c', 'src/scanner.cc' },
-        branch = 'main'
-    },
+require('nvim-treesitter.parsers').get_parser_configs().norg = {
+  install_info = {
+    url = 'https://github.com/vhyrro/tree-sitter-norg',
+    files = { 'src/parser.c', 'src/scanner.cc' },
+    branch = 'main'
+  },
 }
 
 require('nvim-treesitter.configs').setup {
   ensure_installed = 'all', -- Install all modules, allows to include norg which is not part of maintained
+
   highlight = {
     enable = true,
      -- Needed for PHP correct indentation of method calls on multiple lines
@@ -26,6 +18,7 @@ require('nvim-treesitter.configs').setup {
      -- configured easily ?
     additional_vim_regex_highlighting = true,
   },
+
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -35,7 +28,9 @@ require('nvim-treesitter.configs').setup {
       node_decremental = "grm",
     },
   },
-  indent = { enable = false },
+
+  indent = { enable = true },
+
   textobjects = {
     select = {
       enable = true,
@@ -67,6 +62,7 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
+
   -- TODO check possible remplacement for vim-commentary:
   -- https://github.com/terrortylor/nvim-comment
   -- Config for it: https://github.com/JoosepAlviste/nvim-ts-context-commentstring#nvim-comment

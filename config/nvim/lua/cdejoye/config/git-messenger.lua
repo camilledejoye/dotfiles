@@ -1,5 +1,3 @@
-require('packer').use('rhysd/git-messenger.vim')
-
 local g = vim.g
 
 g.git_messenger_floating_win_opts = { border = 'rounded' }
@@ -9,7 +7,7 @@ g.git_messenger_extra_blame_args = '-w'
 vim.cmd([[
   augroup cdejoye_git_messenger
     autocmd!
-    autocmd FileType gitmessengerpopup lua require('cdejoye.git-messenger').setup()
+    autocmd FileType gitmessengerpopup lua require('cdejoye.config.git-messenger').setup()
   augroup END
 ]])
 
