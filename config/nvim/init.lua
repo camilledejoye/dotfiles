@@ -56,9 +56,6 @@ cmd [[command! PackerCompile packadd packer.nvim | lua require('cdejoye.plugins'
 -- cmd([[source /home/cdejoye/.config/nvim/config/50-fzf.vim]])
 require('cdejoye.mappings') -- Load custom mappings
 
--- TODO redo the status line with a Lua plugin and remove this
-cmd([[source /home/cdejoye/.config/nvim/config/50-statusline.vim]])
-
 -- Jump to the last position we were when we closed the file the last time
 cmd([[
 augroup cdejoye_custom_commands

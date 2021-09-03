@@ -245,11 +245,11 @@ return require('packer').startup({ function(use)
     config = config('vim-test'),
   }
 
-  use { 'itchyny/lightline.vim' }
-  -- use { -- galaxyline.nvim
-  --   'glepnir/galaxyline.nvim',
-  --   requires = { 'devicons' }
-  -- }
+  use {
+    'itchyny/lightline.vim',
+    -- config = 'vim.cmd([[source /home/cdejoye/.config/nvim/config/50-statusline.vim]])',
+    config = [[vim.cmd('runtime config/50-statusline.vim')]],
+  }
 
   -- TODO: check these plugins
   -- https://github.com/lukas-reineke/indent-blankline.nvim

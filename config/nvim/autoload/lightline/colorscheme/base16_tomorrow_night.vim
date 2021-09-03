@@ -29,41 +29,41 @@ let g:base16_cterm08 = 01
 let g:base16_cterm0A = 03
 let g:base16_cterm0D = 04
 
-let s:base16_gui00 = '#'.g:base16_gui00
-let s:base16_gui01 = '#'.g:base16_gui01
-let s:base16_gui02 = '#'.g:base16_gui02
-let s:base16_gui03 = '#'.g:base16_gui03
-let s:base16_gui04 = '#'.g:base16_gui04
-let s:base16_gui05 = '#'.g:base16_gui05
-let s:base16_gui08 = '#'.g:base16_gui08
-let s:base16_gui09 = '#'.g:base16_gui09
-let s:base16_gui0A = '#'.g:base16_gui0A
-let s:base16_gui0B = '#'.g:base16_gui0B
-let s:base16_gui0C = '#'.g:base16_gui0C
-let s:base16_gui0D = '#'.g:base16_gui0D
-let s:base16_gui0E = '#'.g:base16_gui0E
-let s:base16_gui0F = '#'.g:base16_gui0F
+let s:bg = g:base16_gui00
+let s:alt_bg = g:base16_gui02
+let s:fg = g:base16_gui05
+let s:alt_fg = g:base16_gui01
+let s:disable_fg = g:base16_gui03
+let s:darker_fg = g:base16_gui04
+let s:red = g:base16_gui08
+let s:orange = g:base16_gui09
+let s:yellow = g:base16_gui0A
+let s:green = g:base16_gui0B
+let s:cyan = g:base16_gui0C
+let s:blue = g:base16_gui0D
+let s:purple = g:base16_gui0E
+let s:brown = g:base16_gui0F
 
 let s:palette = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
 
 let s:palette.normal.left = [
-  \ [s:base16_gui01, s:base16_gui0D, g:base16_cterm01, g:base16_cterm0D],
-  \ [s:base16_gui05, s:base16_gui02, g:base16_cterm05, g:base16_cterm02],
+  \ [s:alt_fg, s:blue, g:base16_cterm01, g:base16_cterm0D],
+  \ [s:fg, s:alt_bg, g:base16_cterm05, g:base16_cterm02],
 \ ]
 let s:palette.inactive.left =  [
-  \ [s:base16_gui03, s:base16_gui01, g:base16_cterm03, g:base16_cterm01],
-  \ [s:base16_gui03, s:base16_gui01, g:base16_cterm03, g:base16_cterm01],
+  \ [s:disable_fg, s:alt_fg, g:base16_cterm03, g:base16_cterm01],
+  \ [s:disable_fg, s:alt_fg, g:base16_cterm03, g:base16_cterm01],
 \ ]
 let s:palette.insert.left = [copy(s:palette.normal.left[0]), s:palette.normal.left[1]]
 let s:palette.replace.left = [copy(s:palette.normal.left[0]), s:palette.normal.left[1]]
 let s:palette.visual.left = [copy(s:palette.normal.left[0]), s:palette.normal.left[1]]
 " Update the background color for each mode
-let s:palette.insert.left[0][1] = s:base16_gui0B
-let s:palette.replace.left[0][1] = s:base16_gui09
-let s:palette.visual.left[0][1] = s:base16_gui0E
+let s:palette.insert.left[0][1] = s:green
+let s:palette.replace.left[0][1] = s:orange
+let s:palette.visual.left[0][1] = s:purple
 
 let s:palette.normal.middle = [
-  \ [s:base16_gui04, s:base16_gui01, g:base16_cterm04, g:base16_cterm01],
+  \ [s:darker_fg, s:alt_fg, g:base16_cterm04, g:base16_cterm01],
 \ ]
 let s:palette.inactive.middle = [copy(s:palette.inactive.left[0])]
 
@@ -73,10 +73,10 @@ for mode in ['normal', 'inactive', 'insert', 'replace', 'visual']
 endfor
 
 let s:palette.normal.error = [
-  \ [s:base16_gui08, s:base16_gui01, g:base16_cterm08, g:base16_cterm01],
+  \ [s:red, s:alt_fg, g:base16_cterm08, g:base16_cterm01],
 \ ]
 let s:palette.normal.warning = [
-  \ [s:base16_gui0A, s:base16_gui01, g:base16_cterm0A, g:base16_cterm01],
+  \ [s:yellow, s:alt_fg, g:base16_cterm0A, g:base16_cterm01],
 \ ]
 
 let s:palette.tabline.left = [s:palette.normal.left[1]]
