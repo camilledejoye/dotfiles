@@ -248,12 +248,6 @@ return require('packer').startup({ function(use)
     config = config('vim-test'),
   }
 
-  use {
-    'itchyny/lightline.vim',
-    -- config = 'vim.cmd([[source /home/cdejoye/.config/nvim/config/50-statusline.vim]])',
-    config = [[vim.cmd('runtime config/50-statusline.vim')]],
-  }
-
   -- TODO: check these plugins
   -- https://github.com/lukas-reineke/indent-blankline.nvim
   -- To add floating signature when typing: https://github.com/ray-x/lsp_signature.nvim

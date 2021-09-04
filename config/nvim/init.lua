@@ -55,6 +55,7 @@ cmd [[command! PackerCompile packadd packer.nvim | lua require('cdejoye.plugins'
 
 -- cmd([[source /home/cdejoye/.config/nvim/config/50-fzf.vim]])
 require('cdejoye.mappings') -- Load custom mappings
+require('cdejoye.config.statusline')
 
 -- Jump to the last position we were when we closed the file the last time
 cmd([[
