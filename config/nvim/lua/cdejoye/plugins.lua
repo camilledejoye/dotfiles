@@ -181,6 +181,15 @@ return require('packer').startup({ function(use)
     config = config('telescope'),
   }
 
+  use { -- lualine
+    'hoob3rt/lualine.nvim',
+    requires = {
+      { 'kyazdani42/nvim-web-devicons', opt = true},
+      { 'nvim-lua/lsp-status.nvim', opt = true },
+    },
+    config = config('lualine'),
+  }
+
   use { -- tpope plugins
     'tpope/vim-surround',
     'tpope/vim-commentary',
