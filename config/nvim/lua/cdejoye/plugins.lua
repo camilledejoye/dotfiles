@@ -129,7 +129,10 @@ return require('packer').startup({ function(use)
 
   use { -- nvim-lspconfig
     'neovim/nvim-lspconfig',
-    after = 'nvim-cmp', -- use an alias like completor to be more generic ?
+    after = { 'nvim-cmp' }, -- use an alias like completor to be more generic ?
+    requires = {
+      { 'nvim-lua/lsp-status.nvim', config = config('lsp-status') },
+    },
     config = config('nvim-lsp'),
   }
 

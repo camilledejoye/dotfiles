@@ -1,9 +1,15 @@
 -- LSP settings
 local nvim_lsp = require('lspconfig')
-local servers = { 'phpactor' } -- Servers to enable
+local lsp_status = require('lsp-status')
+local servers = { phpactor = { -- Servers to enable with their specific configuration
+  init_options = {
+    ['language_server_completion.trim_leading_dollar'] = true,
+  }
+}}
 local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.tbl_extend('keep', capabilities, lsp_status.capabilities)
 
-local function on_attach(_, bufnr)
+local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -39,6 +45,8 @@ local function on_attach(_, bufnr)
   -- buf_set_keymap('n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
   buf_set_keymap('n', '<Leader>ff', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
   vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+
+  lsp_status.on_attach(client)
 end
 
 -- nvim-cmp supports additional completion capabilities
@@ -46,11 +54,11 @@ if pcall(require, 'cmp_nvim_lsp') then
   capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 end
 
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup {
+for server, config in pairs(servers) do
+  nvim_lsp[server].setup(vim.tbl_deep_extend('force', {
     on_attach = on_attach,
     capabilities = capabilities,
-  }
+  }, config))
 end
 
 require('cdejoye.config.lua-language-server').setup(on_attach, capabilities)
