@@ -46,7 +46,7 @@ require('lualine').setup {
     theme = 'base16',
     component_separators = {},
     section_separators = {},
-    disabled_filetypes = {},
+    disabled_filetypes = { 'TelescopePrompt', 'TelescopeResults' },
   },
   sections = {
     lualine_a = {
@@ -71,6 +71,18 @@ require('lualine').setup {
     lualine_y = {},
     lualine_z = {},
   },
-  tabline = {},
+  tabline = {
+    lualine_a = { 'tab-windows', truncate },
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = { 'tab-list' },
+  },
   extensions = { 'fugitive', 'quickfix' },
 }
+
+vim.cmd([[
+hi default link lualine_tab_active lualine_a_normal
+hi default link lualine_tab_inactive lualine_b_normal
+]])
