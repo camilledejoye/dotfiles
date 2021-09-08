@@ -34,4 +34,26 @@ function M.bmap(bufnr, lsh, rhs, mode, opts)
   M.map(lsh, rhs, mode, opts, bufnr)
 end
 
+function M.hi(name, definition, default)
+  local is_link = 'string' == type(definition)
+
+  if not is_link then
+    local stringified_opts = {}
+
+    for opt_name, value in pairs(definition) do
+      table.insert(stringified_opts, string.format('%s=%s', opt_name, value))
+    end
+
+    definition = table.concat(stringified_opts, ' ')
+  end
+
+  vim.cmd(string.format(
+    'highlight%s %s %s %s',
+    default and ' default' or '!',
+    is_link and 'link' or '',
+    name,
+    definition
+  ))
+end
+
 return M

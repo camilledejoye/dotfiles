@@ -27,13 +27,20 @@ return require('packer').startup({ function(use)
     'junegunn/vader.vim',
   }
 
-  use { -- Language related (syntax, completion,e tc.)
-    'elzr/vim-json',
-    'othree/csscomplete.vim',
-    'camilledejoye/vim-sxhkdrc',
-    'cespare/vim-toml',
-    'tbastos/vim-lua',
-    { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview', ft = 'markdown' },
+  -- Disabled because I want to use Treesitter now, but I kept them here just in case
+  -- use { -- Language related (syntax, completion,e tc.)
+  --   'elzr/vim-json',
+  --   'othree/csscomplete.vim',
+  --   'camilledejoye/vim-sxhkdrc',
+  --   'cespare/vim-toml',
+  --   'tbastos/vim-lua',
+  -- }
+
+  use { -- markdown-preview
+    'iamcco/markdown-preview.nvim',
+    run = 'cd app && yarn install',
+    cmd = 'MarkdownPreview',
+    ft = 'markdown',
   }
 
   -- TODO check if I still need it now that I use Treesitter
@@ -117,6 +124,7 @@ return require('packer').startup({ function(use)
       'hrsh7th/cmp-path',
       'onsails/lspkind-nvim',
       'hrsh7th/cmp-nvim-lsp',
+      'ray-x/lsp_signature.nvim',
       -- Use UltiSnips instead until I fixed the mappings and adapt all my snippets
       -- 'saadparwaiz1/cmp_luasnip',
       -- 'L3MON4D3/LuaSnip',
@@ -132,6 +140,7 @@ return require('packer').startup({ function(use)
     after = { 'nvim-cmp' }, -- use an alias like completor to be more generic ?
     requires = {
       { 'nvim-lua/lsp-status.nvim', config = config('lsp-status') },
+      { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
     },
     config = config('nvim-lsp'),
   }
@@ -191,7 +200,7 @@ return require('packer').startup({ function(use)
   }
 
   use { -- tpope plugins
-    'tpope/vim-surround',
+    { 'tpope/vim-surround', setup = function() vim.g.surround_no_insert_mappings = true end },
     'tpope/vim-commentary',
     'tpope/vim-scriptease',
     { 'tpope/vim-unimpaired', config = config('unimpaired') },
