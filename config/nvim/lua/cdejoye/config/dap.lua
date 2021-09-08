@@ -9,7 +9,7 @@ dapui.setup {
   mappings = {
     expand = { 'za', '<CR>', '<2-LeftMouse>' },
   },
-  sidebar = { position = 'right', width = 80 },
+  sidebar = { position = 'right', size = 80 },
 }
 
 -- Not sure it's working...
