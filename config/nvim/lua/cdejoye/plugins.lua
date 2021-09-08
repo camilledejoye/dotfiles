@@ -96,8 +96,6 @@ return require('packer').startup({ function(use)
     end,
   }
 
-  use('tpope/vim-vinegar') -- File explorer
-
   use { -- GitSigns
     'lewis6991/gitsigns.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
@@ -261,6 +259,15 @@ return require('packer').startup({ function(use)
     run = ":UpdateRemotePlugins" ,
     requires = {"vim-test/vim-test"},
     config = config('vim-test'),
+  }
+
+  use { -- lir.nvim
+    'tamago324/lir.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'kyazdani42/nvim-web-devicons',
+    },
+    config = config('lir'),
   }
 
   -- TODO: check these plugins
