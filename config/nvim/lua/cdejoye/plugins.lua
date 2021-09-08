@@ -58,10 +58,7 @@ return require('packer').startup({ function(use)
     'milisims/nvim-luaref',
   }
 
-  use { -- To use icons from nonicons font
-    'yamatsum/nvim-nonicons',
-    requires = 'kyazdani42/nvim-web-devicons',
-  }
+  use { 'kyazdani42/nvim-web-devicons' }
 
   use('monaqa/dial.nvim') -- Improved increment/decrement
   use('tommcdo/vim-lion') -- Align text
