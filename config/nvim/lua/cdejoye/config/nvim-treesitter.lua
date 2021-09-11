@@ -69,7 +69,6 @@ require('nvim-treesitter.configs').setup {
   -- Config for it: https://github.com/JoosepAlviste/nvim-ts-context-commentstring#nvim-comment
   -- Or: https://github.com/b3nj5m1n/kommentary
   -- Config for it: https://github.com/b3nj5m1n/kommentary
-  context_commentstring = { enable = true, config = { php = '// %s' } },
 }
 
 vim.opt.foldmethod = 'expr'
