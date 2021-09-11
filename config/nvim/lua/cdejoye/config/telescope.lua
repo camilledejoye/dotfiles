@@ -1,16 +1,28 @@
 -- Telescope: https://github.com/nvim-telescope/telescope.nvim
-require('telescope').setup {
+local telescope = require('telescope')
+local actions = require('telescope.actions')
+local map = require('cdejoye.utils').map
+local hi = require('cdejoye.utils').hi
+local cmd = vim.cmd
+
+-- Setup
+telescope.setup {
   defaults = {
     prompt_prefix = '❯ ',
     selection_caret = '❯ ',
-    -- file_sorter =  require'telescope.sorters'.get_fzy_sorter,
-    -- generic_sorter =  require'telescope.sorters'.get_fzy_sorter,
     sorting_strategy = 'ascending',
+    dynamic_preview_title = true,
+
+    mappings = {
+        i = { ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist },
+        n = { ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist },
+    },
   },
 
   pickers = {
     buffers = {
-      sort_lastused = true,
+      ignore_current_buffer = true,
+      selection_strategy = 'closest',
       -- theme = 'ivy',
       mappings = {
         n = {
@@ -22,176 +34,97 @@ require('telescope').setup {
       },
     },
 
-    grep_string = { theme = 'ivy' },
-    spell_suggest = { theme = 'cursor' }
+    grep_string = { layout_strategy = 'vertical' },
+    spell_suggest = {
+      theme = 'cursor',
+      mappings = {
+        i = {
+          ['<Esc>'] = actions.close,
+        },
+      },
+    },
+    lsp_code_actions = {
+      theme = 'cursor',
+      mappings = {
+        i = {
+          ['<Esc>'] = actions.close,
+        },
+      },
+    },
   },
 
   extensions = {
     fzf = {
       fuzzy = true,
+      -- To be able to use fzf syntax: !, ', etc
       override_generic_sorter = true,
       override_file_sorter = true,
       case_mode = 'smart_case',
     },
-    -- -- TODO rewrite them to work for my taste with possibility to easily add --no-ignore
-    -- -- and/or --hidden
-    -- fzf_writer = {
-    --   use_highlighter = true,
-    -- },
   },
 }
+telescope.load_extension('fzf')
 
-local map = require('cdejoye.utils').map
-local cmd = vim.cmd
-
-require('telescope').load_extension('fzf')
--- require('telescope').load_extension('fzf_writer')
-
-map('<Leader>sf', [[<cmd>lua require('telescope.builtin').git_files()<CR>]])
-map('<Leader>sF', [[<cmd>lua require('telescope.builtin').find_files({ no_ignore = true })<CR>]])
+-- Mappings
+map('<Leader>sf', [[<cmd>lua require('cdejoye.config.telescope').find_files()<CR>]])
+map('<Leader>sF', [[<cmd>lua require('telescope.builtin').find_files({ no_ignore = true, hidden = true })<CR>]])
 map('<Leader>sb', [[<cmd>lua require('telescope.builtin').buffers()<CR>]])
 map('<Leader>sc', [[<cmd>lua require('telescope.builtin').git_commits()<CR>]])
+-- Pass `search_dirs = {}` to avoid having the filenames prefixed with a .
+map('<Leader>rg', [[<cmd>lua require('telescope.builtin').grep_string({ search_dirs = {} })<CR>]])
+map('<Leader>Rg', [[<cmd>lua require('telescope.builtin').grep_string({ search_dirs = {}, no_ignore = true })<CR>]])
+map('z=', [[<cmd>lua require('telescope.builtin').spell_suggest()<CR>]])
 
-map('<Leader>rg', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]])
-map('<Leader>Rg', [[<cmd>lua require('cdejoye.telescope').rg({ no_ignore = true })<CR>]])
-
-cmd([[command! -complete=dir -nargs=* Rg lua require('telescope.builtin').live_grep({ search_dirs = { unpack({<f-args>}) } })]])
+-- Commands
+-- Example unpacking command arguments
+-- cmd([[command! -complete=dir -nargs=* Rg lua require('telescope.builtin').live_grep({ search_dirs = { unpack({<f-args>}) } })]])
+cmd([[command! -complete=dir -nargs=* Rg lua require('telescope.builtin').grep_string({ search_dirs = { <f-args> } })]])
+cmd([[command! -complete=dir -nargs=* RRg lua require('cdejoye.config.telescope').live_grep({ search_dirs = { <f-args> } })]])
 cmd([[command! H lua require('telescope.builtin').help_tags()]])
-
--- TODO need work because it replace propose the suggestion for the word under the cursor
--- but insert the choice at the position of the first invalid word in the buffer ><
--- map('z=', [[<cmd>lua require('telescope.builtin').spell_suggest()<CR>]])
+cmd([[command! Tplugins lua require('cdejoye.config.telescope').find_files_in_plugins()]])
+cmd([[command! Tconfig lua require('cdejoye.config.telescope').find_files_in_config()]])
 
 -- Highlights
-cmd('hi! def link TelescopeBorder Directory')
-cmd('hi! def link TelescopePromptPrefix String')
-cmd('hi! def link TelescopeSelectionCaret String')
+hi('TelescopeBorder', 'FloatBorder')
+hi('TelescopePromptPrefix', 'TSString')
+hi('TelescopeSelectionCaret', 'TSString')
 
--- Custom pickers/writers
+-- Custom pickers
+local builtin = require('telescope.builtin')
+
 local M = {}
 
-local Job = require('plenary.job')
-local conf = require('telescope.config').values
-local finders = require('telescope.finders')
-local make_entry = require('telescope.make_entry')
-local pickers = require('telescope.pickers')
-local sorters = require('telescope.sorters')
+function M.find_files(options) -- Find with git and fallback if not a git repository
+  options = options or {}
 
-local flatten = vim.tbl_flatten
-
-local escape_chars = function(string)
-  return string.gsub(string, "[%(|%)|\\|%[|%]|%-|%{%}|%?|%+|%*|%^|%$]", {
-    ["\\"] = "\\\\",
-    ["-"] = "\\-",
-    ["("] = "\\(",
-    [")"] = "\\)",
-    ["["] = "\\[",
-    ["]"] = "\\]",
-    ["{"] = "\\{",
-    ["}"] = "\\}",
-    ["?"] = "\\?",
-    ["+"] = "\\+",
-    ["*"] = "\\*",
-    ["^"] = "\\^",
-    ["$"] = "\\$",
-  })
+  if not pcall(builtin.git_files, options) then
+    builtin.find_files(options)
+  end
 end
 
--- Special keys:
---  opts.search -- the string to search.
---  opts.search_dirs -- list of directory to search in
---  opts.use_regex -- special characters won't be escaped
-function M.rg(opts)
-  -- TODO: This should probably check your visual selection as well, if you've got one
-
-  local vimgrep_arguments = conf.vimgrep_arguments
-  local search_dirs = opts.search_dirs
-  local word = opts.search or vim.fn.expand "<cword>"
-  local search = opts.use_regex and word or escape_chars(word)
-  local word_match = opts.word_match
-  local no_ignore = opts.no_ignore or false
-  opts.entry_maker = opts.entry_maker or make_entry.gen_from_vimgrep(opts)
-
-  if no_ignore then
-    table.insert(vimgrep_arguments, '--no-ignore')
-  end
-
-  local additional_args = {}
-  if opts.additional_args ~= nil and type(opts.additional_args) == "function" then
-    additional_args = opts.additional_args(opts)
-  end
-
-  local args = vim.tbl_flatten {
-    vimgrep_arguments,
-    additional_args,
-    word_match,
-    search,
-  }
-
-  if search_dirs then
-    for _, path in ipairs(search_dirs) do
-      table.insert(args, vim.fn.expand(path))
-    end
-  -- To have filenames not starting with ./
-  -- else
-  --   table.insert(args, ".")
-  end
-
-  pickers.new(opts, {
-    prompt_title = "Find Word",
-    finder = finders.new_oneshot_job(args, opts),
-    previewer = conf.grep_previewer(opts),
-    sorter = conf.generic_sorter(opts),
-  }):find()
+function M.find_files_in_plugins(options)
+  return builtin.find_files(vim.tbl_extend('force', {
+    prompt_title = 'Plugins',
+    cwd = vim.fn.stdpath('data') .. '/site/pack/packer',
+  }, options or {}))
 end
 
--- From https://github.com/nvim-telescope/telescope-fzf-writer.nvim
--- Trigger an error with devicon if called first, but not if called after another finder
--- which also uses devicon...
-function M.rg2(opts)
-  opts = opts or {}
+function M.find_files_in_config(options)
+  return builtin.find_files(vim.tbl_extend('force', {
+    prompt_title = 'Config files',
+    cwd = vim.env.XDG_CONFIG_HOME or '~/.config',
+    no_ignore = true,
+    hidden = true,
+    follow = true,
+  }, options or {}))
+end
 
-  local fzf_separator = opts.fzf_separator or "|"
+function M.live_grep(options)
+  local vimgrep_arguments = require('telescope.config').values.vimgrep_arguments
 
-  local live_grepper = finders._new {
-    fn_command = function(_, prompt)
-      if #prompt < 2 then
-        return nil
-      end
-
-      local rg_prompt, fzf_prompt
-      if string.find(prompt, fzf_separator, 1, true) then
-        rg_prompt  = string.sub(prompt, 1, string.find(prompt, fzf_separator, 1, true) - 1)
-        fzf_prompt = string.sub(prompt, string.find(prompt, fzf_separator, 1, true) + #fzf_separator, #prompt)
-      else
-        rg_prompt = prompt
-        fzf_prompt = ""
-      end
-
-      local rg_args = flatten { conf.vimgrep_arguments, rg_prompt }
-      table.remove(rg_args, 1)
-
-      return {
-        writer = Job:new {
-          command = 'rg',
-          args = rg_args,
-        },
-
-        command = 'fzf',
-        args = {'--filter', fzf_prompt},
-      }
-    end,
-    entry_maker = make_entry.gen_from_vimgrep(opts),
-    maximum_results = opts.max_results,
-    cwd = opts.cwd or vim.loop.cwd(),
-  }
-
-  pickers.new(opts, {
-      prompt_title = 'Fzf Writer: Grep',
-      finder = live_grepper,
-      previewer = conf.grep_previewer(opts),
-      sorter = true and sorters.highlighter_only(opts) or nil,
-    }):find()
+  return builtin.live_grep(vim.tbl_extend('force', {
+    vimgrep_arguments = vim.tbl_flatten { vimgrep_arguments, { '--hidden', '--no-ignore', '-L' } }
+  }, options or {}))
 end
 
 return M

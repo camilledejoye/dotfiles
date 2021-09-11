@@ -21,7 +21,8 @@ g.mapleader = ' '
 opt.runtimepath:append({ vim_dir .. '/templates' })
 opt.path:append({ '**' })
 opt.autochdir = false
-opt.wildignore:append({'*/.git/*', '*/vendor/*', '*/node_modules/*', '*/var/*', '*/web/build/*'})
+-- File in wildignore won't be previwed by telescope
+-- opt.wildignore:append({'*/.git/*', '*/vendor/*', '*/node_modules/*', '*/var/*', '*/web/build/*'})
 opt.textwidth = 90
 opt.hidden = true
 opt.number = true
@@ -62,3 +63,10 @@ augroup cdejoye_custom_commands
   autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute "keepjumps normal g`\"" | endif
 augroup END
 ]])
+
+function RELOAD(module_name, starts_with_only)
+  require('plenary.reload').reload_module(module_name, starts_with_only)
+end
+-- TODO create a completion function to help finding reloadable modules ?
+-- Will depend on my actual usage of this command
+cmd([[command! -nargs=1 RELOAD lua RELOAD(<f-args>)]])

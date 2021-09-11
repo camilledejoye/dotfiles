@@ -1,11 +1,22 @@
+-- https://github.com/glepnir/lspsaga.nvim
 local map = require('cdejoye.utils').map
 
 -- Config
 require('lspsaga').init_lsp_saga {
-  error_sign = "",
-  warn_sign = "",
-  infor_sign = "🛈",
-  hint_sign = "!",
+  use_saga_diagnostic_sign = false,
+
+  code_action_icon = ' ',
+  code_action_prompt = {
+    enable = true,
+    sign = false,
+    sign_priority = 20,
+    virtual_text = true,
+  },
+
+  rename_prompt_prefix = '❯',
+  rename_action_keys = {
+    quit = { '<Esc>', '<C-c>' },
+  },
 }
 
 -- Mappings
@@ -60,8 +71,8 @@ hi('LspSagaCodeActionTitle', 'LspFloatWinTitle')
 hi('LspSagaCodeActionTruncateLine', 'LspFLoatWinTruncateLine')
 hi('LspSagaCodeActionContent', 'LspFloatWinNormal')
 
-hi('LspSagaRenameBorder', { guifg = colors.base0A, guibg = 'NONE' })
-hi('LspSagaRenamePromptPrefix', { guifg = colors.base0D, guibg = 'NONE' })
+hi('LspSagaRenameBorder', 'LspFloatWinBorder')
+hi('LspSagaRenamePromptPrefix', { guifg = colors.base0B, guibg = 'NONE' })
 
 hi('LspSagaHoverBorder', 'LspFloatWinBorder')
 hi('LspSagaSignatureHelpBorder', 'LspFloatWinBorder')

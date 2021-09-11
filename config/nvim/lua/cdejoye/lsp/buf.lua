@@ -1,14 +1,21 @@
+local fzf = require('fzf-lua')
+local fzf_actions = require('fzf-lua.actions')
+
+local telescope = require('telescope.builtin')
+local jump_types = {
+  edit = 'edit',
+  split = 'split',
+  vsplit = 'vsplit',
+  tabedit = 'tab',
+}
+
 local validate = vim.validate
-local buf = {}
-local valid_edit_cmds = {
-  e = true,
-  edit = true,
-  sp = true,
-  split = true,
-  vsp = true,
-  vsplit = true,
-  tabe = true,
-  tabedit = true,
+local valid_edit_cmds = { 'edit', 'split', 'vsplit', 'tabedit' }
+local actions_map = {
+  edit = fzf_actions.file_edit,
+  split = fzf_actions.file_split,
+  vsplit = fzf_actions.file_vsplit,
+  tabedit = fzf_actions.file_tabedit,
 }
 
 local function implode(list, sep)
@@ -21,80 +28,80 @@ local function implode(list, sep)
 end
 
 local function is_valid_edit_cmd(edit_cmd)
-  local is_valid = true == (valid_edit_cmds[edit_cmd] or nil)
-  local message = 'Valid commands: ' .. implode(valid_edit_cmds, ', ')
+  local is_valid = nil == edit_cmd or actions_map[edit_cmd]
+  local message = 'Valid commands: ' .. implode(vim.tbl_keys(valid_edit_cmds), ', ')
 
   return is_valid, message
 end
 
-local function request(method, edit_cmd)
-  local params = vim.lsp.util.make_position_params()
-  local handler = buf.goto_handler(edit_cmd)
+local function make_options(edit_cmd, options)
+  local default_options = {
+    -- Make it synchronous to avoid opening the window when there is only one result
+    async_or_timeout = 2000,
+    jump_to_single_result = true,
+  }
 
-  return vim.lsp.buf_request(0, method, params, handler)
-end
-
-function buf.goto_handler(edit_cmd)
-  local util = vim.lsp.util
-  local log = require("vim.lsp.log")
-  local api = vim.api
-
-  local handler = function(_, method, result)
-    if result == nil or vim.tbl_isempty(result) then
-      local _ = log.info() and log.info(method, "No location found")
-      return nil
-    end
-
-    if edit_cmd then
-      vim.cmd(edit_cmd)
-    end
-
-    if vim.tbl_islist(result) then
-      util.jump_to_location(result[1])
-
-      if #result > 1 then
-        util.set_qflist(util.locations_to_items(result))
-        api.nvim_command("copen")
-        api.nvim_command("wincmd p")
-      end
-    else
-      util.jump_to_location(result)
-    end
+  if edit_cmd then
+    default_options.jump_to_single_result_action = actions_map[edit_cmd]
   end
 
-  return handler
+  return vim.tbl_extend('force', default_options, options or {})
 end
 
-function buf.definition(edit_cmd)
+local function fzf_handler(handler, edit_cmd, options)
   validate {
     edit_cmd = { edit_cmd, is_valid_edit_cmd, 'Invalid edit command' }
   }
 
-  return request('textDocument/definition', edit_cmd or 'edit')
+  options = make_options(edit_cmd, options)
+
+  fzf[handler](options)
 end
 
-function buf.declaration(edit_cmd)
-  validate {
-    edit_cmd = { edit_cmd, is_valid_edit_cmd, 'Invalid edit command' }
-  }
+local fzf_buf = {}
 
-  return request('textDocument/declaration', edit_cmd or 'edit')
+function fzf_buf.definition(edit_cmd)
+  return fzf_handler('lsp_definitions', edit_cmd)
 end
 
-function buf.type_definition(edit_cmd)
-  validate {
-    edit_cmd = { edit_cmd, is_valid_edit_cmd, 'Invalid edit command' }
-  }
-
-  return request('textDocument/typeDefinition', edit_cmd or 'edit')
+function fzf_buf.declaration(edit_cmd)
+  return fzf_handler('lsp_declarations', edit_cmd)
 end
 
-function buf.implementation(edit_cmd)
-  validate {
-    edit_cmd = { edit_cmd, is_valid_edit_cmd, 'Invalid edit command' }
-  }
-
-  return request('textDocument/implementation', edit_cmd or 'edit')
+function fzf_buf.type_definition(edit_cmd)
+  return fzf_handler('lsp_typedefs', edit_cmd)
 end
 
-return buf
+function fzf_buf.implementation(edit_cmd)
+  return fzf_handler('lsp_implementations', edit_cmd)
+end
+
+function fzf_buf.references(edit_cmd)
+  -- For references it might take a while so I force it to be async
+  -- There is almost no chance there will be only one result anyway
+  return fzf_handler('lsp_references', edit_cmd, { async = true })
+end
+
+local telescope_buf = {}
+
+function telescope_buf.definition(edit_cmd)
+  return telescope.lsp_definitions({ jump_type = jump_types[edit_cmd] or nil })
+end
+
+function telescope_buf.declaration(edit_cmd)
+  return telescope.lsp_declarations({ jump_type = jump_types[edit_cmd] or nil })
+end
+
+function telescope_buf.type_definition(edit_cmd)
+  return telescope.lsp_type_definitions({ jump_type = jump_types[edit_cmd] or nil })
+end
+
+function telescope_buf.implementation(edit_cmd)
+  return telescope.lsp_implementations({ jump_type = jump_types[edit_cmd] or nil })
+end
+
+function telescope_buf.references(edit_cmd)
+  return telescope.lsp_references({ jump_type = jump_types[edit_cmd] or nil })
+end
+
+return telescope_buf

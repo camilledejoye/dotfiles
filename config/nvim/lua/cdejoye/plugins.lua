@@ -137,7 +137,7 @@ return require('packer').startup({ function(use)
       { 'nvim-lua/lsp-status.nvim', config = config('lsp-status') },
       { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
     },
-    config = config('nvim-lsp'),
+    config = config('lspconfig'),
   }
 
   -- TODO test it to make sure it's correctly configured
@@ -180,9 +180,17 @@ return require('packer').startup({ function(use)
       'nvim-lua/plenary.nvim',
       'kyazdani42/nvim-web-devicons',
       { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
-      -- { 'nvim-telescope/telescope-fzf-writer.nvim' },
     },
     config = config('telescope'),
+  }
+
+  use { --fzf-lua
+    'ibhagwan/fzf-lua',
+    requires = {
+      'vijaymarupudi/nvim-fzf',
+      { 'kyazdani42/nvim-web-devicons', opt = true },
+    },
+    config = config('fzf'),
   }
 
   use { -- lualine
@@ -266,6 +274,7 @@ return require('packer').startup({ function(use)
     requires = {
       'nvim-lua/plenary.nvim',
       'kyazdani42/nvim-web-devicons',
+      'tamago324/lir-bookmark.nvim',
     },
     config = config('lir'),
   }

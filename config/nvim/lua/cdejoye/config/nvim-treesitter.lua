@@ -10,6 +10,7 @@ require('nvim-treesitter.parsers').get_parser_configs().norg = {
 
 require('nvim-treesitter.configs').setup {
   ensure_installed = 'all', -- Install all modules, allows to include norg which is not part of maintained
+  ignore_install = { 'fennel' }, -- I had errors in checkheal for this one
 
   highlight = {
     enable = true,

@@ -1,15 +1,16 @@
 local cmp = require('cmp')
 
 -- Name of the sources as keys and text to show in the completion menu as values
+-- The order helps define the source priority, see `sorting.priority_weight` options
 local sources = {
-  buffer = '[Buffer]',
-  path = '[Path]',
+  nvim_lsp = '[LSP]',
   neorg = '[Neorg]',
+  path = '[Path]',
   -- luasnip = '[LuaSnip]',
   ultisnips = '[UltiSnips]',
-  nvim_lsp = '[LSP]',
-  emoji = '[Emoji]',
+  buffer = '[Buffer]',
   spell = '[Spell]',
+  emoji = '[Emoji]',
 }
 
 
