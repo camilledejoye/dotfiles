@@ -43,7 +43,6 @@ return require('packer').startup({ function(use)
     ft = 'markdown',
   }
 
-  -- TODO check if I still need it now that I use Treesitter
   use('wellle/targets.vim') -- Adds a bunch of text objects, especially argument text object
 
   use { -- Fix CursorHold performance issue on Neovim:
@@ -56,6 +55,7 @@ return require('packer').startup({ function(use)
   use { -- Add documentation around Lua
     'nanotee/luv-vimdocs',
     'milisims/nvim-luaref',
+    'folke/lua-dev.nvim', -- Configured in lua-language-server.lua if installed
   }
 
   use { 'kyazdani42/nvim-web-devicons' }

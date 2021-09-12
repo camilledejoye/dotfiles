@@ -13,11 +13,23 @@ table.insert(runtime_path, 'lua/?/init.lua')
 local M = {}
 
 function M.setup(on_attach, capabilities)
-  require('lspconfig').sumneko_lua.setup {
+  local is_luadev_installed, luadev = pcall(require, 'lua-dev')
+  local options = { -- Default options
     cmd = { sumneko_binary, '-E', sumneko_root_path .. '/main.lua' },
     on_attach = on_attach,
     capabilities = capabilities,
-    settings = {
+  }
+
+  if is_luadev_installed then
+    options = luadev.setup {
+      lspconfig = {
+        cmd = { sumneko_binary, '-E', sumneko_root_path .. '/main.lua' },
+        on_attach = on_attach,
+        capabilities = capabilities,
+      }
+    }
+  else
+    options.settings = {
       Lua = {
         runtime = {
           -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
@@ -38,8 +50,10 @@ function M.setup(on_attach, capabilities)
           enable = false,
         },
       },
-    },
-  }
+    }
+  end
+
+  require('lspconfig').sumneko_lua.setup(options)
 end
 
 return M
