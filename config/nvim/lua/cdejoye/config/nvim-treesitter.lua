@@ -64,11 +64,9 @@ require('nvim-treesitter.configs').setup {
     },
   },
 
-  -- TODO check possible remplacement for vim-commentary:
-  -- https://github.com/terrortylor/nvim-comment
-  -- Config for it: https://github.com/JoosepAlviste/nvim-ts-context-commentstring#nvim-comment
-  -- Or: https://github.com/b3nj5m1n/kommentary
-  -- Config for it: https://github.com/b3nj5m1n/kommentary
+  -- Update commentrstring option inside a file based on the cursor location
+  -- For example when commenting some SQL inside a PHP file, CSS inside HTML, etc.
+  context_commentstring = { enable = true },
 }
 
 vim.opt.foldmethod = 'expr'
