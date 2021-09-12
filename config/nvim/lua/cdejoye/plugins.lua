@@ -141,14 +141,10 @@ return require('packer').startup({ function(use)
     requires = {
       { 'nvim-lua/lsp-status.nvim', config = config('lsp-status') },
       { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
+      { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
     },
     config = config('lspconfig'),
   }
-
-  -- TODO test it to make sure it's correctly configured
-  -- require('cdejoye.diagnosticls')
-  use { 'w0rp/ale', config = config('ale') } -- Disable when diagnosticls will be setup
-
 
   use('camilledejoye/php-foldexpr')
 

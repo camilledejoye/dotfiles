@@ -93,3 +93,4 @@ end
 
 -- Setup Lua LSP server
 require('cdejoye.config.lua-language-server').setup(on_attach, capabilities)
+require('cdejoye.config.null-ls').setup(on_attach, capabilities)
