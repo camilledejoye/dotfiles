@@ -112,6 +112,12 @@ return require('packer').startup({ function(use)
     config = config('neorg'),
   }
 
+  use {
+    'L3MON4D3/LuaSnip',
+    -- requires = { 'rafamadriz/friendly-snippets' },
+    config = config('luasnip'),
+  }
+
   use { -- Completion manager
     'hrsh7th/nvim-cmp',
     requires = {
@@ -120,9 +126,9 @@ return require('packer').startup({ function(use)
       'onsails/lspkind-nvim',
       'hrsh7th/cmp-nvim-lsp',
       'ray-x/lsp_signature.nvim',
-      -- Use UltiSnips instead until I fixed the mappings and adapt all my snippets
+      -- Disable while I'm still using UltiSnips (no need for LSP)
       -- 'saadparwaiz1/cmp_luasnip',
-      -- 'L3MON4D3/LuaSnip',
+      'L3MON4D3/LuaSnip',
       'quangnguyen30192/cmp-nvim-ultisnips',
       'hrsh7th/cmp-emoji',
       'f3fora/cmp-spell',
@@ -145,17 +151,6 @@ return require('packer').startup({ function(use)
 
   use('camilledejoye/php-foldexpr')
 
-  use { -- PHP snippets
-    'sniphpets/sniphpets',
-    requires = {
-      'sniphpets/sniphpets-common',
-      'sniphpets/sniphpets-symfony',
-      'sniphpets/sniphpets-phpunit',
-      'sniphpets/sniphpets-doctrine',
-      'sniphpets/sniphpets-postfix-codes',
-    },
-  }
-
   use { -- Phpactor
     'phpactor/phpactor',
     run = 'composer install -o',
@@ -165,11 +160,23 @@ return require('packer').startup({ function(use)
 
   use { -- Snippets
     'SirVer/ultisnips', -- The engine
-    requires = { 'honza/vim-snippets' }, -- The snippets definitions
+    requires = {
+      'honza/vim-snippets', -- The snippets definitions
+      { -- PHP snippets
+        'sniphpets/sniphpets',
+        requires = {
+          'sniphpets/sniphpets-common',
+          'sniphpets/sniphpets-symfony',
+          'sniphpets/sniphpets-phpunit',
+          'sniphpets/sniphpets-doctrine',
+          'sniphpets/sniphpets-postfix-codes',
+        },
+      },
+    },
     config = function()
       vim.g.UltiSnipsExpandTrigger		= "<Tab>"
-      vim.g.UltiSnipsJumpForwardTrigger	= "<c-j>"
-      vim.g.UltiSnipsJumpBackwardTrigger	= "<c-k>"
+      vim.g.UltiSnipsJumpForwardTrigger	= "<C-j>"
+      vim.g.UltiSnipsJumpBackwardTrigger	= "<C-k>"
       vim.g.UltiSnipsRemoveSelectModeMappings = 0
     end,
   }
