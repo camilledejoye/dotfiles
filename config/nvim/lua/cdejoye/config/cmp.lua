@@ -93,7 +93,9 @@ cmp.setup {
   formatting = {
     format = function(entry, vim_item)
       -- fancy icons and a name of kind
-      vim_item.kind = require('lspkind').presets.default[vim_item.kind] .. ' ' .. vim_item.kind
+      local item_kinds = require('vim.lsp.protocol').CompletionItemKind
+      local kind_num = item_kinds[vim_item.kind]
+      vim_item.kind = item_kinds[kind_num]
 
       -- set a name for each source
       vim_item.menu = sources[entry.source.name]

@@ -15,6 +15,8 @@ if not pcall(require, 'packer') then
 end
 
 return require('packer').startup({ function(use)
+  use { 'RRethy/nvim-base16', config = config('colorscheme') }
+
   use { -- Packer can manage itself
     'wbthomason/packer.nvim',
     cmd = { 'PackerInstall', 'PackerUpdate', 'PackerSync', 'PackerClean', 'PackerCompile' },
@@ -22,9 +24,9 @@ return require('packer').startup({ function(use)
 
   use { -- Miscelanous
     'camilledejoye/vim-cleanfold',
-    'kana/vim-niceblock',
+    { 'kana/vim-niceblock', config = config('niceblock') },
     'terryma/vim-multiple-cursors',
-    'junegunn/vader.vim',
+    { 'junegunn/vader.vim', opt = true },
   }
 
   -- Disabled because I want to use Treesitter now, but I kept them here just in case
@@ -49,7 +51,7 @@ return require('packer').startup({ function(use)
     -- https://github.com/antoinemadec/FixCursorHold.nvim
     -- See: https://github.com/neovim/neovim/issues/12587
     "antoinemadec/FixCursorHold.nvim",
-    run = [[vim.g.curshold_updatime = 1000]]
+    setup = [[vim.g.cursorhold_updatetime = 1000]]
   }
 
   use { -- Add documentation around Lua
@@ -60,10 +62,8 @@ return require('packer').startup({ function(use)
 
   use { 'kyazdani42/nvim-web-devicons' }
 
-  use('monaqa/dial.nvim') -- Improved increment/decrement
+  use { 'monaqa/dial.nvim', config = config('dial') } -- Improved increment/decrement
   use('tommcdo/vim-lion') -- Align text
-
-  use { 'w0rp/ale', config = config('ale') }
 
   use { 'jiangmiao/auto-pairs', config = config('auto-pairs') }
 
@@ -72,8 +72,6 @@ return require('packer').startup({ function(use)
     setup = [[require('cdejoye.utils').map('yoC', '<cmd>ColorizerToggle<CR>')]],
     cmd = 'ColorizerToggle',
   }
-
-  use { 'RRethy/nvim-base16', config = config('colorscheme') }
 
   use { -- Debugger
     -- https://github.com/mfussenegger/nvim-dap
@@ -118,12 +116,13 @@ return require('packer').startup({ function(use)
     config = config('luasnip'),
   }
 
+  use { 'onsails/lspkind-nvim', config = config('lspkind') }
+
   use { -- Completion manager
     'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      'onsails/lspkind-nvim',
       'hrsh7th/cmp-nvim-lsp',
       'ray-x/lsp_signature.nvim',
       -- Disable while I'm still using UltiSnips (no need for LSP)
@@ -148,6 +147,8 @@ return require('packer').startup({ function(use)
 
   -- TODO test it to make sure it's correctly configured
   -- require('cdejoye.diagnosticls')
+  use { 'w0rp/ale', config = config('ale') } -- Disable when diagnosticls will be setup
+
 
   use('camilledejoye/php-foldexpr')
 
@@ -224,7 +225,7 @@ return require('packer').startup({ function(use)
     'radenling/vim-dispatch-neovim',
     { 'tpope/vim-projectionist', config = config('projectionist') },
     'tpope/vim-eunuch',
-    'tpope/vim-sleuth',
+    -- 'tpope/vim-sleuth', -- Hopping Treesitter will have good enough defaults
   }
 
   use { -- Treesitter
@@ -250,24 +251,26 @@ return require('packer').startup({ function(use)
     config = config('vim-argwrap'),
   }
 
-  use { -- vim-closetag
-    'alvan/vim-closetag',
-    config = function()
-      vim.g.closetag_filetypes = 'html,xhtml,jsx,twig,riot,html.twig'
-      vim.g.closetag_xhtml_filetypes = 'html,xhtml,jsx,twig,riot,html.twig'
-    end,
-  }
+  -- Keep it for reference, I don't work with those languages anymore
+  -- use { -- vim-closetag
+  --   'alvan/vim-closetag',
+  --   config = function()
+  --     vim.g.closetag_filetypes = 'html,xhtml,jsx,twig,riot,html.twig'
+  --     vim.g.closetag_xhtml_filetypes = 'html,xhtml,jsx,twig,riot,html.twig'
+  --   end,
+  -- }
 
-  use { -- vim-plugin-viewdoc
-    'powerman/vim-plugin-viewdoc',
-    config = function ()
-      vim.opt.keywordprg = [[:ViewDoc <cword>]]
-      vim.g.no_viewdoc_abbrev = 1 -- Disable abbreviations
-      vim.g.no_viewdoc_maps = 1 -- Disable mappings
-      vim.g.viewdoc_open = 'botright vnew' --How to open the help window
-      vim.g.viewdoc_openempty = 0 -- Do not open window when doc is not found
-    end
-  }
+  -- I don't use pman doc for php anymore but it could still be interesting for later
+  -- use { -- vim-plugin-viewdoc
+  --   'powerman/vim-plugin-viewdoc',
+  --   config = function ()
+  --     vim.opt.keywordprg = [[:ViewDoc <cword>]]
+  --     vim.g.no_viewdoc_abbrev = 1 -- Disable abbreviations
+  --     vim.g.no_viewdoc_maps = 1 -- Disable mappings
+  --     vim.g.viewdoc_open = 'botright vnew' --How to open the help window
+  --     vim.g.viewdoc_openempty = 0 -- Do not open window when doc is not found
+  --   end
+  -- }
 
   use { -- vim-test
     'rcarriga/vim-ultest',
@@ -285,15 +288,6 @@ return require('packer').startup({ function(use)
     },
     config = config('lir'),
   }
-
-  -- TODO: check these plugins
-  -- https://github.com/lukas-reineke/indent-blankline.nvim
-  -- To add floating signature when typing: https://github.com/ray-x/lsp_signature.nvim
-  -- Add info from LSP to status bar: https://github.com/nvim-lua/lsp-status.nvim
-    -- Example config: https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/lua/tj/lsp/status.lua
-  -- https://github.com/ms-jpq/coq_nvim (completion supposed to be fast)
-  -- https://github.com/folke/zen-mode.nvim
-  -- https://github.com/folke/twilight.nvim
 end, config = {
   disable_commands = true,
 }})
