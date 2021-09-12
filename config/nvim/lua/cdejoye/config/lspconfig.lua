@@ -15,6 +15,13 @@ sign define LspDiagnosticsSignHint text=
 -- Define the highlight group for the active parameter in the signature helper
 hi('LspSignatureActiveParameter', 'Visual')
 
+-- Disable diagnostics virtual text
+require('vim.lsp.handlers')['textDocument/publishDiagnostics'] = function(err, result, ctx, config)
+  config = vim.tbl_extend('force', config or {}, { virtual_text = false })
+
+  return require('vim.lsp.diagnostic').on_publish_diagnostics(err, result, ctx, config)
+end
+
 -- Servers to enable with their specific configuration
 local servers = { phpactor = {
   init_options = {

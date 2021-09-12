@@ -58,6 +58,10 @@ local function select_or_choose_or_jump_next()
 end
 
 cmp.setup {
+  sources = vim.tbl_map(function(source)
+    return { name = source }
+  end, vim.tbl_keys(sources)),
+
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -86,9 +90,10 @@ cmp.setup {
     ['<C-j>'] = cmp.mapping(luasnip_jump_next(), { 'i', 's' }),
   },
 
-  sources = vim.tbl_map(function(source)
-    return { name = source }
-  end, vim.tbl_keys(sources)),
+  documentation = {
+    border = 'rounded',
+    winhighlight = 'NormalFloat:NormalFloat,FloatBorder:FloatBorder',
+  },
 
   formatting = {
     format = function(entry, vim_item)
