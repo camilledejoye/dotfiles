@@ -3,14 +3,16 @@ local cmp = require('cmp')
 -- Name of the sources as keys and text to show in the completion menu as values
 -- The order helps define the source priority, see `sorting.priority_weight` options
 local sources = {
-  nvim_lsp = '[LSP]',
-  neorg = '[Neorg]',
-  path = '[Path]',
-  -- luasnip = '[LuaSnip]',
-  ultisnips = '[UltiSnips]',
-  buffer = '[Buffer]',
-  spell = '[Spell]',
-  emoji = '[Emoji]',
+  nvim_lsp = { name = 'nvim_lsp', label = '[LSP]' },
+  neorg = { name = 'neorg', label = '[Neorg]' },
+  path = { name = 'path', label = '[Path]' },
+  -- luasnip = { name = 'luasnip', label = '[LuaSnip]' },
+  ultisnips = { name = 'ultisnips', label = '[UltiSnips]' },
+  buffer = { name = 'buffer', label = '[Buffer]', opts = { get_bufnrs = function()
+    return vim.api.nvim_list_bufs()
+  end} },
+  spell = { name = 'spell', label = '[Spell]' },
+  emoji = { name = 'emoji', label = '[Emoji]' },
 }
 
 vim.o.completeopt = 'menu,menuone,noselect'
@@ -58,9 +60,7 @@ local function select_or_choose_or_jump_next()
 end
 
 cmp.setup {
-  sources = vim.tbl_map(function(source)
-    return { name = source }
-  end, vim.tbl_keys(sources)),
+  sources = vim.tbl_values(sources),
 
   snippet = {
     expand = function(args)
@@ -103,7 +103,7 @@ cmp.setup {
       vim_item.kind = item_kinds[kind_num]
 
       -- set a name for each source
-      vim_item.menu = sources[entry.source.name]
+      vim_item.menu = sources[entry.source.name].label
 
       -- set the detail as menu
       if 'nvim_lsp' == entry.source.name then
