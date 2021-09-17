@@ -17,61 +17,63 @@ local sources = {
 
 vim.o.completeopt = 'menu,menuone,noselect'
 
-local luasnip = require('luasnip')
+-- local luasnip = require('luasnip')
 
-local function luasnip_jump_prev()
-  return function(fallback)
-    if not luasnip.jump(-1) then
-      fallback()
-    end
-  end
-end
+-- local function luasnip_jump_prev()
+--   return function(fallback)
+--     if not luasnip.jump(-1) then
+--       fallback()
+--     end
+--   end
+-- end
 
-local function luasnip_jump_next()
-  return function(fallback)
-    if not luasnip.jump(1) then
-      fallback()
-    end
-  end
-end
+-- local function luasnip_jump_next()
+--   return function(fallback)
+--     if not luasnip.jump(1) then
+--       fallback()
+--     end
+--   end
+-- end
 
-local function select_or_choose_or_jump_prev()
-  return function(fallback)
-    if not cmp.select_prev_item() then
-      if luasnip.choice_active() then
-        luasnip.change_choice(-1)
-      else
-        luasnip_jump_prev()(fallback)
-      end
-    end
-  end
-end
+-- local function select_or_choose_or_jump_prev()
+--   return function(fallback)
+--     if not cmp.select_prev_item() then
+--       if luasnip.choice_active() then
+--         luasnip.change_choice(-1)
+--       else
+--         luasnip_jump_prev()(fallback)
+--       end
+--     end
+--   end
+-- end
 
-local function select_or_choose_or_jump_next()
-  return function(fallback)
-    if not cmp.select_next_item() then
-      if luasnip.choice_active() then
-        luasnip.change_choice(1)
-      else
-        luasnip_jump_next()(fallback)
-      end
-    end
-  end
-end
+-- local function select_or_choose_or_jump_next()
+--   return function(fallback)
+--     if not cmp.select_next_item() then
+--       if luasnip.choice_active() then
+--         luasnip.change_choice(1)
+--       else
+--         luasnip_jump_next()(fallback)
+--       end
+--     end
+--   end
+-- end
 
 cmp.setup {
   sources = vim.tbl_values(sources),
 
   snippet = {
     expand = function(args)
-      luasnip.lsp_expand(args.body)
-      -- vim.fn['UltiSnips#Anon'](args.body)
+      -- luasnip.lsp_expand(args.body)
+      vim.fn['UltiSnips#Anon'](args.body)
     end,
   },
 
   mapping = {
-    ['<C-p>'] = cmp.mapping(select_or_choose_or_jump_prev(), { 'i', 's' }),
-    ['<C-n>'] = cmp.mapping(select_or_choose_or_jump_next(), { 'i', 's' }),
+    -- ['<C-p>'] = cmp.mapping(select_or_choose_or_jump_prev(), { 'i', 's' }),
+    -- ['<C-n>'] = cmp.mapping(select_or_choose_or_jump_next(), { 'i', 's' }),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -80,14 +82,13 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = false,
     },
-    -- Disable while I'm still using UltiSnips
     -- ['<Tab>'] = function(fallback)
     --   if not luasnip.expand() then
     --     fallback()
     --   end
     -- end,
-    ['<C-k>'] = cmp.mapping(luasnip_jump_prev(), { 'i', 's' }),
-    ['<C-j>'] = cmp.mapping(luasnip_jump_next(), { 'i', 's' }),
+    -- ['<C-k>'] = cmp.mapping(luasnip_jump_prev(), { 'i', 's' }),
+    -- ['<C-j>'] = cmp.mapping(luasnip_jump_next(), { 'i', 's' }),
   },
 
   documentation = {

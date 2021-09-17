@@ -110,11 +110,11 @@ return require('packer').startup({ function(use)
     config = config('neorg'),
   }
 
-  use {
-    'L3MON4D3/LuaSnip',
-    -- requires = { 'rafamadriz/friendly-snippets' },
-    config = config('luasnip'),
-  }
+  -- use {
+  --   'L3MON4D3/LuaSnip',
+  --   -- requires = { 'rafamadriz/friendly-snippets' },
+  --   config = config('luasnip'),
+  -- }
 
   use { 'onsails/lspkind-nvim', config = config('lspkind') }
 
@@ -127,7 +127,7 @@ return require('packer').startup({ function(use)
       'ray-x/lsp_signature.nvim',
       -- Disable while I'm still using UltiSnips (no need for LSP)
       -- 'saadparwaiz1/cmp_luasnip',
-      'L3MON4D3/LuaSnip',
+      -- 'L3MON4D3/LuaSnip',
       'quangnguyen30192/cmp-nvim-ultisnips',
       'hrsh7th/cmp-emoji',
       'f3fora/cmp-spell',
@@ -156,7 +156,8 @@ return require('packer').startup({ function(use)
   }
 
   use { -- Snippets
-    'SirVer/ultisnips', -- The engine
+    -- 'SirVer/ultisnips', -- The engine
+    'camilledejoye/ultisnips', -- Until the handling of floating windows is fixed
     requires = {
       'honza/vim-snippets', -- The snippets definitions
       { -- PHP snippets

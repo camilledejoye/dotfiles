@@ -35,6 +35,12 @@ luasnip.config.setup {
   enable_autosnippets = true,
 }
 
+local function php_visibility(visibility_letter)
+  return 'u' == visibility_letter and 'public '
+  or 'o' == visibility_letter and 'protected '
+  or 'i' == visibility_letter and 'private '
+end
+
 luasnip.snippets = {
   all = {},
 
@@ -42,13 +48,43 @@ luasnip.snippets = {
   -- And only use luasnip for LSP snippets since I can't manage to make UltiSnips works
   -- properly in this situation
   -- php = {
-  --   Add handling for abstract !
-  --   snippet({ trig = 'm(;?)([uoi])(s?)', regTrig = true }, {
+  --   -- Constructor
+  --   snippet({ trig = 'c([uoi])', regTrig = true }, {
   --     func(function(args)
-  --       local visibility = args[1].captures[2]
-  --       return 'u' == visibility and 'public '
-  --         or 'o' == visibility and 'protected '
-  --         or 'i' == visibility and 'private '
+  --       return php_visibility(args[1].captures[1])
+  --     end, {}),
+  --     text(' function __construct('),
+  --     insert(1),
+  --     text({ ')', '{' }),
+  --     text({ '', '\t' }),
+  --     func(function(args) return args[1].env.TM_SELECTED_TEXT end, {}),
+  --     insert(0),
+  --     text({ '', '}' }),
+  --   }),
+
+  --   -- Property declaration
+  --   snippet({ trig = 'p([uoi])(s?)', regTrig = true }, {
+  --     func(function(args)
+  --       return php_visibility(args[1].captures[1])
+  --     end, {}),
+  --     func(function(args)
+  --       return 's' == args[1].captures[3] and 'static ' or ''
+  --     end, {}),
+  --     insert(1, 'Type'),
+  --     text(' $'),
+  --     insert(2, 'propertyName'),
+  --     insert(3, ' = null'),
+  --     text(';'),
+  --     insert(0),
+  --   }),
+
+  --   -- Method
+  --   snippet({ trig = 'm([a;]?)([uoi])(s?)', regTrig = true }, {
+  --     func(function(args)
+  --       return php_visibility(args[1].captures[2])
+  --     end, {}),
+  --     func(function(args)
+  --       return 'a' == args[1].captures[1] and 'abstract ' or ''
   --     end, {}),
   --     func(function(args)
   --       return 's' == args[1].captures[3] and 'static ' or ''
@@ -60,7 +96,7 @@ luasnip.snippets = {
   --     text(')'),
   --     insert(3, ': void'),
   --     dynamic(4, function(args)
-  --       if ';' == args[1].captures[1] then
+  --       if '' ~= args[1].captures[1] then
   --         return snippet_node(nil, text(';'))
   --       end
 
@@ -74,15 +110,30 @@ luasnip.snippets = {
   --         text({ '', '}' }),
   --       })
   --     end, {}),
-  --   })
+  --   }),
+
+  --   -- Class
+  --   snippet('class', {
+  --     text('<?php'),
+  --     text({ '', '' }),
+  --     text({ '', 'namespace ' }),
+  --     func(function(_)
+  --       return vim.call('phpactor#GetNamespace')
+  --     end, {}),
+  --     text(';'),
+  --     text({ '', '' }),
+  --     text({ '', 'class ' }),
+  --     insert(1, 'ClassName'),
+  --     text({ '', '{' }),
+  --     text({ '', '\t' }),
+  --     func(function(args) return args[1].env.TM_SELECTED_TEXT end, {}),
+  --     insert(0),
+  --     text({ '', '}' }),
+  --   }),
   -- },
 }
 
 luasnip.autosnippets = {
-  all = {
-    -- snippet('autotrigger', { text('autosnippet') }),
-  },
-
   php = {
     -- snippet(',t', text('$this->')),
     -- snippet(',r', { text('return '), insert(1), text(';'), insert(0) }),
@@ -159,7 +210,7 @@ luasnip.autosnippets = {
 --   current_win.buf = create_win.buf
 -- end
 
--- function choice_popup_close()
+-- function Choice_popup_close()
 --   if not current_win then
 --     return
 --   end
@@ -180,8 +231,8 @@ luasnip.autosnippets = {
 -- vim.cmd([[
 -- augroup choice_popup
 -- au!
--- au User LuasnipChoiceNodeEnter lua choice_popup(require("luasnip").session.event_node)
--- au User LuasnipChoiceNodeLeave lua choice_popup_close()
--- au User LuasnipChangeChoice lua update_choice_popup(require("luasnip").session.event_node)
+-- au User LuasnipChoiceNodeEnter lua Choice_popup(require("luasnip").session.event_node)
+-- au User LuasnipChoiceNodeLeave lua Choice_popup_close()
+-- au User LuasnipChangeChoice lua Update_choice_popup(require("luasnip").session.event_node)
 -- augroup END
 -- ]])
