@@ -70,16 +70,15 @@ map('<Leader>sf', [[<cmd>lua require('cdejoye.config.telescope').find_files()<CR
 map('<Leader>sF', [[<cmd>lua require('telescope.builtin').find_files({ no_ignore = true, hidden = true })<CR>]])
 map('<Leader>sb', [[<cmd>lua require('telescope.builtin').buffers()<CR>]])
 map('<Leader>sc', [[<cmd>lua require('telescope.builtin').git_commits()<CR>]])
--- Pass `search_dirs = {}` to avoid having the filenames prefixed with a .
-map('<Leader>rg', [[<cmd>lua require('telescope.builtin').grep_string({ search_dirs = {} })<CR>]])
-map('<Leader>Rg', [[<cmd>lua require('telescope.builtin').grep_string({ search_dirs = {}, no_ignore = true })<CR>]])
+map('<Leader>rg', [[<cmd>Rg<CR>]])
+map('<Leader>Rg', [[<cmd>Rg!<CR>]])
+map('<Leader>H', [[<cmd>H<CR>]])
 map('z=', [[<cmd>lua require('telescope.builtin').spell_suggest()<CR>]])
 
 -- Commands
 -- Example unpacking command arguments
 -- cmd([[command! -complete=dir -nargs=* Rg lua require('telescope.builtin').live_grep({ search_dirs = { unpack({<f-args>}) } })]])
-cmd([[command! -complete=dir -nargs=* Rg lua require('telescope.builtin').grep_string({ search_dirs = { <f-args> } })]])
-cmd([[command! -complete=dir -nargs=* RRg lua require('cdejoye.config.telescope').live_grep({ search_dirs = { <f-args> } })]])
+cmd([[command! -bang -complete=dir -nargs=* Rg lua require('cdejoye.config.telescope').grep_string({ <f-args> }, '!' == '<bang>')]])
 cmd([[command! H lua require('telescope.builtin').help_tags()]])
 cmd([[command! Tplugins lua require('cdejoye.config.telescope').find_files_in_plugins()]])
 cmd([[command! Tconfig lua require('cdejoye.config.telescope').find_files_in_config()]])
@@ -117,6 +116,34 @@ function M.find_files_in_config(options)
     hidden = true,
     follow = true,
   }, options or {}))
+end
+
+function M.grep_string(args, bang)
+  args = args or {}
+  -- Always include hidden files and follow symlinks
+  local vimgrep_arguments = vim.tbl_flatten { require('telescope.config').values.vimgrep_arguments, {
+    '--hidden',
+    '-L',
+  } }
+  local options = {
+    search_dirs = {}, -- remove the ./ in front of the results if no search_dirs are provided
+    use_regex = true, -- Will only be used if options.search is defined
+  }
+
+  if 1 == #args then
+    options.search = args[1]
+  elseif 1 < #args then
+    options.search = args[1]
+    options.search_dirs = { args[2] }
+  end
+
+  if bang then
+    options = vim.tbl_extend('force', {
+      vimgrep_arguments = vim.tbl_flatten { vimgrep_arguments, { '--no-ignore' } }
+    }, options)
+  end
+
+  return builtin.grep_string(options)
 end
 
 function M.live_grep(options)
