@@ -7,6 +7,3 @@ vim.g.nremap = {
   ['[uu'] = '<skip>',
   [']uu'] = '<skip>',
 }
-
--- =o and =op mappings could not be removed this way so I had to deal with them
--- in ../after/plugin/conflicting-mappings.vim

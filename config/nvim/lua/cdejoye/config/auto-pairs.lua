@@ -6,8 +6,6 @@ g.AutoPairsShortcutToggle = ''
 g.AutoPairsShortcutFastWrap = ''
 g.AutoPairsShortcutJump = ''
 g.AutoPairsShortcutBackInsert = ''
--- Conflicting mapping, see: after/plugin/conflicting-mappings.vim
-g.AutoPairsMapBS = 0
 
 -- Fly Mode will always force closed-pair jumping instead of inserting
 -- Only for ')', '}', ']'
