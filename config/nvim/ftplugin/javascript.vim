@@ -1,5 +1,4 @@
-setlocal ts=2 sw=2
-setlocal foldmethod=syntax
+setlocal ts=2 sw=2 sts = 2
 
 command! UnMinify call UnMinify()
 function! UnMinify()
@@ -10,5 +9,3 @@ function! UnMinify()
     %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
     normal ggVG=
 endfunction
-
-" vim: ts=2 sw=2 et fdm=marker

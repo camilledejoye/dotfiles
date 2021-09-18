@@ -60,7 +60,7 @@ require('cdejoye.mappings') -- Load custom mappings
 -- Jump to the last position we were when we closed the file the last time
 cmd([[
 augroup cdejoye_custom_commands
-  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute "keepjumps normal g`\"" | endif
+  autocmd BufReadPost * if 'gitcommit' != &filetype && line("'\"") > 0 && line("'\"") <= line("$") | execute "keepjumps normal g`\"" | endif
 augroup END
 ]])
 
