@@ -3,6 +3,8 @@ require('neorg').setup {
   load = {
     ['core.defaults'] = {}, -- Load all the default modules
 
+    ['core.norg.completion'] = { config = { engine = 'nvim-cmp' } },
+
     ['core.keybinds'] = { -- Configure core.keybinds
       config = {
         default_keybinds = true, -- Generate the default keybinds
@@ -15,6 +17,39 @@ require('neorg').setup {
         icons = {
           todo = {
             pending = { icon = ' ' },
+          },
+        },
+      },
+    },
+
+    ['core.integrations.treesitter'] = {
+      config = {
+        highlights = {
+          TodoItem = {
+            ['1'] = {
+              Undone = '+TSError',
+              Pending = '+TSPunctDelimiter',
+            },
+            ['2'] = {
+              Undone = '+TSError',
+              Pending = '+TSPunctDelimiter',
+            },
+            ['3'] = {
+              Undone = '+TSError',
+              Pending = '+TSPunctDelimiter',
+            },
+            ['4'] = {
+              Undone = '+TSError',
+              Pending = '+TSPunctDelimiter',
+            },
+            ['5'] = {
+              Undone = '+TSError',
+              Pending = '+TSPunctDelimiter',
+            },
+            ['6'] = {
+              Undone = '+TSError',
+              Pending = '+TSPunctDelimiter',
+            },
           },
         },
       },
