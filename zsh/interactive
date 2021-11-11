@@ -69,4 +69,9 @@ eval "$(starship init zsh)"
 
 . ~/.shell/interactive
 
+# Hook direnv if installed
+if type direnv >/dev/null 2>&1; then
+    eval "$(direnv hook zsh)"
+fi
+
 # vim: ft=zsh fdm=marker
