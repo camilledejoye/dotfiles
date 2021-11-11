@@ -5,11 +5,19 @@
 # Allow to use the user aliases with sudo
 alias sudo='sudo '
 
-alias ls='ls --color=auto'
-alias l='ls -C'
-alias ll='ls -lh'
-alias la='ll -A'
-alias lt='ll -tr'
+if type exa >/dev/null 2>&1; then
+    alias ls='exa'
+    alias l='ls'
+    alias ll='exa -lH'
+    alias la='ll -a'
+    alias lt='ll --sort newest'
+else
+    alias ls='ls --color=auto'
+    alias l='ls -C'
+    alias ll='ls -lh'
+    alias la='ll -A'
+    alias lt='ll -tr'
+fi
 
 alias rm='rm -i'
 alias rm!='\rm'
