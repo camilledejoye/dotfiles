@@ -53,6 +53,8 @@ plugins=(
   zsh-vim-mode
   # timer
   pass
+  docker
+  docker-compose
 )
 
 source $ZSH/oh-my-zsh.sh
