@@ -1,4 +1,4 @@
-local ShortMode = require('lualine.component'):new()
+local ShortMode = require('lualine.component'):extend()
 
 -- List of mode -> :h mode()
 -- Use ony the first letter as recommended by the documentation
@@ -19,10 +19,10 @@ ShortMode.mode2byte = {
   select_block = 94,
 }
 
-ShortMode.new = function(self, options, child)
-  local this = self._parent:new(options, child or ShortMode)
+ShortMode.init = function(self, options)
+  ShortMode.super.init(self, options)
 
-  this.options.mode_text = vim.tbl_extend('keep', this.options.mode_text or {}, {
+  self.options.mode_text = vim.tbl_extend('keep', self.options.mode_text or {}, {
     [self.mode2byte.normal]       = 'N',
     [self.mode2byte.prompt]       = 'P',
     [self.mode2byte.command]      = 'C',
@@ -37,8 +37,6 @@ ShortMode.new = function(self, options, child)
     [self.mode2byte.select_line]  = 'SL',
     [self.mode2byte.select_block] = 'SB',
   })
-
-  return this
 end
 
 ShortMode.update_status = function (self)

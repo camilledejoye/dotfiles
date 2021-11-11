@@ -2,7 +2,7 @@ local highlight = require('lualine.highlight')
 local icons_provider = require('lualine.icons.provider');
 local utils = require('lualine.utils.utils')
 
-local FileNameWithIcon = require('lualine.component'):new()
+local FileNameWithIcon = require('lualine.component'):extend()
 
 local components = {}
 
@@ -44,12 +44,12 @@ local function add_fg_highlight(options, data, from_hl_group_name, hl_group_name
   local highlight_color = utils.extract_highlight_colors(from_hl_group_name, 'fg')
   local is_current_window = get_statusline_win() == vim.api.nvim_get_current_win()
   local default_highlight = highlight.format_highlight(
-    is_current_window,
-    options.self.section
+    options.self.section,
+    is_current_window
   )
   local section_hl_group_name = options.self.section .. '_' .. hl_group_name
 
-  if not utils.highlight_exists(section_hl_group_name .. '_normal') then
+  if not highlight.highlight_exists(section_hl_group_name .. '_normal') then
     section_hl_group_name = highlight.create_component_highlight_group(
       { fg = highlight_color },
       hl_group_name,
@@ -61,26 +61,24 @@ local function add_fg_highlight(options, data, from_hl_group_name, hl_group_name
     .. data .. default_highlight
 end
 
-FileNameWithIcon.new = function(self, options, child)
-  local this = self._parent:new(options, child or FileNameWithIcon)
+FileNameWithIcon.init = function(self, options)
+  FileNameWithIcon.super.init(self, options)
 
-  if this.component_no then -- If real component and not in case of inheritance
-    table.insert(components, this.component_no, this)
+  if self.component_no then -- If real component and not in case of inheritance
+    table.insert(components, self.component_no, self)
   end
 
-  this.options.symbols = vim.tbl_extend(
+  self.options.symbols = vim.tbl_extend(
     'force',
     {modified = '●', readonly = ''},
-    this.options.symbols or {}
+    self.options.symbols or {}
   )
 
-  this.options = vim.tbl_extend('keep', this.options, {
+  self.options = vim.tbl_extend('keep', self.options, {
     readonly = true,
     modified = true,
     modified_icon = false,
   })
-
-  return this
 end
 
 FileNameWithIcon.get_icon = function(self)

@@ -44,9 +44,10 @@ require('lualine').setup {
   options = {
     icons_enabled = true,
     theme = 'base16',
-    component_separators = {},
-    section_separators = {},
+    section_separators = { left = '', right = '' },
+    component_separators = { left = '', right = '' },
     disabled_filetypes = { 'TelescopePrompt', 'TelescopeResults' },
+    mode = 3,
   },
   sections = {
     lualine_a = {
@@ -77,7 +78,7 @@ require('lualine').setup {
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
-    lualine_z = { 'tab-list' },
+    lualine_z = { 'tabs' },
   },
   extensions = { 'fugitive', 'quickfix' },
 }

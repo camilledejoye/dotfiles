@@ -1,31 +1,31 @@
 local actions = require('fzf-lua.actions')
 
 require('fzf-lua').setup {
-  fzf_binds = { -- fzf '--bind=' options
-    'f2:toggle-preview',
-    'f3:toggle-preview-wrap',
-    'ctrl-f:page-down',
-    'ctrl-b:page-up',
-    -- 'ctrl-d:half-page-down',
-    -- 'ctrl-u:half-page-up',
-    'shift-down:preview-page-down',
-    'shift-up:preview-page-up',
-    'ctrl-d:preview-page-down',
-    'ctrl-u:preview-page-up',
-    'ctrl-a:toggle-all',
-    'ctrl-l:clear-query',
+  winopts = {
+    preview = {
+      wrap = 'wrap',
+      -- veritcal = 'down:45%',
+      horizontal = 'right:40%',
+    },
   },
-  preview_wrap = 'wrap',
-  -- preview_vertical = 'down:45%',
-  preview_horizontal = 'right:40%',
-
-  previewers = {
-    builtin = { -- Does not inherit global configuration
-      wrap = true,
-      keymap = {
-        page_up = '<C-u>',
-        page_down = '<C-d>',
-      },
+  keymap = {
+    builtin = {
+      page_up = '<C-u>',
+      page_down = '<C-d>',
+    },
+    fzf = {
+      'f2:toggle-preview',
+      'f3:toggle-preview-wrap',
+      'ctrl-f:page-down',
+      'ctrl-b:page-up',
+      -- 'ctrl-d:half-page-down',
+      -- 'ctrl-u:half-page-up',
+      'shift-down:preview-page-down',
+      'shift-up:preview-page-up',
+      'ctrl-d:preview-page-down',
+      'ctrl-u:preview-page-up',
+      'ctrl-a:toggle-all',
+      'ctrl-l:clear-query',
     },
   },
 

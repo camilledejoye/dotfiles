@@ -13,7 +13,7 @@ dapui.setup {
 }
 
 -- Not sure it's working...
-g.dap_virtual_text = true
+require('nvim-dap-virtual-text').setup()
 
 -- Theme
 local sign = vim.fn.sign_define
