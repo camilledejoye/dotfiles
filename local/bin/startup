@@ -12,7 +12,10 @@ pgrep -x pa-applet >/dev/null 2>&1 || pa-applet --disable-key-grabbing &
 # pgrep -x picom >/dev/null 2>&1 || picom -b
 
 # Set the wallpaper
-feh --no-fehbg --recursive --randomize --bg-scale ~/Pictures/Wallpapers
+# For a random wallpager
+# feh --no-fehbg --recursive --randomize --bg-scale ~/Pictures/Wallpapers
+# For a fix wallpaper
+feh --no-fehbg --recursive --bg-scale ~/Pictures/Wallpapers/arch/logo.png
 
 # Start urxvt deamon
 # Switched to alacrity
