@@ -60,7 +60,7 @@ require('neorg').setup {
         workspaces = {
           my_workspace = '~/notes',
           wiki = '~/vimwiki',
-          wynd = '~/work/wynd/.notes',
+          worldia ='~/work/worldia/notes'
         },
         autodetect = true,
         autochdir = true,

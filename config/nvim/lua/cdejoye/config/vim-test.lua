@@ -19,27 +19,37 @@ g['test#php#phpunit#patterns'] = {
 
 g['test#php#phpunit#options'] = '--testdox' -- Use testdox format for PHPUnit
 
-g.ultest_use_pty = 1 -- Act like an interactive session
-g.ultest_output_on_line = 0 -- Disable showing output on CursorHold
+g['test#strategy'] = 'neovim'
+g.ultest_loaded = 1
+map('<Leader>tf', ':TestFile<CR>')
+map('<Leader>tn', ':TestNearest<CR>')
+map('<Leader>ts', ':TestSuite<CR>')
+map('<Leader>tl', ':TestLast<CR>')
+map('<Leader>tv', ':TestVisit<CR>')
 
--- map('<Leader>tf', ':TestFile<CR>')
--- map('<Leader>tn', ':TestNearest<CR>')
--- map('<Leader>ts', ':TestSuite<CR>')
--- map('<Leader>tl', ':TestLast<CR>')
--- map('<Leader>tv', ':TestVisit<CR>')
+-- Disable until I can test it better, I experienced some issues with it so I'll stick
+-- with the regular vim-test for now
+-- g.ultest_use_pty = 1 -- Act like an interactive session
+-- g.ultest_output_on_line = 0 -- Disable showing output on CursorHold
 
-local opts = { noremap = false }
-map('<Leader>tf', '<Plug>(ultest-run-file)', 'n', opts)
-map('<Leader>tn', '<Plug>(ultest-run-nearest)', 'n', opts)
-map('<Leader>to', '<Plug>(ultest-output-jump)', 'n', opts)
-map('<Leader>ts', '<Plug>(ultest-summary-jump)', 'n', opts)
--- Override default mapping used for tags (I don't use tags)
-map('[t', '<Plug>(ultest-prev-fail)', 'n', opts)
-map(']t', '<Plug>(ultest-next-fail)', 'n', opts)
+-- -- map('<Leader>tf', ':TestFile<CR>')
+-- -- map('<Leader>tn', ':TestNearest<CR>')
+-- -- map('<Leader>ts', ':TestSuite<CR>')
+-- -- map('<Leader>tl', ':TestLast<CR>')
+-- -- map('<Leader>tv', ':TestVisit<CR>')
 
-vim.cmd([[
-augroup cdejoye_vim_test
-  autocmd!
-  autocmd BufWritePost * UltestNearest
-augroup END
-]])
+-- local opts = { noremap = false }
+-- map('<Leader>tf', '<Plug>(ultest-run-file)', 'n', opts)
+-- map('<Leader>tn', '<Plug>(ultest-run-nearest)', 'n', opts)
+-- map('<Leader>to', '<Plug>(ultest-output-jump)', 'n', opts)
+-- map('<Leader>ts', '<Plug>(ultest-summary-jump)', 'n', opts)
+-- -- Override default mapping used for tags (I don't use tags)
+-- map('[t', '<Plug>(ultest-prev-fail)', 'n', opts)
+-- map(']t', '<Plug>(ultest-next-fail)', 'n', opts)
+
+-- vim.cmd([[
+-- augroup cdejoye_vim_test
+--   autocmd!
+--   autocmd BufWritePost * UltestNearest
+-- augroup END
+-- ]])

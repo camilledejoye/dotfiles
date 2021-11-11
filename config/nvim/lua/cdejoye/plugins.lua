@@ -157,7 +157,7 @@ return require('packer').startup({ function(use)
 
   use { -- Snippets
     -- 'SirVer/ultisnips', -- The engine
-    'camilledejoye/ultisnips', -- Until the handling of floating windows is fixed
+    'camilledejoye/ultisnips', branch = 'fix-floating-window-break-placeholders', -- Until the handling of floating windows is fixed
     requires = {
       'honza/vim-snippets', -- The snippets definitions
       { -- PHP snippets
@@ -169,6 +169,11 @@ return require('packer').startup({ function(use)
           'sniphpets/sniphpets-doctrine',
           'sniphpets/sniphpets-postfix-codes',
         },
+        config = function()
+          -- Disable because mappings starting with ; causes issues with lsp-signature
+          -- The timeout for the mapping resolution make the popup window appears again
+          vim.g.sniphpets_common_disable_shortcuts = 1
+        end,
       },
     },
     config = function()
@@ -212,7 +217,7 @@ return require('packer').startup({ function(use)
     'tpope/vim-commentary',
     'tpope/vim-scriptease',
     { 'tpope/vim-unimpaired', config = config('unimpaired') },
-    -- 'tpope/vim-endwise',
+    'tpope/vim-endwise',
     -- 'tpope/vim-speeddating',
     'tpope/vim-abolish',
     -- Lua alternative to check: https://github.com/TimUntersberger/neogit
@@ -244,7 +249,8 @@ return require('packer').startup({ function(use)
   }
 
   use { -- vim-argwrap
-    'FooSoft/vim-argwrap',
+    -- 'FooSoft/vim-argwrap',
+    'camilledejoye/vim-argwrap', branch = 'imp/php-always-tail-comma-for-method-declaration',
     config = config('vim-argwrap'),
   }
 

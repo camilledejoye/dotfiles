@@ -7,7 +7,7 @@ require('lspsaga').init_lsp_saga {
 
   code_action_icon = ' ',
   code_action_prompt = {
-    enable = true,
+    enable = false,
     sign = false,
     sign_priority = 20,
     virtual_text = true,
@@ -48,10 +48,6 @@ hi('SagaShadow', { guibg = colors.base00 })
 hi('LspSagaFinderSelection', { guifg = colors.base0B, guibg = 'NONE', gui = 'bold' })
 
 hi('DiagnosticTruncateLine', 'LspFLoatWinTruncateLine')
-hi('DiagnosticError', 'LspDiagnosticsDefaultError')
-hi('DiagnosticWarning', 'LspDiagnosticsDefaultWarning')
-hi('DiagnosticInformation', 'LspDiagnosticsDefaultInformation')
-hi('DiagnosticHint', 'LspDiagnosticsDefaultHint')
 
 hi('DefinitionPreviewTitle', 'TSTitle')
 

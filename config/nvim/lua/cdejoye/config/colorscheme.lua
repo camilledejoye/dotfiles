@@ -28,3 +28,5 @@ hi('PmenuThumb', { guibg = colors.base02 }) -- Completion menu scrollbar's butto
 -- hi('PmenuSel', { guifg = colors.base01, guibg = colors.base0D, gui = 'italic,bold' }) -- Selected item
 -- hi('PmenuSbar', 'Pmenu') -- Completion menu scrollbar
 -- hi('PmenuThumb', { guibg = colors.base02 }) -- Completion menu scrollbar's button
+
+hi('yamlTSField', 'TSKeyword')

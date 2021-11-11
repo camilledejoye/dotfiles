@@ -23,7 +23,7 @@ lsp_status.config {
   indicator_info = "🛈",
   indicator_hint = "!",
   indicator_ok = "",
-  spinner_frames = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" },
+  spinner_frames = { "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾" },
 }
 
 lsp_status.register_progress()

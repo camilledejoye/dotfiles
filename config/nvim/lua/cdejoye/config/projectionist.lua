@@ -7,7 +7,7 @@ vim.g.projectionist_heuristics = {
     ['composer.json&src/&tests/'] = {
         ['src/*.php'] = {
             ['type'] = 'src',
-            ['skeleton'] = 'class',
+            ['skeleton'] = 'classf',
             ['alternate'] = {
               'tests/Unit/{}Test.php',
               'tests/Integration/{}Test.php',

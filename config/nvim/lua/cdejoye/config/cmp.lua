@@ -3,17 +3,39 @@ local cmp = require('cmp')
 -- Name of the sources as keys and text to show in the completion menu as values
 -- The order helps define the source priority, see `sorting.priority_weight` options
 local sources = {
-  nvim_lsp = { name = 'nvim_lsp', label = '[LSP]' },
-  neorg = { name = 'neorg', label = '[Neorg]' },
-  path = { name = 'path', label = '[Path]' },
+  { name = 'nvim_lsp', label = '[LSP]' },
+  { name = 'neorg', label = '[Neorg]' },
+  { name = 'path', label = '[Path]' },
   -- luasnip = { name = 'luasnip', label = '[LuaSnip]' },
-  ultisnips = { name = 'ultisnips', label = '[UltiSnips]' },
-  buffer = { name = 'buffer', label = '[Buffer]', opts = { get_bufnrs = function()
-    return vim.api.nvim_list_bufs()
+  { name = 'ultisnips', label = '[UltiSnips]' },
+  { name = 'buffer', label = '[Buffer]', opts = { get_bufnrs = function()
+    return { vim.api.nvim_get_current_buf() }
+    -- local buffers = {}
+
+    -- for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    --   if vim.api.nvim_buf_is_loaded(buf) then
+    --     table.insert(buffers, buf)
+    --   end
+    -- end
+
+    -- return buffers
+
+    -- local bufs = {}
+
+    -- for _, win in ipairs(vim.api.nvim_list_wins()) do
+    --   bufs[vim.api.nvim_win_get_buf(win)] = true
+    -- end
+
+    -- return vim.tbl_keys(bufs)
   end} },
-  spell = { name = 'spell', label = '[Spell]' },
-  emoji = { name = 'emoji', label = '[Emoji]' },
+  { name = 'spell', label = '[Spell]' },
+  { name = 'emoji', label = '[Emoji]' },
 }
+
+local source_names = {}
+for _, source in ipairs(sources) do
+  source_names[source.name] = source.label
+end
 
 vim.o.completeopt = 'menu,menuone,noselect'
 
@@ -104,7 +126,7 @@ cmp.setup {
       vim_item.kind = item_kinds[kind_num]
 
       -- set a name for each source
-      vim_item.menu = sources[entry.source.name].label
+      vim_item.menu = source_names[entry.source.name]
 
       -- set the detail as menu
       if 'nvim_lsp' == entry.source.name then

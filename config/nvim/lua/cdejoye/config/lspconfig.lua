@@ -1,3 +1,4 @@
+-- vim.lsp.set_log_level('debug')
 -- LSP settings
 local nvim_lsp = require('lspconfig')
 local lsp_status = require('lsp-status')
@@ -23,11 +24,9 @@ require('vim.lsp.handlers')['textDocument/publishDiagnostics'] = function(err, r
 end
 
 -- Servers to enable with their specific configuration
-local servers = { phpactor = {
-  init_options = {
-    ['language_server_completion.trim_leading_dollar'] = true,
-  }
-}}
+local servers = {
+  phpactor = { init_options = { ['language_server_completion.trim_leading_dollar'] = true } },
+}
 
 -- Setup the default client capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -74,11 +73,9 @@ local on_attach = function(client, bufnr)
 
   lsp_signature.on_attach({
     hi_parameter = 'Visual',
-    trigger_on_newline = true,
     -- padding = ' ', -- Generate an error when using the toggle key to show the signature
     floating_window_above_cur_line = true,
     hint_enable = false, -- Disable virtual text
-    -- fix_pos = true,
     toggle_key = '<C-s>',
   }, bufnr)
 
