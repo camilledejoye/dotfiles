@@ -1,3 +1,4 @@
 EXCLUDES="README.md fzf fzf-git oh-my-zsh zsh/pure zsh/oh-my-zsh edid"
 SYMLINK_DIRS="config/nvim password-store vimwiki"
 UNDOTTED="Pictures vimwiki"
+COPY_ALWAYS="zshrc zshenv zprofile"
