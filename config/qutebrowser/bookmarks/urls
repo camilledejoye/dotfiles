@@ -1,9 +1,9 @@
-https://docs.xfce.org/xfce/xfce4-power-manager/start xfce:xfce4-power-manager:start [Xfce Docs]
 https://github.com/lahwaacz/Scripts/blob/master/toggle-touchpad.sh Scripts/toggle-touchpad.sh at master · lahwaacz/Scripts
 https://wiki.archlinux.org/index.php/Autostarting Autostarting - ArchWiki
 https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html Shell startup scripts — flowblok’s blog
 https://github.com/softmoth/zsh-vim-mode softmoth/zsh-vim-mode: Friendly bindings for ZSH's vi mode
 http://zsh.sourceforge.net/Guide/zshguide04.html#l95 A User's Guide to the Z-Shell
 https://gitlab.com/dwt1/dotfiles Derek Taylor / Dotfiles · GitLab
-https://github.com/thestinger/termite/ thestinger/termite: A keyboard-centric VTE-based terminal, aimed at use within a window manager with tiling and/or tabbing support.
 https://wiki.archlinux.org/index.php/General_recommendations General recommendations - ArchWiki
+https://github.com/mjlbach/defaults.nvim mjlbach/defaults.nvim: A small, featureful neovim template
+https://github.com/glacambre/firenvim glacambre/firenvim: Embed Neovim in your browser.
