@@ -45,7 +45,11 @@ alias bm='base16-manager'
 # PHP {{{
 
 alias php-xedbug='XDEBUG_CONFIG="idekey=xdebug" php'
-alias sf='bin/console'
+# Commented because I work with containers most of the time and I create dedicated `sf`
+# scripts to run `bin/console` inside the container.
+# This alias was preventing me to using the script without first removing it with `unalias
+# sf`
+# alias sf='bin/console'
 
 # }}}
 
