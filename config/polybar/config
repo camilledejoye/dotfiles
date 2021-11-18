@@ -89,7 +89,7 @@ font-4 = "Noto Sans:size=10;1"
 ; font-6 = "Symbols Nerd Font:pixelsize=8;1"
 
 modules-left = bspwm
-modules-center = date
+modules-center = rofi-calendar
 ; modules-right = filesystem xbacklight alsa pulseaudio xkeyboard memory cpu wlan eth battery temperature date powermenu
 modules-right = memory cpu battery
 
@@ -520,6 +520,13 @@ content = 
 content-font = ${fonts.nf-icons-small}
 
 click-left = ~/.local/bin/udisks-menu -i -lines 5 -width 20 -location 5 -yoffset -25 -xoffset -5
+
+[module/rofi-calendar]
+type = custom/script
+label =   %output%
+exec = date +'%a %d, %H:%M'
+label-font = ${fonts.noto}
+click-left = ~/.config/polybar/scripts/rofi-calendar
 
 [settings]
 screenchange-reload = true

@@ -1,0 +1,60 @@
+#!/bin/sh
+# Adapted from https://github.com/capezotte/dotfiles/blob/master/polybar/scripts/rofi-calendar
+
+# Set up command substitution
+set -f  # avoid globs
+IFS='%' # split variables on % (for print_month)
+
+# initialize increment to zero and offset to -1
+incr=0; offset=-1
+
+# Settings and translation
+PREV_MONTH_TEXT="${PREV_MONTH_TEXT:-« Previous month «}"
+NEXT_MONTH_TEXT="${NEXT_MONTH_TEXT:-» Next month »}"
+
+# use northeast for bar on top, southeast for bar on bottom
+# use west if you're a weirdo with date to the left
+# or even just "north" if you're a gnome shell refugee
+anchor="${anchor:-south}"
+xoffset='0'
+yoffset='-1em'
+
+# print date with increment
+datei() { date --date="$incr month" "$@"; }
+
+# print current month
+print_month() {
+	# shellcheck disable=SC2046 # split date into two arguments
+    cal --color=always -w $(datei +'%m%%%Y') \
+	| sed -e '1d' \
+	      -e 's/\x1b\[[7;]*m/\<b\>\<u\>/g' \
+	      -e 's/\x1b\[[27;]*m/\<\/u\>\<\/b\>/g' \
+	      -e '/^ *$/d'
+	printf '%s\n' "$PREV_MONTH_TEXT" "$NEXT_MONTH_TEXT"
+}
+
+while :; do
+	month_page=$(print_month)
+	header=$(datei +'%b %Y')
+	num_lines=$(echo "$month_page" | wc -l)
+	
+	# open rofi and read the selected row
+	selected="$(echo "$month_page" | rofi \
+		-dmenu -i \
+		-markup-rows \
+		-m -3 \
+        -theme-str 'window {width: 11%; anchor: '"$anchor"'; location: northwest; x-offset: '$xoffset'; y-offset: '$yoffset';}' \
+        -theme-str 'listview {lines: '"$(echo $month_page | wc -l)"' ;scrollbar: false;}' \
+		-selected-row $((num_lines+offset)) \
+		-p "$header")" || break
+	# select next/prev month if necessary and prepare row to be highlighted
+	case $selected in
+	("$PREV_MONTH_TEXT")
+		: $((incr-=1))
+		offset=-2 ;;
+	("$NEXT_MONTH_TEXT")
+		: $((incr+=1))
+		offset=-1 ;;
+	(*) break ;; # end if prev/next wasn't selected
+	esac
+done
