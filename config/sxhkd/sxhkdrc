@@ -54,6 +54,12 @@ XF86Audio{Lower,Raise}Volume{_, + shift}
 XF86AudioMute
     pactl set-sink-mute @DEFAULT_SINK@ toggle >/dev/null 2>&1 || notify-send "Impossible to change the volume, check you sxhkd configuration."
 
+XF86Audio{Stop,Play,Prev,Next}
+    mpc {stop,toggle,prev,next}
+
+XF86Tools
+    terminal-open vimpc
+
 # }}}
 
 # vim: ts=4 sw=4 et fdm=marker
