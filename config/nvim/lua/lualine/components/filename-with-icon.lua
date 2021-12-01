@@ -78,6 +78,7 @@ FileNameWithIcon.init = function(self, options)
     readonly = true,
     modified = true,
     modified_icon = false,
+    shorten_filename = false,
   })
 end
 
@@ -112,9 +113,9 @@ FileNameWithIcon.get_filename = function(filename, format)
   return filename
 end
 
-FileNameWithIcon.shorten = function(filename)
+FileNameWithIcon.shorten = function(self, filename)
   local space = math.min(50, math.floor(0.4 * win_get_width()))
-  local should_shorten = #filename > space
+  local should_shorten = self.options.shorten_filename and #filename > space
 
   return should_shorten and vim.fn.pathshorten(filename) or filename
 end
@@ -148,7 +149,7 @@ end
 
 FileNameWithIcon.filename = function(self)
   return self:highlight_when_modified(
-    FileNameWithIcon.shorten(
+    self:shorten(
       FileNameWithIcon.get_filename()
     )
   )
