@@ -178,8 +178,7 @@ FileNameWithIcon.render = function(component_no)
   local component = components[component_no]
 
   return vim.trim(table.concat({
-    component:get_icon(),
-    component:modified_icon(),
+    vim.trim(table.concat({ component:get_icon(), component:modified_icon() }, ' ')),
     component:filename(),
     component:readonly(),
   }, ' '))
