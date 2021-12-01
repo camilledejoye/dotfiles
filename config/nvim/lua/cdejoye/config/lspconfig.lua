@@ -26,6 +26,20 @@ end
 -- Servers to enable with their specific configuration
 local servers = {
   phpactor = { init_options = { ['language_server_completion.trim_leading_dollar'] = true } },
+  -- TODO automate installation or finally work on a nix setup:
+  -- yarn global add vscode-langservers-extracted
+  jsonls = {
+    settings = {
+      json = {
+        schemas = {
+          {
+            fileMatch = { 'composer.json' },
+            url = 'https://getcomposer.org/schema.json',
+          },
+        }
+      },
+    },
+  },
 }
 
 -- Setup the default client capabilities
