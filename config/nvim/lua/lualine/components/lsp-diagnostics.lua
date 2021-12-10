@@ -6,7 +6,7 @@ local LspDiagnostics = require('lualine.components.diagnostics'):extend()
 
 LspDiagnostics.init = function(self, options)
   if nil == options.sources then
-    options.sources = { 'nvim_lsp' }
+    options.sources = { 'nvim_diagnostic' }
   end
 
   LspDiagnostics.super.init(self, options)
