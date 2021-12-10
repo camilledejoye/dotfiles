@@ -158,7 +158,7 @@ return require('packer').startup({ function(use)
 
   use { -- Snippets
     -- 'SirVer/ultisnips', -- The engine
-    'camilledejoye/ultisnips', branch = 'fix-floating-window-break-placeholders', -- Until the handling of floating windows is fixed
+    'camilledejoye/ultisnips', branch = 'develop', -- Until the handling of floating windows is fixed
     requires = {
       'honza/vim-snippets', -- The snippets definitions
       { -- PHP snippets
