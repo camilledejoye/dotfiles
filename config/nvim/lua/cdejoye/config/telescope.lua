@@ -130,11 +130,14 @@ function M.grep_string(args, bang)
     use_regex = true, -- Will only be used if options.search is defined
   }
 
-  if 1 == #args then
-    options.search = args[1]
-  elseif 1 < #args then
-    options.search = args[1]
-    options.search_dirs = { args[2] }
+  -- If there is more than one argument and the last argument is a file or directory
+  if 1 < #args and '' ~= vim.fn.glob(args[#args]) then
+    options.search_dirs = table.remove(args)
+  end
+
+  if 0 < #args then
+    -- Use all remaining arguments as a search pattern
+    options.search = table.concat(args, ' ')
   end
 
   if bang then
