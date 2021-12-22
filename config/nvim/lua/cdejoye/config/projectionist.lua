@@ -3,8 +3,91 @@ local map = require('cdejoye.utils').map
 map('<Leader>a', ':A<CR>')
 map('<Leader>va', ':AV<CR>')
 
+-- Specific for Worldia
+local worldia = {
+    ['src/Common/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Common/{}.php' },
+    },
+    ['src/Core/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Core/{}.php' },
+    },
+    ['src/Resource/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Resource/{}.php' },
+    },
+    ['src/Services/Cars/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Cars/{}.php' },
+    },
+    ['src/Services/Common/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Common/{}.php' },
+    },
+    ['src/Services/Flights/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Flights/{}.php' },
+    },
+    ['src/Services/Points/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Points/{}.php' },
+    },
+    ['src/Services/Rooms/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Rooms/{}.php' },
+    },
+    ['src/Services/Routes/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Routes/{}.php' },
+    },
+    ['src/Services/Tours/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Tours/{}.php' },
+    },
+    ['src/Services/Transfers/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Transfers/{}.php' },
+    },
+
+    ['src/Common/*.php'] = {
+        ['alternate'] = { 'src/Common/spec/{}Spec.php' },
+    },
+    ['src/Core/*.php'] = {
+        ['alternate'] = { 'src/Core/spec/{}Spec.php' },
+    },
+    ['src/Resource/*.php'] = {
+        ['alternate'] = { 'src/Resource/spec/{}Spec.php' },
+    },
+    ['src/Services/Cars/*.php'] = {
+        ['alternate'] = { 'src/Services/Cars/spec/{}Spec.php' },
+    },
+    ['src/Services/Common/*.php'] = {
+        ['alternate'] = { 'src/Services/Common/spec/{}Spec.php' },
+    },
+    ['src/Services/Flights/*.php'] = {
+        ['alternate'] = { 'src/Services/Flights/spec/{}Spec.php' },
+    },
+    ['src/Services/Points/*.php'] = {
+        ['alternate'] = { 'src/Services/Points/spec/{}Spec.php' },
+    },
+    ['src/Services/Rooms/*.php'] = {
+        ['alternate'] = { 'src/Services/Rooms/spec/{}Spec.php' },
+    },
+    ['src/Services/Routes/*.php'] = {
+        ['alternate'] = { 'src/Services/Routes/spec/{}Spec.php' },
+    },
+    ['src/Services/Tours/*.php'] = {
+        ['alternate'] = { 'src/Services/Tours/spec/{}Spec.php' },
+    },
+    ['src/Services/Transfers/*.php'] = {
+        ['alternate'] = { 'src/Services/Transfers/spec/{}Spec.php' },
+    },
+    ['src/Common/spec/*.php'] = {
+        ['alternate'] = { 'src/Common/{}Spec.php' },
+    },
+    ['src/Core/spec/*.php'] = {
+        ['alternate'] = { 'src/Core/{}Spec.php' },
+    },
+}
+
 vim.g.projectionist_heuristics = {
-    ['composer.json&src/&tests/'] = {
+    ['docker-compose*.yaml'] = {
+        ['*'] = { start = 'docker-compose up -d' }
+    },
+    ['composer.json&src/'] = vim.tbl_deep_extend('keep', worldia, {
+        ['*.php'] = {
+            ['console'] = 'php -a',
+        },
         ['src/*.php'] = {
             ['type'] = 'src',
             ['skeleton'] = 'classf',
@@ -13,43 +96,47 @@ vim.g.projectionist_heuristics = {
               'tests/Integration/{}Test.php',
               'tests/Functional/{}Test.php',
               'tests/{}Test.php',
+              'spec/{}Spec.php',
             }
-        },
-        ['tests/Unit/*Test.php'] = {
-            ['type'] = 'unittest',
-            ['skeleton'] = 'pucase',
-            ['alternate'] = 'src/{}.php',
         },
         ['tests/*Test.php'] = {
             ['type'] = 'test',
             ['skeleton'] = 'pucase',
             ['alternate'] = 'src/{}.php',
         },
-        ['lib/**/src/*.php'] = {
-            ['type'] = 'src',
-            ['skeleton'] = 'class',
-            ['alternate'] = 'lib/{dirname|basename}/tests/{basename}Test.php',
+        ['spec/*Spec.php'] = {
+            ['type'] = 'test',
+            ['skeleton'] = 'classe',
+            ['alternate'] = 'src/{}.php',
         },
-        ['lib/**/tests/*Test.php'] = {
+    }),
+    ['composer.json&lib/'] = vim.tbl_deep_extend('keep', worldia, {
+        ['*.php'] = {
+            ['console'] = 'php -a',
+        },
+        ['lib/*.php'] = {
+            ['type'] = 'src',
+            ['skeleton'] = 'classf',
+            ['alternate'] = {
+              'tests/Unit/{}Test.php',
+              'tests/Integration/{}Test.php',
+              'tests/Functional/{}Test.php',
+              'tests/{}Test.php',
+              'spec/{}Spec.php',
+            }
+        },
+        ['tests/*Test.php'] = {
             ['type'] = 'test',
             ['skeleton'] = 'pucase',
-            ['alternate'] = 'lib/{dirname|basename}/src/{basename}.php',
+            ['alternate'] = 'lib/{}.php',
         },
-        ['src/**/Command/*Command.php'] = {
-            ['type'] = 'command',
-            ['skeleton'] = 'sfcommand',
-            ['alternate'] = {
-                'src/{dirname}/Handler/{basename}Handler.php',
-                'src/{dirname}/Command/{basename}CommandHandler.php',
-            },
+        ['spec/*Spec.php'] = {
+            ['type'] = 'test',
+            ['skeleton'] = 'classe',
+            ['alternate'] = 'lib/{}.php',
         },
-        ['src/**/Handler/*Handler.php'] = {
-            ['type'] = 'handler',
-            ['skeleton'] = 'class',
-            ['alternate'] = 'src/{dirname|basename}/Command/{basename}Command.php',
-        },
-    },
-    ['src/Kernel.php&public/index.php'] = {
+    }),
+    ['src/Kernel.php&public/index.php&src/Controller'] = {
         ['config/*'] = {
             ['type'] = 'config',
         },
