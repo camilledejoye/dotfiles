@@ -17,6 +17,7 @@ require('lspsaga').init_lsp_saga {
   rename_action_keys = {
     quit = { '<Esc>', '<C-c>' },
   },
+  rename_prompt_populate = false, -- Disable populating the prompt with the current word under the cursor
 }
 
 -- Mappings
