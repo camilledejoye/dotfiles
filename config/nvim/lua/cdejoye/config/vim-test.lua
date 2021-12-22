@@ -19,6 +19,10 @@ g['test#php#phpunit#patterns'] = {
 
 g['test#php#phpunit#options'] = '--testdox' -- Use testdox format for PHPUnit
 
+g['test#php#phpspec#executable'] = 'docker-compose exec php vendor/bin/phpspec'
+
+g['test#php#behat#executable'] = 'docker-compose exec php vendor/bin/behat'
+
 g['test#strategy'] = 'neovim'
 g.ultest_loaded = 1
 map('<Leader>tf', ':TestFile<CR>')
