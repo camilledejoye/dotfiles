@@ -141,7 +141,9 @@ return require('packer').startup({ function(use)
     after = { 'nvim-cmp' }, -- use an alias like completor to be more generic ?
     requires = {
       { 'nvim-lua/lsp-status.nvim', config = config('lsp-status') },
-      { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
+      -- Use a fork insteaf because the original plugin was not updated for more than 6 months
+      -- { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
+      { 'tami5/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
       { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
     },
     config = config('lspconfig'),
@@ -221,7 +223,6 @@ return require('packer').startup({ function(use)
     'tpope/vim-endwise',
     -- 'tpope/vim-speeddating',
     'tpope/vim-abolish',
-    -- Lua alternative to check: https://github.com/TimUntersberger/neogit
     { 'tpope/vim-fugitive', config = config('fugitive') },
     'tpope/vim-repeat',
     'tpope/vim-dispatch',

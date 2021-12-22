@@ -75,8 +75,11 @@ local on_attach = function(client, bufnr)
   bmap('<leader>ca', [[<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>]])
   bmap('<leader>ca', [[<cmd>lua require('telescope.builtin').lsp_range_code_actions()<CR>]], 'v')
 
-  bmap('[d', [[<cmd>lua require('lspsaga.diagnostic').lsp_jump_diagnostic_prev()<CR>]])
-  bmap(']d', [[<cmd>lua require('lspsaga.diagnostic').lsp_jump_diagnostic_next()<CR>]])
+  -- Update after switching to the fork (see plugins.lua)
+  -- bmap('[d', [[<cmd>lua require('lspsaga.diagnostic').lsp_jump_diagnostic_prev()<CR>]])
+  -- bmap(']d', [[<cmd>lua require('lspsaga.diagnostic').lsp_jump_diagnostic_next()<CR>]])
+  bmap('[d', [[<cmd>lua require('lspsaga.diagnostic').navigate('prev')()<CR>]])
+  bmap(']d', [[<cmd>lua require('lspsaga.diagnostic').navigate('next')()<CR>]])
   bmap('<leader>od', [[<cmd>lua require('trouble').open('lsp_document_diagnostics')<CR>]])
   bmap('<leader>ld', [[<cmd>lua require('telescope.builtin').lsp_document_diagnostics()<CR>]])
 
