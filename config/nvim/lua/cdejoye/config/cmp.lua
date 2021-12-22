@@ -99,8 +99,8 @@ cmp.setup.cmdline('/', {
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
   sources = cmp.config.sources({
-    { name = 'path', keyword_length = 5 }
+    { name = 'path' }
   }, {
-    { name = 'cmdline', keyword_length = 5 },
+    { name = 'cmdline' },
   })
 })
