@@ -91,6 +91,7 @@ return require('packer').startup({ function(use)
     config = function()
       vim.g.EditorConfig_exclude_patterns = {'fugitive://.\\*'}
       vim.g.EditorConfig_disable_rules = {'trim_trailing_whitespace'}
+      vim.g.EditorConfig_max_line_indicator = 'none'
     end,
   }
 
