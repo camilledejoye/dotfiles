@@ -104,8 +104,9 @@ return require('packer').startup({ function(use)
   use{ 'rhysd/git-messenger.vim', config = config('git-messenger') }
 
   use { -- Neorg
-    'vhyrro/neorg',
-    branch = 'unstable',
+    'nvim-neorg/neorg',
+    -- No more unstable branch in new repo ?
+    -- branch = 'unstable',
     requires = { 'nvim-lua/plenary.nvim', 'vhyrro/neorg-telescope' },
     after = 'nvim-treesitter',
     config = config('neorg'),
