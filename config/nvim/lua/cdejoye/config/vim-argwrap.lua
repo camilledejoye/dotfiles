@@ -9,7 +9,7 @@ g.argwrap_php_smart_brace = 1
 -- Until PHP 8 function and method declarations can't have a trailing comma
 -- This option removes it so that we can still use argwrap to add it to
 -- function and method calls
-g.argwrap_php_remove_tail_comma_function_declaration = 1
+g.argwrap_php_remove_tail_comma_function_declaration = 0
 
 vim.cmd([[
 augroup ely_argwrap
