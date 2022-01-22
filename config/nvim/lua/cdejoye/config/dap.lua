@@ -1,6 +1,5 @@
 local dap = require('dap') -- Must be before overriding the signs
 local dapui = require('dapui')
-local g = vim.g
 
 require('telescope').load_extension('dap')
 
@@ -10,6 +9,7 @@ dapui.setup {
     expand = { 'za', '<CR>', '<2-LeftMouse>' },
   },
   sidebar = { position = 'right', size = 80 },
+  tray = { elements = {} },
 }
 
 -- Not sure it's working...
@@ -51,21 +51,21 @@ local map = require('cdejoye.utils').map
 
 map('<F5>', [[
   <cmd>lua require('dap').continue()<CR>
-  <cmd>echohl ModeMsg | echom 'Debugger is listening...' | echohl None<CR>
+  <cmd>lua require('dapui').open()<CR>
 ]])
 map('<F8>', [[
-  <cmd>lua require('dap').close()<CR>
+  <cmd>lua require('dap').terminate()<CR>
   <cmd>lua require('dapui').close()<CR>
-  <cmd>echohl ModeMsg | echom 'Debugger closed' | echohl None<CR>
 ]])
-map('<F09>', [[<cmd>lua require('dap').step_over()<CR>]])
+map('<F9>', [[<cmd>lua require('dap').step_over()<CR>]])
 map('<F10>', [[<cmd>lua require('dap').step_into()<CR>]])
 map('<F11>', [[<cmd>lua require('dap').step_out()<CR>]])
 map('<Leader>db', [[<cmd>lua require('dap').toggle_breakpoint()<CR>]])
-map('<Leader>dr', [[<cmd>lua require('dap').repl_open()<CR>]])
+map('<Leader>dr', [[<cmd>lua require('dap').repl.open()<CR>]])
 map('<Leader>de', [[<cmd>lua require('dapui').eval()<CR>]], 'nv')
 
 -- Adapters
+-- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#php
 local php_adapter_dir = vim.env.VSCODE_PHP_DEBUG_HOME or '/home/cdejoye/work/vscode-php-debug'
 
 dap.adapters.php = {
@@ -77,7 +77,7 @@ dap.configurations.php = {
   {
     type = 'php',
     request = 'launch',
-    name = 'Lister for Xdebug',
+    name = 'Listen for Xdebug',
     port = 9003,
     pathMappings = {
       ['/var/www/html'] = '${workspaceFolder}',
