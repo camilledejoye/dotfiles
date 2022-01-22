@@ -38,6 +38,9 @@ local worldia = {
     ['src/Services/Transfers/spec/*Spec.php'] = {
         ['alternate'] = { 'src/Services/Transfers/{}.php' },
     },
+    ['src/Tasks/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Tasks/{}.php' },
+    },
 
     ['src/Common/*.php'] = {
         ['alternate'] = { 'src/Common/spec/{}Spec.php' },
@@ -77,6 +80,9 @@ local worldia = {
     },
     ['src/Core/spec/*.php'] = {
         ['alternate'] = { 'src/Core/{}Spec.php' },
+    },
+    ['src/Tasks/*.php'] = {
+        ['alternate'] = { 'src/Tasks/spec/{}Spec.php' },
     },
 }
 
