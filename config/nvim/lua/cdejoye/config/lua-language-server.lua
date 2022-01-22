@@ -22,11 +22,7 @@ function M.setup(on_attach, capabilities)
 
   if is_luadev_installed then
     options = luadev.setup {
-      lspconfig = {
-        cmd = { sumneko_binary, '-E', sumneko_root_path .. '/main.lua' },
-        on_attach = on_attach,
-        capabilities = capabilities,
-      }
+      lspconfig = options,
     }
   else
     options.settings = {

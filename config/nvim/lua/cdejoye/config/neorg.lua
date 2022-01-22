@@ -1,7 +1,31 @@
+local workspaces = {
+  default = '~/notes',
+  wiki = '~/vimwiki',
+  worldia ='~/work/worldia/api/notes'
+}
+
 require('neorg').setup {
   -- Tell Neorg what modules to load
   load = {
     ['core.defaults'] = {}, -- Load all the default modules
+
+    ['core.norg.journal'] = { -- Easily create files for a journal
+			-- https://github.com/nvim-neorg/neorg/wiki/Journal#Configuration
+		},
+
+    ['core.norg.qol.toc'] = { -- Generates a Table of Content from the Neorg file
+			-- https://github.com/nvim-neorg/neorg/wiki/Qol-Toc
+		},
+
+    ['core.gtd.base'] = { -- Manages your tasks with Neorg using the Getting Things Done methodology
+			-- https://github.com/nvim-neorg/neorg/wiki/Getting-Things-Done
+		},
+
+    ['core.presenter'] = { -- Neorg module to create gorgeous presentation slides
+			-- https://github.com/nvim-neorg/neorg/wiki/Core-Presenter
+		},
+
+
 
     ['core.norg.completion'] = { config = { engine = 'nvim-cmp' } },
 
@@ -57,11 +81,7 @@ require('neorg').setup {
 
     ['core.norg.dirman'] = { -- Manage your directories with Neorg
       config = {
-        workspaces = {
-          my_workspace = '~/notes',
-          wiki = '~/vimwiki',
-          worldia ='~/work/worldia/notes'
-        },
+        workspaces = workspaces,
         autodetect = true,
         autochdir = true,
       },
