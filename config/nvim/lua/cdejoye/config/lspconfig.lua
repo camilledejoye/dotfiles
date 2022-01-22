@@ -17,17 +17,13 @@ sign define LspDiagnosticsSignHint text=
 hi('LspSignatureActiveParameter', 'Visual')
 
 -- Disable diagnostics virtual text
-require('vim.lsp.handlers')['textDocument/publishDiagnostics'] = function(err, result, ctx, config)
-  config = vim.tbl_extend('force', config or {}, { virtual_text = false })
-
-  return require('vim.lsp.diagnostic').on_publish_diagnostics(err, result, ctx, config)
-end
+vim.diagnostic.config({virtual_text = false})
 
 -- Servers to enable with their specific configuration
 local servers = {
   phpactor = { init_options = { ['language_server_completion.trim_leading_dollar'] = true } },
   -- TODO automate installation or finally work on a nix setup:
-  -- yarn global add vscode-langservers-extracted
+  -- yay -S vscode-langservers-extracted
   jsonls = {
     settings = {
       json = {
@@ -40,6 +36,12 @@ local servers = {
       },
     },
   },
+  -- yay -S lemminx
+  lemminx = {
+    cmd = { 'lemminx' },
+  },
+  -- yay -S typescript-language-server
+  tsserver = {},
 }
 
 -- Setup the default client capabilities
