@@ -2,6 +2,13 @@
 export LANG="fr_FR.UTF-8"
 export LC_MESSAGES="en_US.UTF-8"
 
+# Pager
+# -X leaves file contents on the screen when less exits.
+# -F makes less quit if the entire output can be displayed on one screen.
+# -R displays ANSI color escape sequences in "raw" form.
+# -S disables line wrapping. Side-scroll to see long lines.
+export LESS="-SRXF"
+
 # Config files
 export DOTFILES="$HOME/.dotfiles"
 export ZSHRC="$HOME/.zshrc"
