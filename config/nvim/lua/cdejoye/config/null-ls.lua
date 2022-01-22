@@ -36,6 +36,39 @@ local phpcsfixer = helpers.make_builtin {
   factory = helpers.generator_factory,
 }
 
+        -- - %rootDir%/../../../src/Core/Infrastructure/Migrations/*
+        -- - %rootDir%/../../../src/**/spec/*
+        -- - %rootDir%/../../../src/**/DataFixtures/*
+
+local function should_run_phpstan(utils)
+  local client = vim.lsp.get_client_by_id(utils.client_id)
+  local root_dir = client.config.root_dir
+  local bufname = string.gsub(utils.bufname, root_dir..'/', '')
+  local should_skip = nil ~= string.find(bufname, '/spec/')
+    or nil ~= string.find(bufname, '/DataFixtures/')
+    or 1 == string.find(bufname, '/src/Core/Infrastructure/Migrations/')
+
+  return not should_skip
+end
+
+local function should_run_phpcsfixer(utils)
+  local client = vim.lsp.get_client_by_id(utils.client_id)
+  local root_dir = client.config.root_dir
+  local bufname = string.gsub(utils.bufname, root_dir..'/', '')
+  local should_skip = 1 == string.find(bufname, 'tests/') or 1 == string.find(bufname, 'vendor/')
+
+  return not should_skip
+end
+
+local function should_run_phpcs(utils)
+  local client = vim.lsp.get_client_by_id(utils.client_id)
+  local root_dir = client.config.root_dir
+  local bufname = string.gsub(utils.bufname, root_dir..'/', '')
+  local should_skip = nil ~= string.find(bufname, '/spec/') or 1 == string.find(bufname, 'vendor/')
+
+  return not should_skip
+end
+
 function M.setup (on_attach, _)
   require('null-ls').setup {
     diagnostics_format = '#{m} [#{s}]',
@@ -46,20 +79,26 @@ function M.setup (on_attach, _)
         -- alternatives to define manually but make sure the cwd is correct !
         -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#local-executables
         only_local = 'vendor/bin',
+        runtime_condition = should_run_phpstan,
         -- command = './vendor/bin/phpstan',
         -- condition = function(_)
         --   return vim.fn.executable('./vendor/bin/phpstan')
         -- end,
       },
-      -- builtins.formatting.phpcbf,
-      -- builtins.diagnostics.phpcs.with {
-      --   only_local = 'vendor/bin',
-      -- },
+      builtins.formatting.phpcbf.with {
+        only_local = 'vendor/bin',
+        runtime_condition = should_run_phpcs,
+      },
+      builtins.diagnostics.phpcs.with {
+        only_local = 'vendor/bin',
+        runtime_condition = should_run_phpcs,
+      },
       builtins.formatting.phpcsfixer.with {
         only_local = 'vendor/bin',
       },
       phpcsfixer.with {
         only_local = 'vendor/bin',
+        runtime_condition = should_run_phpcsfixer,
       },
     },
     on_attach = on_attach,
