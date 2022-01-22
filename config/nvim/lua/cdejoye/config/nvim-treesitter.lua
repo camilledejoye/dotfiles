@@ -28,14 +28,14 @@ parser_configs.norg_table = {
 
 require('nvim-treesitter.configs').setup {
   ensure_installed = 'all', -- Install all modules, allows to include norg which is not part of maintained
-  ignore_install = { 'fennel' }, -- I had errors in checkheal for this one
+  ignore_install = { 'phpdoc' }, -- it does not compile right now
 
   highlight = {
     enable = true,
      -- Needed for PHP correct indentation of method calls on multiple lines
      -- The indent module does not work correctly neither for my test, maybe it can be
      -- configured easily ?
-    additional_vim_regex_highlighting = true,
+    additional_vim_regex_highlighting = false,
   },
 
   incremental_selection = {
@@ -48,7 +48,7 @@ require('nvim-treesitter.configs').setup {
     },
   },
 
-  indent = { enable = false },
+  indent = { enable = true },
 
   textobjects = {
     select = {
@@ -78,6 +78,26 @@ require('nvim-treesitter.configs').setup {
       },
       swap_previous = {
         ["<leader>sA"] = "@parameter.inner",
+      },
+    },
+    move = {
+      enable = true,
+      set_jumps = true,
+      goto_next_start = {
+        ["]m"] = "@function.outer",
+        ["]]"] = "@class.outer",
+      },
+      goto_next_end = {
+        ["]M"] = "@function.outer",
+        ["]["] = "@class.outer",
+      },
+      goto_previous_start = {
+        ["[m"] = "@function.outer",
+        ["[["] = "@class.outer",
+      },
+      goto_previous_end = {
+        ["[M"] = "@function.outer",
+        ["[]"] = "@class.outer",
       },
     },
   },
