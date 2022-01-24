@@ -2,14 +2,6 @@
 -- https://github.com/vhyrro/neorg#setting-up-treesitter
 local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
 
-parser_configs.norg = {
-  install_info = {
-    url = 'https://github.com/vhyrro/tree-sitter-norg',
-    files = { 'src/parser.c', 'src/scanner.cc' },
-    branch = 'main'
-  },
-}
-
 parser_configs.norg_meta = {
   install_info = {
     url = "https://github.com/nvim-neorg/tree-sitter-norg-meta",
@@ -28,7 +20,6 @@ parser_configs.norg_table = {
 
 require('nvim-treesitter.configs').setup {
   ensure_installed = 'all', -- Install all modules, allows to include norg which is not part of maintained
-  ignore_install = { 'phpdoc' }, -- it does not compile right now
 
   highlight = {
     enable = true,
