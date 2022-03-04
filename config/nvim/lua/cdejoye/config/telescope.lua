@@ -52,6 +52,10 @@ telescope.setup {
       },
     },
   },
+  lsp_references = { layout_strategy = 'vertical' },
+  lsp_definitions = { layout_strategy = 'vertical' },
+  lsp_type_definitions = { layout_strategy = 'vertical' },
+  lsp_implementations = { layout_strategy = 'vertical' },
 
   extensions = {
     fzf = {
