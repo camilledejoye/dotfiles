@@ -86,6 +86,7 @@ alias gds='git dfs'
 alias gdt='git difftool -w --no-prompt'
 alias gdts='git difftool -w --staged --no-prompt'
 alias gl="git l"
+alias gld="git lg develop.."
 alias gla="git la"
 alias gls='git ls-files'
 alias gmt='git mt --no-prompt'
