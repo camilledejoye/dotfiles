@@ -114,3 +114,7 @@ config.bind('yox', 'config-cycle statusbar.show always never ;; config-cycle tab
 # Bindings for command mode
 config.bind('<Ctrl+n>', 'completion-item-focus next', mode='command')
 config.bind('<Ctrl+p>', 'completion-item-focus prev', mode='command')
+
+# Bindings for qute-pass userscript (complete forms with pass)
+config.bind('<Ctrl+Shift+L>', 'spawn --userscript qute-pass', mode='normal')
+config.bind('<Ctrl+Shift+L>', 'spawn --userscript qute-pass', mode='insert')

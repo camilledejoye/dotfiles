@@ -16,6 +16,7 @@ settings:
     https://meet.google.com: true
   content.notifications.enabled:
     https://calendar.google.com: true
+    https://git.worldia.com: true
     https://gitlab.wynd.eu: true
     https://mail.google.com: true
     https://meet.google.com: true
