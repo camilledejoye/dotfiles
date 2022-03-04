@@ -1,16 +1,27 @@
 local builtins = require('null-ls').builtins
 local helpers = require('null-ls.helpers')
 
-local M = {}
-
+--- Fake a linter for php-cs-fixer
+--- All the diagnostics will be shown on the first line because we don't have line information
+---
+--- TODO It might be possible to try to find out lines with errors by scanning the resulted diff but
+--- I don't see how to link the diffs to the correct rule so even with this solution I might need
+--- to show all errors on each impacted line ?
 local phpcsfixer = helpers.make_builtin {
   name = 'php-cs',
   method = require('null-ls.methods').internal.DIAGNOSTICS,
   filetypes = { 'php' },
   generator_opts = {
     command = 'php-cs-fixer',
-    -- command = './vendor/bin/php-cs-fixer',
-    args = { 'fix', '--dry-run', '--using-cache=no', '--format=gitlab', '--show-progress=none', '--no-interaction', '-' },
+    args = {
+      'fix',
+      '--dry-run',
+      '--using-cache=no',
+      '--format=gitlab',
+      '--show-progress=none',
+      '--no-interaction',
+      '-',
+    },
     format = 'json_raw',
     to_stdin = true,
     from_stderr = false,
@@ -24,7 +35,7 @@ local phpcsfixer = helpers.make_builtin {
         local diagnostic = {
           row = 0, -- php-cs-fixer is not a real linter ant can't provide more information
           message = json_diagnostic.description,
-          source = 'php-cs', -- shown as #{s} when formatting the diagnostic
+          source = 'php-cs-fixer', -- shown as #{s} when formatting the diagnostic
         }
 
         table.insert(diagnostics, diagnostic)
@@ -36,70 +47,84 @@ local phpcsfixer = helpers.make_builtin {
   factory = helpers.generator_factory,
 }
 
-        -- - %rootDir%/../../../src/Core/Infrastructure/Migrations/*
-        -- - %rootDir%/../../../src/**/spec/*
-        -- - %rootDir%/../../../src/**/DataFixtures/*
+---@class ExtendedNullLsParams @parent Params
+---@field bufname_match fun(glob: string): boolean #Match the bufname against a glob pattern
 
-local function should_run_phpstan(utils)
-  local client = vim.lsp.get_client_by_id(utils.client_id)
-  local root_dir = client.config.root_dir
-  local bufname = string.gsub(utils.bufname, root_dir..'/', '')
-  local should_skip = nil ~= string.find(bufname, '/spec/')
-    or nil ~= string.find(bufname, '/DataFixtures/')
-    or 1 == string.find(bufname, '/src/Core/Infrastructure/Migrations/')
+---@alias ShouldRunCallback fun(params: ExtendedNullLsParams): boolean
 
-  return not should_skip
+--- Decides, at runtime, if a source should be run or not
+---
+---@param callback ShouldRunCallback #Callback used to determine if the source should be run
+---@return fun(params: Params): boolean #Wrapper around `callback` to provide extended params
+local function should_run(callback)
+  vim.validate({callback = { callback, 'function' }})
+
+  ---@param params Params
+  return function(params)
+    local client = vim.lsp.get_client_by_id(params.client_id)
+    local root_dir = client.config.root_dir
+    params.bufname_match = function(glob)
+      glob = root_dir..'/'..glob
+
+      return vim.regex(vim.fn.glob2regpat(glob)):match_str(params.bufname)
+    end
+
+    return callback(params)
+  end
 end
 
-local function should_run_phpcsfixer(utils)
-  local client = vim.lsp.get_client_by_id(utils.client_id)
-  local root_dir = client.config.root_dir
-  local bufname = string.gsub(utils.bufname, root_dir..'/', '')
-  local should_skip = 1 == string.find(bufname, 'tests/') or 1 == string.find(bufname, 'vendor/')
+---@params params ExtendedNullLsParams
+local should_run_phpcsfixer = should_run(function(params)
+  return not(
+    params.bufname_match('tests/')
+    or params.bufname_match('vendor/*')
+    or params.bufname_match('var/*')
+  )
+end)
 
-  return not should_skip
-end
+---@params params ExtendedNullLsParams
+local should_run_phpcs = should_run(function(params)
+  return not(
+    params.bufname_match('src/**/spec/*')
+    or params.bufname_match('vendor/*')
+  )
+end)
 
-local function should_run_phpcs(utils)
-  local client = vim.lsp.get_client_by_id(utils.client_id)
-  local root_dir = client.config.root_dir
-  local bufname = string.gsub(utils.bufname, root_dir..'/', '')
-  local should_skip = nil ~= string.find(bufname, '/spec/') or 1 == string.find(bufname, 'vendor/')
-
-  return not should_skip
-end
+local M = {}
 
 function M.setup (on_attach, _)
   require('null-ls').setup {
+    -- debug = true,
     diagnostics_format = '#{m} [#{s}]',
     sources = {
       -- builtins.code_actions.gitsigns,
+
+      -- yay -S shellcheck
       builtins.diagnostics.shellcheck,
+
+      -- yay -S lua51-luacheck
+      builtins.diagnostics.luacheck,
+      -- yay -S stylua-bin
+      builtins.formatting.stylua,
+
       builtins.diagnostics.phpstan.with {
-        -- alternatives to define manually but make sure the cwd is correct !
-        -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#local-executables
-        only_local = 'vendor/bin',
-        runtime_condition = should_run_phpstan,
-        -- command = './vendor/bin/phpstan',
-        -- condition = function(_)
-        --   return vim.fn.executable('./vendor/bin/phpstan')
-        -- end,
+        ---@params params ExtendedNullLsParams
+        runtime_condition = should_run(function(params)
+          return not(
+            params.bufname_match('src/Core/Infrastructure/Migrations/*')
+            or params.bufname_match('src/**/spec/*')
+            or params.bufname_match('src/**/DataFixtures/*')
+            or params.bufname_match('src/**/Behat/*')
+            or params.bufname_match('vendor/*')
+          )
+        end),
       },
-      builtins.formatting.phpcbf.with {
-        only_local = 'vendor/bin',
-        runtime_condition = should_run_phpcs,
-      },
-      builtins.diagnostics.phpcs.with {
-        only_local = 'vendor/bin',
-        runtime_condition = should_run_phpcs,
-      },
-      builtins.formatting.phpcsfixer.with {
-        only_local = 'vendor/bin',
-      },
-      phpcsfixer.with {
-        only_local = 'vendor/bin',
-        runtime_condition = should_run_phpcsfixer,
-      },
+
+      builtins.formatting.phpcbf.with { runtime_condition = should_run_phpcs, },
+      builtins.diagnostics.phpcs.with { runtime_condition = should_run_phpcs, },
+
+      builtins.formatting.phpcsfixer.with { runtime_condition = should_run_phpcsfixer, },
+      phpcsfixer.with { runtime_condition = should_run_phpcsfixer, },
     },
     on_attach = on_attach,
   }
