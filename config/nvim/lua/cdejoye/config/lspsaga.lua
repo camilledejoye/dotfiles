@@ -21,8 +21,8 @@ require('lspsaga').init_lsp_saga {
 }
 
 -- Mappings
-map('<C-f>', [[<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>]])
-map('<C-b>', [[<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>]])
+map('<C-f>', [[<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1, '<c-f>')<CR>]])
+map('<C-b>', [[<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1, '<c-b>')<CR>]])
 
 -- Theming
 local hi = require('cdejoye.utils').hi
