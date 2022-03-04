@@ -44,10 +44,10 @@ hack-big = 2
 fa-solid = 3
 fa-brands = 4
 noto = 5
-; nf-icons = 6
-; nf-icons-small = 7
-; fa-solid-small = 4
-; fa-solid-big = 3
+nf-icons = 6
+nf-icons-small = 7
+fa-solid-small = 4
+fa-solid-big = 3
 
 [bar/mainbar]
 bottom = true
@@ -76,8 +76,8 @@ module-margin-right = 0
 
 font-0 = "Hack:size=8;2"
 font-1 = "Hack:size=10;2"
-font-2 = "Font Awesome 5 Free Solid:size=10;2"
-font-3 = "Font Awesome 5 Brands:size=10;2"
+font-2 = "Font Awesome 6 Free Solid:size=10;2"
+font-3 = "Font Awesome 6 Brands:size=10;2"
 font-4 = "Noto Sans:size=10;1"
 ; font-0 = "Hack:size=10"
 ; font-0 = "Hack:pixelsize=8;1"
