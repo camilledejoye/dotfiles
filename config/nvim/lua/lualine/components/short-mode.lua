@@ -1,7 +1,7 @@
 local ShortMode = require('lualine.component'):extend()
 
 -- List of mode -> :h mode()
--- Use ony the first letter as recommended by the documentation
+-- Use only the first letter as recommended by the documentation
 -- Use byte code because for some modes it's what we got, for instance with visual block
 ShortMode.mode2byte = {
   normal       = 110,

@@ -1,10 +1,14 @@
+local utils = require('lualine.utils.utils')
+
 vim.o.showmode = false
 vim.o.showtabline = 2
 
 local condition = { width = {
-  gt = function(ceiling) return
-		function() return ceiling < vim.api.nvim_win_get_width(0) end
-	end,
+  gt = function(ceiling)
+    return function()
+      return ceiling < vim.api.nvim_win_get_width(0)
+    end
+  end,
 } }
 
 local truncate = {
@@ -30,6 +34,53 @@ local function paste()
   return vim.o.paste and '[P]' or ''
 end
 
+local fileicon = { 'filetype', icon_only = true, padding = { left = 1, right = 0 } }
+local filename = {
+  'filename',
+  symbols = { modified = ' ●', readonly = ' ' },
+  path = 1, -- relative path
+  shorting_target = 0, -- do not shorten filenames
+}
+
+local diagnostics = {
+  'diagnostics',
+  sources = { 'nvim_diagnostic' },
+  diagnostics_color = {
+    error = {
+      fg = utils.extract_highlight_colors('Error', 'fg'),
+      bg = utils.extract_color_from_hllist(
+        'fg',
+        { 'DiagnosticError', 'LspDiagnosticsDefaultError', 'DiffDelete' },
+        '#cc6666'
+      ),
+    },
+    warn = {
+      fg = utils.extract_highlight_colors('Error', 'fg'),
+      bg = utils.extract_color_from_hllist(
+        'fg',
+        { 'DiagnosticWarn', 'LspDiagnosticsDefaultWarning', 'DiffText' },
+        '#de935f'
+      ),
+    },
+    info = {
+      fg = utils.extract_highlight_colors('Error', 'fg'),
+      bg = utils.extract_color_from_hllist(
+        'fg',
+        { 'DiagnosticInfo', 'LspDiagnosticsDefaultInformation', 'Normal' },
+        '#e0e0e0'
+      ),
+    },
+    hint = {
+      fg = utils.extract_highlight_colors('Error', 'fg'),
+      bg = utils.extract_color_from_hllist(
+        'fg',
+        { 'DiagnosticHint', 'LspDiagnosticsDefaultHint', 'DiffChange' },
+        '#81a2be'
+      ),
+    },
+  },
+}
+
 -- TODO implement $/progress on phpactor
 -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#progress
 -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#workDoneProgress
@@ -40,7 +91,7 @@ local function lsp_messages()
   return loaded and lsp_status.status_progress() or ''
 end
 
-require('lualine').setup {
+require('lualine').setup({
   options = {
     icons_enabled = true,
     theme = 'base16',
@@ -56,24 +107,24 @@ require('lualine').setup {
       { paste, left_padding = 0, condition = condition.width.gt(50) },
     },
     lualine_b = { truncate, 'branch' },
-    lualine_c = { 'filename-with-icon' },
+    lualine_c = { fileicon, filename },
     lualine_x = { lsp_messages },
     lualine_y = {
       { percent, condition = condition.width.gt(50) },
       { maxline, condition = condition.width.gt(100) },
     },
-    lualine_z = { 'location', 'lsp-diagnostics' },
+    lualine_z = { 'location', diagnostics },
   },
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
-    lualine_c = { 'filename-with-icon' },
+    lualine_c = { fileicon, filename },
     lualine_x = {},
     lualine_y = {},
     lualine_z = {},
   },
   tabline = {
-    lualine_a = { 'tab-windows', truncate },
+    lualine_a = { { 'windows', mode = 0 }, truncate },
     lualine_b = {},
     lualine_c = {},
     lualine_x = {},
@@ -81,9 +132,4 @@ require('lualine').setup {
     lualine_z = { 'tabs' },
   },
   extensions = { 'fugitive', 'quickfix' },
-}
-
-vim.cmd([[
-hi default link lualine_tab_active lualine_a_normal
-hi default link lualine_tab_inactive lualine_b_normal
-]])
+})
