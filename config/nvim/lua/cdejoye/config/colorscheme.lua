@@ -9,24 +9,29 @@ else
 end
 
 local colors = require('base16-colorscheme').colors
+local cursorline = colors.base01
+local visual = colors.base02
+local comment = colors.base03
+local blue = colors.base0D
 
--- Setup the color for floating windows' borders
-hi('FloatBorder', 'Directory')
+-- Setup the color for floating windows
+hi('FloatBorder', { guifg = blue })
 
-hi('EndOfBuffer', { guifg = colors.base00 }) -- Hide the ~ in the number column
-hi('VertSplit', { guifg = colors.base01 }) -- Color of the border between vertival splits
+hi('EndOfBuffer', { guifg = 'bg' }) -- Hide the ~ in the number column
+hi('VertSplit', { guifg = visual }) -- Color of the border between vertival splits
 
-hi('LineNr', { guifg = colors.base03 }) -- Color of the line numbers
-hi('CursorLineNr', { guifg = colors.base0D, guibg = colors.base00 }) -- Color of the current line number
+hi('LineNr', { guifg = comment }) -- Color of the line numbers
+hi('CursorLineNr', { guifg = blue, guibg = 'bg' }) -- Color of the current line number
 
-hi('Pmenu', { guifg = colors.base03, guibg = colors.base01, gui = 'italic' }) -- Completion menu
-hi('PmenuSel', { guifg = colors.base0D, guibg = colors.base00, gui = 'bold' }) -- Selected item
+hi('Pmenu', { guifg = comment, guibg = cursorline, gui = 'italic' }) -- Completion menu
+hi('PmenuSel', { guifg = blue, guibg = 'bg', gui = 'bold' }) -- Selected item
 hi('PmenuSbar', 'Pmenu') -- Completion menu scrollbar
-hi('PmenuThumb', { guibg = colors.base02 }) -- Completion menu scrollbar's button
+hi('PmenuThumb', { guibg = visual }) -- Completion menu scrollbar's button
+-- Custom ones to use for floating window showing documentation during completion
+hi('PmenuBorder', 'PmenuInvisibleBorder')
+-- Hide the borders by using the same fg and bg but keep the padding having by using borders
+hi('PmenuInvisibleBorder', { guifg = cursorline, guibg = cursorline })
 
--- hi('Pmenu', { guifg = colors.base03, guibg = colors.base01, gui = 'italic' }) -- Completion menu
--- hi('PmenuSel', { guifg = colors.base01, guibg = colors.base0D, gui = 'italic,bold' }) -- Selected item
--- hi('PmenuSbar', 'Pmenu') -- Completion menu scrollbar
--- hi('PmenuThumb', { guibg = colors.base02 }) -- Completion menu scrollbar's button
+hi('CmpItemAbbrMatch', { guifg = blue, gui = 'bold' })
 
 hi('yamlTSField', 'TSKeyword')

@@ -44,7 +44,7 @@ hi('TargetFileName', 'TSComment')
 hi('DefinitionIcon', 'Special')
 hi('ReferencesIcon', 'Special')
 hi('ProviderTruncateLine', 'LspFLoatWinTruncateLine')
-hi('SagaShadow', { guibg = colors.base00 })
+hi('SagaShadow', { guibg = 'bg' })
 
 hi('LspSagaFinderSelection', { guifg = colors.base0B, guibg = 'NONE', gui = 'bold' })
 

@@ -1,6 +1,22 @@
 local cmp = require('cmp')
+local hi = require('cdejoye.utils').hi
 
 vim.o.completeopt = 'menu,menuone,noselect'
+
+hi('CmpItemAbbrMatch', 'TSEmphasis', true)
+hi('CmpItemAbbrMatchFuzzy', 'CmpItemAbbrMatch', true)
+hi('CmpItemAbbrDeprecated', { gui = 'strikethrough' }, true)
+hi('CmpItemKindFunction', 'TSFunction', true)
+hi('CmpItemKindMethod', 'TSMethod', true)
+hi('CmpItemKindConstructor', 'TSConstructor', true)
+hi('CmpItemKindInterface', 'TSType', true)
+hi('CmpItemKindClass', 'CmpItemKindInterface', true)
+hi('CmpItemKindModule', 'CmpItemKindInterface', true)
+hi('CmpItemKindVariable', 'TSVariable', true)
+hi('CmpItemKindField', 'TSField', true)
+hi('CmpItemKindProperty', 'TSProperty', true)
+hi('CmpItemKindConstant', 'TSConstant', true)
+hi('CmpItemKindKeyword', 'TSKeyword', true)
 
 cmp.setup {
   sources = cmp.config.sources({
@@ -57,8 +73,9 @@ cmp.setup {
   },
 
   documentation = {
-    border = 'rounded',
-    winhighlight = 'NormalFloat:NormalFloat,FloatBorder:FloatBorder',
+    border = 'single',
+    -- winhighlight = 'NormalFloat:Pmenu,FloatBorder:Pmenu',
+    winhighlight = 'NormalFloat:Pmenu,FloatBorder:PmenuBorder',
   },
 
   formatting = {
