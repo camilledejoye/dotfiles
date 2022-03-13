@@ -51,11 +51,11 @@ telescope.setup {
         },
       },
     },
+    lsp_references = { layout_strategy = 'vertical' },
+    lsp_definitions = { layout_strategy = 'vertical' },
+    lsp_type_definitions = { layout_strategy = 'vertical' },
+    lsp_implementations = { layout_strategy = 'vertical' },
   },
-  lsp_references = { layout_strategy = 'vertical' },
-  lsp_definitions = { layout_strategy = 'vertical' },
-  lsp_type_definitions = { layout_strategy = 'vertical' },
-  lsp_implementations = { layout_strategy = 'vertical' },
 
   extensions = {
     fzf = {
@@ -136,7 +136,7 @@ function M.grep_string(args, bang)
 
   -- If there is more than one argument and the last argument is a file or directory
   if 1 < #args and '' ~= vim.fn.glob(args[#args]) then
-    options.search_dirs = table.remove(args)
+    options.search_dirs = { table.remove(args) }
   end
 
   if 0 < #args then
