@@ -3,7 +3,13 @@
 local nvim_lsp = require('lspconfig')
 local lsp_status = require('lsp-status')
 local lsp_signature = require('lsp_signature')
+local lsp_selection_range = require('lsp-selection-range')
+local lsr_client = require('lsp-selection-range.client')
 local hi = require('cdejoye.utils').hi
+
+lsp_selection_range.setup({
+  get_client = lsr_client.select_by_filetype(lsr_client.select)
+})
 
 -- Define diagnostics signs
 vim.cmd([[
@@ -116,6 +122,9 @@ local on_attach = function(client, bufnr)
   bmap('<Leader>ff', '<cmd>lua vim.lsp.buf.formatting()<CR>')
   vim.cmd [[ command! -buffer Format execute 'lua vim.lsp.buf.formatting()' ]]
 
+  bmap('vv', [[<cmd>lua require('lsp-selection-range').trigger()<CR>]], 'n')
+  bmap('vv', [[<cmd>lua require('lsp-selection-range').expand()<CR>]], 'v')
+
   lsp_signature.on_attach({
     hi_parameter = 'Visual',
     -- padding = ' ', -- Generate an error when using the toggle key to show the signature
@@ -134,6 +143,8 @@ end
 if pcall(require, 'cmp_nvim_lsp') then
   capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 end
+
+capabilities = lsp_selection_range.update_capabilities(capabilities)
 
 -- Setup the configured servers
 for server, config in pairs(servers) do

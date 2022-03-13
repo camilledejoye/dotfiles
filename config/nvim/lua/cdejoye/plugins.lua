@@ -140,6 +140,7 @@ return require('packer').startup({ function(use)
       -- { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
       { 'tami5/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
       { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
+      { 'camilledejoye/nvim-lsp-selection-range' },
     },
     config = config('lspconfig'),
   }
