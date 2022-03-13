@@ -21,7 +21,32 @@ vim.diagnostic.config({virtual_text = false})
 
 -- Servers to enable with their specific configuration
 local servers = {
-  phpactor = { init_options = { ['language_server_completion.trim_leading_dollar'] = true } },
+  -- phpactor = { init_options = { ['language_server_completion.trim_leading_dollar'] = true } },
+  -- yay -S nodejs-intelephense
+  intelephense = {
+    init_options = { licenceKey = '/home/cdejoye/.local/share/intelephense/licence-key' },
+    settings = {
+      intelephense = {
+        files = {
+          exclude = {
+            "**/.git/**",
+            "**/.svn/**",
+            "**/.hg/**",
+            "**/CVS/**",
+            "**/.DS_Store/**",
+            "**/node_modules/**",
+            "**/bower_components/**",
+            "**/vendor/**/{Tests,tests}/**",
+            "**/.history/**",
+            "**/vendor/**/vendor/**",
+            -- Symfony project specific
+            "**/var/cache/**",
+            "**/var/log/**",
+          },
+        },
+      },
+    },
+  },
   -- TODO automate installation or finally work on a nix setup:
   -- yay -S vscode-langservers-extracted
   jsonls = {

@@ -22,12 +22,15 @@ cmp.setup {
     { name = 'neorg' },
   }),
 
-  sorting = {
-    comparators = {
-      -- Should help prioritizing suggestions closer to the current position
-      function(...) return require('cmp_buffer'):compare_locality(...) end,
-    },
-  },
+  -- Disable because was actually making it awkward with intelephense
+  -- because it prefix some "global" variables to sort them and they were shown first all
+  -- the time
+  -- sorting = {
+  --   comparators = {
+  --     -- Should help prioritizing suggestions closer to the current position
+  --     function(...) return require('cmp_buffer'):compare_locality(...) end,
+  --   },
+  -- },
 
   snippet = {
     expand = function(args)
@@ -69,6 +72,7 @@ cmp.setup {
       -- vim_item.menu = source_names[entry.source.name]
       vim_item.menu = ({
         buffer = '[Buffer]',
+        spell = '[Spell]',
         nvim_lsp = '[LSP]',
         luasnip = '[LuaSnip]',
         ultisnips = '[UltiSnips]',
