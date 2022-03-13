@@ -13,3 +13,7 @@ g.phpactorCustomMappings = {
   { '<Leader>pe', '<Plug>phpactorClassExpand', 'n' },
   { '<Leader>pE', '<Plug>phpactorClassExpand <BAR> :normal! Bi\\<CR>', 'n' },
 }
+
+local map = require('cdejoye.utils').map
+-- To also register these mappings to all filetypes and no only PHP
+map('<Leader>pe', '<cmd>PhpactorClassExpand<CR>')
