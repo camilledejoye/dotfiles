@@ -242,7 +242,6 @@ return require('packer').startup({ function(use)
     'folke/trouble.nvim',
     requires = { 'kyazdani42/nvim-web-devicons' },
     config = config('trouble'),
-    lock = true, -- Waiting for https://github.com/folke/trouble.nvim/issues/86
   }
 
   use { -- vim-argwrap
