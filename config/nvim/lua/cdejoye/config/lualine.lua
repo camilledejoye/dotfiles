@@ -124,7 +124,7 @@ require('lualine').setup({
     lualine_z = {},
   },
   tabline = {
-    lualine_a = { { 'windows', mode = 0 }, truncate },
+    lualine_a = { 'windows', truncate },
     lualine_b = {},
     lualine_c = {},
     lualine_x = {},
