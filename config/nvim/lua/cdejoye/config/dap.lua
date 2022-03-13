@@ -46,20 +46,30 @@ vim.cmd([[
   hi! def link DapUIScope TSFunction
 ]])
 
+-- Listeners
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
+
 -- Mappings
 local map = require('cdejoye.utils').map
 
-map('<F5>', [[
-  <cmd>lua require('dap').continue()<CR>
-  <cmd>lua require('dapui').open()<CR>
-]])
-map('<F8>', [[
+map('<Leader>dc', [[<cmd>lua require('dap').continue()<CR>]])
+map('<Leader>ds', [[
   <cmd>lua require('dap').terminate()<CR>
   <cmd>lua require('dapui').close()<CR>
 ]])
-map('<F9>', [[<cmd>lua require('dap').step_over()<CR>]])
-map('<F10>', [[<cmd>lua require('dap').step_into()<CR>]])
-map('<F11>', [[<cmd>lua require('dap').step_out()<CR>]])
+map('<Leader>dd', [[<cmd>lua require('dap').step_over()<CR>]])
+map('<Leader>di', [[<cmd>lua require('dap').step_into()<CR>]])
+map('<Leader>do', [[<cmd>lua require('dap').step_out()<CR>]])
 map('<Leader>db', [[<cmd>lua require('dap').toggle_breakpoint()<CR>]])
 map('<Leader>dr', [[<cmd>lua require('dap').repl.open()<CR>]])
 map('<Leader>de', [[<cmd>lua require('dapui').eval()<CR>]], 'nv')
