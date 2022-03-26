@@ -23,10 +23,8 @@ require('nvim-treesitter.configs').setup {
 
   highlight = {
     enable = true,
-     -- Needed for PHP correct indentation of method calls on multiple lines
-     -- The indent module does not work correctly neither for my test, maybe it can be
-     -- configured easily ?
-    additional_vim_regex_highlighting = false,
+     -- Needed for correct indentation of method calls on multiple lines and phpdoc
+    additional_vim_regex_highlighting = { 'php' },
   },
 
   incremental_selection = {
@@ -39,7 +37,12 @@ require('nvim-treesitter.configs').setup {
     },
   },
 
-  indent = { enable = true },
+  indent = {
+    enable = true,
+    disable = {
+      'php', -- Does not work for method calls on multiple lines and phpdoc
+    },
+  },
 
   textobjects = {
     select = {
