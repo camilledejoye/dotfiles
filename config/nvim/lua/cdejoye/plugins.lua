@@ -141,6 +141,7 @@ return require('packer').startup({ function(use)
       { 'tami5/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
       { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
       { 'camilledejoye/nvim-lsp-selection-range' },
+      { 'b0o/schemastore.nvim' }, -- used by jsonls server to retrieve json schemas
     },
     config = config('lspconfig'),
   }

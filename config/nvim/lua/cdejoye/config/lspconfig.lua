@@ -58,12 +58,7 @@ local servers = {
   jsonls = {
     settings = {
       json = {
-        schemas = {
-          {
-            fileMatch = { 'composer.json' },
-            url = 'https://getcomposer.org/schema.json',
-          },
-        }
+        schemas = require('schemastore').json.schemas(),
       },
     },
   },
