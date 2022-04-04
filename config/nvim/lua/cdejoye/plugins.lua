@@ -156,6 +156,16 @@ return require('packer').startup({ function(use)
     config = config('phpactor'),
   }
 
+  use {
+    'camilledejoye/vim-php-refactoring-toolbox',
+    branch = 'improvements',
+    config = function ()
+      local map = require('cdejoye.utils').map
+      vim.g.vim_php_refactoring_use_default_mapping = 0
+      map('<Leader>pi', [[<cmd>call PhpInline()<CR>]])
+    end,
+  }
+
   use { -- Snippets
     -- 'SirVer/ultisnips', -- The engine
     'camilledejoye/ultisnips', branch = 'develop', -- Until the handling of floating windows is fixed
