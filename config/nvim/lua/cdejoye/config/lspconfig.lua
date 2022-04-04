@@ -29,7 +29,7 @@ vim.diagnostic.config({virtual_text = false})
 local servers_options = {
   -- phpactor = { init_options = { ['language_server_completion.trim_leading_dollar'] = true } },
   intelephense = {
-    init_options = { licenceKey = '/home/cdejoye/.local/share/intelephense/licence-key' },
+    init_options = { licenceKey = vim.fn.expand('$HOME/.local/share/intelephense/licence-key') },
     settings = {
       intelephense = {
         files = {
