@@ -57,7 +57,7 @@ return require('packer').startup({ function(use)
   use { -- Add documentation around Lua
     'nanotee/luv-vimdocs',
     'milisims/nvim-luaref',
-    'folke/lua-dev.nvim', -- Configured in lua-language-server.lua if installed
+    'folke/lua-dev.nvim', -- Help configuring sumneko lua language server
   }
 
   use { 'kyazdani42/nvim-web-devicons' }
@@ -142,6 +142,7 @@ return require('packer').startup({ function(use)
       { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
       { 'camilledejoye/nvim-lsp-selection-range' },
       { 'b0o/schemastore.nvim' }, -- used by jsonls server to retrieve json schemas
+      { 'williamboman/nvim-lsp-installer' },
     },
     config = config('lspconfig'),
   }

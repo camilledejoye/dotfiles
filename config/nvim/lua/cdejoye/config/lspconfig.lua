@@ -1,8 +1,8 @@
 -- vim.lsp.set_log_level('debug')
 -- LSP settings
-local nvim_lsp = require('lspconfig')
 local lsp_status = require('lsp-status')
 local lsp_signature = require('lsp_signature')
+local lsp_installer = require('nvim-lsp-installer')
 local lsp_selection_range = require('lsp-selection-range')
 local lsr_client = require('lsp-selection-range.client')
 local hi = require('cdejoye.utils').hi
@@ -26,9 +26,8 @@ hi('LspSignatureActiveParameter', 'Visual')
 vim.diagnostic.config({virtual_text = false})
 
 -- Servers to enable with their specific configuration
-local servers = {
+local servers_options = {
   -- phpactor = { init_options = { ['language_server_completion.trim_leading_dollar'] = true } },
-  -- yay -S nodejs-intelephense
   intelephense = {
     init_options = { licenceKey = '/home/cdejoye/.local/share/intelephense/licence-key' },
     settings = {
@@ -53,8 +52,6 @@ local servers = {
       },
     },
   },
-  -- TODO automate installation or finally work on a nix setup:
-  -- yay -S vscode-langservers-extracted
   jsonls = {
     settings = {
       json = {
@@ -62,13 +59,61 @@ local servers = {
       },
     },
   },
-  -- yay -S lemminx
-  lemminx = {
-    cmd = { 'lemminx' },
+  yamlls = {
+    settings = {
+      yaml = {
+        format = {
+          singleQuote = true,
+          proseWrap = 'Always',
+          printWidth = 120, -- TODO detect it for YAML config ?
+        },
+        schemaStore = { enable = true },
+      },
+    },
   },
-  -- yay -S typescript-language-server
+  lemminx = {}, -- XML
   tsserver = {},
+  sumneko_lua = require('lua-dev').setup(),
 }
+
+-- -- Uncomment to install/update all pre-configured servers when start Neovim
+-- local settings = require('nvim-lsp-installer.settings')
+-- local JobExecutionPool = require('nvim-lsp-installer.jobs.pool')
+-- -- Limit the number of server installed at the same time to limit the resource consumption
+-- local job_pool = JobExecutionPool:new({
+--   size = settings.current.max_concurrent_installers,
+-- })
+-- for server_name, _ in pairs(servers_options) do
+--   local log_levels = vim.log.levels
+--   local server_was_found, server = lsp_installer.get_server(server_name)
+--   if server_was_found and not server:is_installed() then
+--     local notification_id = require('notifier').notify('Installing...', log_levels.INFO, {
+--       summary = string.format('[LSP Installer] %s', server.name),
+--       timeout = 0,
+--     })
+
+--     job_pool:supply(function(callback)
+--       server:install_attached({
+--         requested_server_version = nil,
+--         stdio_sink = {
+--           stdout = function(_) end,
+--           stderr = function(_) end,
+--         }
+--       }, function(success)
+--         local log_level = success and log_levels.INFO or log_levels.ERROR
+--         local message = success and 'Installed' or 'An error occurred'
+
+--         require('notifier').notify(message, log_level, {
+--           -- icon = '', -- Not yet part of notifier options
+--           replaces_id = notification_id,
+--           timeout = 2000,
+--         })
+
+--         callback()
+--       end)
+--     end)
+--   end
+-- end
 
 -- Setup the default client capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -141,14 +186,25 @@ end
 
 capabilities = lsp_selection_range.update_capabilities(capabilities)
 
--- Setup the configured servers
-for server, config in pairs(servers) do
-  nvim_lsp[server].setup(vim.tbl_deep_extend('force', {
+-- Setup the installed servers
+lsp_installer.on_server_ready(function(server)
+  local options = {
     on_attach = on_attach,
     capabilities = capabilities,
-  }, config))
-end
+  }
+
+  if servers_options[server.name] then
+    local server_options = servers_options[server.name]
+
+    if 'function' == type(server_options) then
+      options = server_options(options)
+    elseif 'table' == type(server_options) then
+      options = vim.tbl_extend('force', options, server_options)
+    end
+  end
+
+  server:setup(options)
+end)
 
 -- Setup Lua LSP server
-require('cdejoye.config.lua-language-server').setup(on_attach, capabilities)
 require('cdejoye.config.null-ls').setup(on_attach, capabilities)
