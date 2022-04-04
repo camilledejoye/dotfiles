@@ -4,6 +4,9 @@ local map = require('cdejoye.utils').map
 -- Disabled the possibility to run a test from it's source file
 -- g['test#no_alternate'] = 1 " Ex.: Don't run tests on save from the sources
 g['test#php#behat#use_suite_in_args'] = 1
+-- For Worldia because we don't have a file matching the default glob pattern:
+-- features/bootstrap/**/*.php
+g['test#php#behat#bootstrap_directory'] = '*'
 
 -- Don't run *Test.php with codeception
 g['test#php#codeception#file_pattern'] = [[\v((c|C)e(p|s)t\.php$|\.feature$)]]
