@@ -26,7 +26,6 @@ return require('packer').startup({ function(use)
     'camilledejoye/vim-cleanfold',
     { 'kana/vim-niceblock', config = config('niceblock') },
     'terryma/vim-multiple-cursors',
-    { 'junegunn/vader.vim', opt = true },
   }
 
   -- Disabled because I want to use Treesitter now, but I kept them here just in case
@@ -63,7 +62,7 @@ return require('packer').startup({ function(use)
   use { 'kyazdani42/nvim-web-devicons' }
 
   use { 'monaqa/dial.nvim', config = config('dial') } -- Improved increment/decrement
-  use('tommcdo/vim-lion') -- Align text
+  use { 'tommcdo/vim-lion' } -- Align text
 
   use { 'jiangmiao/auto-pairs', config = config('auto-pairs') }
 
@@ -147,8 +146,6 @@ return require('packer').startup({ function(use)
     config = config('lspconfig'),
   }
 
-  use('camilledejoye/php-foldexpr')
-
   use { -- Phpactor
     'phpactor/phpactor',
     run = 'composer install -o',
@@ -205,15 +202,6 @@ return require('packer').startup({ function(use)
     config = config('telescope'),
   }
 
-  use { --fzf-lua
-    'ibhagwan/fzf-lua',
-    requires = {
-      'vijaymarupudi/nvim-fzf',
-      { 'kyazdani42/nvim-web-devicons', opt = true },
-    },
-    config = config('fzf'),
-  }
-
   use { -- lualine
     'hoob3rt/lualine.nvim',
     requires = {
@@ -226,10 +214,7 @@ return require('packer').startup({ function(use)
   use { -- tpope plugins
     { 'tpope/vim-surround', setup = function() vim.g.surround_no_insert_mappings = true end },
     'tpope/vim-commentary',
-    'tpope/vim-scriptease',
     { 'tpope/vim-unimpaired', config = config('unimpaired') },
-    'tpope/vim-endwise',
-    -- 'tpope/vim-speeddating',
     'tpope/vim-abolish',
     { 'tpope/vim-fugitive', config = config('fugitive') },
     'tpope/vim-repeat',
@@ -237,7 +222,6 @@ return require('packer').startup({ function(use)
     'radenling/vim-dispatch-neovim',
     { 'tpope/vim-projectionist', config = config('projectionist') },
     'tpope/vim-eunuch',
-    -- 'tpope/vim-sleuth', -- Hopping Treesitter will have good enough defaults
   }
 
   use { -- Treesitter
@@ -251,38 +235,11 @@ return require('packer').startup({ function(use)
     config = config('nvim-treesitter'),
   }
 
-  use { -- Trouble
-    'folke/trouble.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons' },
-    config = config('trouble'),
-  }
-
   use { -- vim-argwrap
     -- 'FooSoft/vim-argwrap',
     'camilledejoye/vim-argwrap', branch = 'imp/php-always-tail-comma-for-method-declaration',
     config = config('vim-argwrap'),
   }
-
-  -- Keep it for reference, I don't work with those languages anymore
-  -- use { -- vim-closetag
-  --   'alvan/vim-closetag',
-  --   config = function()
-  --     vim.g.closetag_filetypes = 'html,xhtml,jsx,twig,riot,html.twig'
-  --     vim.g.closetag_xhtml_filetypes = 'html,xhtml,jsx,twig,riot,html.twig'
-  --   end,
-  -- }
-
-  -- I don't use pman doc for php anymore but it could still be interesting for later
-  -- use { -- vim-plugin-viewdoc
-  --   'powerman/vim-plugin-viewdoc',
-  --   config = function ()
-  --     vim.opt.keywordprg = [[:ViewDoc <cword>]]
-  --     vim.g.no_viewdoc_abbrev = 1 -- Disable abbreviations
-  --     vim.g.no_viewdoc_maps = 1 -- Disable mappings
-  --     vim.g.viewdoc_open = 'botright vnew' --How to open the help window
-  --     vim.g.viewdoc_openempty = 0 -- Do not open window when doc is not found
-  --   end
-  -- }
 
   use { -- vim-test
     'rcarriga/vim-ultest',
