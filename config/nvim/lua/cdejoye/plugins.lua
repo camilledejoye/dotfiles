@@ -134,7 +134,7 @@ return require('packer').startup({ function(use)
     'neovim/nvim-lspconfig',
     after = { 'nvim-cmp' }, -- use an alias like completor to be more generic ?
     requires = {
-      { 'nvim-lua/lsp-status.nvim', config = config('lsp-status') },
+      { 'j-hui/fidget.nvim', config = function() require('fidget').setup({ text = { spinner = 'dots' } }) end },
       -- Use a fork insteaf because the original plugin was not updated for more than 6 months
       -- { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
       { 'tami5/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
@@ -143,7 +143,7 @@ return require('packer').startup({ function(use)
       { 'b0o/schemastore.nvim' }, -- used by jsonls server to retrieve json schemas
       { 'williamboman/nvim-lsp-installer' },
     },
-    config = config('lspconfig'),
+    config = config('lsp'),
   }
 
   use { -- Phpactor
@@ -198,15 +198,18 @@ return require('packer').startup({ function(use)
       'nvim-lua/plenary.nvim',
       'kyazdani42/nvim-web-devicons',
       { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+      'nvim-telescope/telescope-ui-select.nvim',
+      'nvim-telescope/telescope-fzf-writer.nvim',
+      'nvim-telescope/telescope-symbols.nvim',
     },
     config = config('telescope'),
   }
 
   use { -- lualine
     'hoob3rt/lualine.nvim',
+    after = 'nvim-base16',
     requires = {
       { 'kyazdani42/nvim-web-devicons', opt = true},
-      { 'nvim-lua/lsp-status.nvim', opt = true },
     },
     config = config('lualine'),
   }
@@ -214,6 +217,7 @@ return require('packer').startup({ function(use)
   use { -- tpope plugins
     { 'tpope/vim-surround', setup = function() vim.g.surround_no_insert_mappings = true end },
     'tpope/vim-commentary',
+    { 'tpope/vim-scriptease', cmd = 'Scriptnames' },
     { 'tpope/vim-unimpaired', config = config('unimpaired') },
     'tpope/vim-abolish',
     { 'tpope/vim-fugitive', config = config('fugitive') },

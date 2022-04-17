@@ -6,4 +6,6 @@ vim.g.nremap = {
   [']u'] = '<skip>',
   ['[uu'] = '<skip>',
   [']uu'] = '<skip>',
+  ['[CC'] = '<skip>',
+  [']CC'] = '<skip>',
 }

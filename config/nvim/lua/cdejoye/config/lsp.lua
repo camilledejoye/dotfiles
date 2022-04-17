@@ -1,6 +1,5 @@
 -- vim.lsp.set_log_level('debug')
 -- LSP settings
-local lsp_status = require('lsp-status')
 local lsp_signature = require('lsp_signature')
 local lsp_installer = require('nvim-lsp-installer')
 local lsp_selection_range = require('lsp-selection-range')
@@ -25,9 +24,11 @@ hi('LspSignatureActiveParameter', 'Visual')
 -- Disable diagnostics virtual text
 vim.diagnostic.config({virtual_text = false})
 
+-- To quickly switch between php servers
+local use_phpactor = false
+
 -- Servers to enable with their specific configuration
 local servers_options = {
-  -- phpactor = { init_options = { ['language_server_completion.trim_leading_dollar'] = true } },
   intelephense = {
     init_options = { licenceKey = vim.fn.expand('$HOME/.local/share/intelephense/licence-key') },
     settings = {
@@ -116,7 +117,6 @@ local servers_options = {
 
 -- Setup the default client capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_extend('keep', capabilities, lsp_status.capabilities)
 
 -- Configure the buffer when attaching to them
 local on_attach = function(client, bufnr)
@@ -174,8 +174,6 @@ local on_attach = function(client, bufnr)
     hint_enable = false, -- Disable virtual text
     toggle_key = '<C-s>',
   }, bufnr)
-
-  lsp_status.on_attach(client)
 end
 
 -- nvim-cmp supports additional completion capabilities
@@ -184,6 +182,15 @@ if pcall(require, 'cmp_nvim_lsp') then
 end
 
 capabilities = lsp_selection_range.update_capabilities(capabilities)
+
+if use_phpactor then
+  servers_options.intelephense = nil
+  require('lspconfig').phpactor.setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    init_options = { ['language_server_completion.trim_leading_dollar'] = true },
+  })
+end
 
 -- Setup the installed servers
 lsp_installer.on_server_ready(function(server)
@@ -200,10 +207,10 @@ lsp_installer.on_server_ready(function(server)
     elseif 'table' == type(server_options) then
       options = vim.tbl_extend('force', options, server_options)
     end
-  end
 
-  server:setup(options)
+    server:setup(options)
+  end
 end)
 
--- Setup Lua LSP server
+-- Setup null-ls
 require('cdejoye.config.null-ls').setup(on_attach, capabilities)

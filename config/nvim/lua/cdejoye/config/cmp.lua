@@ -72,10 +72,12 @@ cmp.setup {
     }),
   },
 
-  documentation = {
-    border = 'single',
-    -- winhighlight = 'NormalFloat:Pmenu,FloatBorder:Pmenu',
-    winhighlight = 'NormalFloat:Pmenu,FloatBorder:PmenuBorder',
+  window = {
+    documentation = {
+      border = 'single',
+      -- winhighlight = 'NormalFloat:Pmenu,FloatBorder:Pmenu',
+      winhighlight = 'NormalFloat:Pmenu,FloatBorder:PmenuBorder',
+    },
   },
 
   formatting = {

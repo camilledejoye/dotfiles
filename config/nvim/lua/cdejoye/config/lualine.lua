@@ -1,4 +1,5 @@
 local utils = require('lualine.utils.utils')
+local highlight = require('lualine.highlight')
 
 vim.o.showmode = false
 vim.o.showtabline = 2
@@ -42,42 +43,65 @@ local filename = {
   shorting_target = 0, -- do not shorten filenames
 }
 
+local section_redirects = {
+  lualine_x = 'lualine_c',
+  lualine_y = 'lualine_b',
+  lualine_z = 'lualine_a',
+}
+local function get_hl(section_letter, suffix)
+  local section = 'lualine_' .. section_letter
+
+  if section_redirects[section] then
+    section = highlight.highlight_exists(section .. '_' .. suffix) and section or section_redirects[section]
+  end
+
+  return section .. '_' .. suffix
+end
+
 local diagnostics = {
   'diagnostics',
   sources = { 'nvim_diagnostic' },
   diagnostics_color = {
-    error = {
-      fg = utils.extract_highlight_colors('Error', 'fg'),
-      bg = utils.extract_color_from_hllist(
-        'fg',
-        { 'DiagnosticError', 'LspDiagnosticsDefaultError', 'DiffDelete' },
-        '#cc6666'
-      ),
-    },
-    warn = {
-      fg = utils.extract_highlight_colors('Error', 'fg'),
-      bg = utils.extract_color_from_hllist(
-        'fg',
-        { 'DiagnosticWarn', 'LspDiagnosticsDefaultWarning', 'DiffText' },
-        '#de935f'
-      ),
-    },
-    info = {
-      fg = utils.extract_highlight_colors('Error', 'fg'),
-      bg = utils.extract_color_from_hllist(
-        'fg',
-        { 'DiagnosticInfo', 'LspDiagnosticsDefaultInformation', 'Normal' },
-        '#e0e0e0'
-      ),
-    },
-    hint = {
-      fg = utils.extract_highlight_colors('Error', 'fg'),
-      bg = utils.extract_color_from_hllist(
-        'fg',
-        { 'DiagnosticHint', 'LspDiagnosticsDefaultHint', 'DiffChange' },
-        '#81a2be'
-      ),
-    },
+    error = function(context)
+      return {
+        fg = utils.extract_highlight_colors(get_hl(context.section, 'normal'), 'fg'),
+        bg = utils.extract_color_from_hllist(
+          'fg',
+          { 'DiagnosticError', 'LspDiagnosticsDefaultError', 'DiffDelete' },
+          '#cc6666'
+        ),
+      }
+    end,
+    warn = function(context)
+      return {
+        fg = utils.extract_highlight_colors(get_hl(context.section, 'normal'), 'fg'),
+        bg = utils.extract_color_from_hllist(
+          'fg',
+          { 'DiagnosticWarn', 'LspDiagnosticsDefaultWarning', 'DiffText' },
+          '#de935f'
+        ),
+      }
+    end,
+    info = function(context)
+      return {
+        fg = utils.extract_highlight_colors(get_hl(context.section, 'normal'), 'fg'),
+        bg = utils.extract_color_from_hllist(
+          'fg',
+          { 'DiagnosticInfo', 'LspDiagnosticsDefaultInformation', 'Normal' },
+          '#e0e0e0'
+        ),
+      }
+    end,
+    hint = function(context)
+      return {
+        fg = utils.extract_highlight_colors(get_hl(context.section, 'normal'), 'fg'),
+        bg = utils.extract_color_from_hllist(
+          'fg',
+          { 'DiagnosticHint', 'LspDiagnosticsDefaultHint', 'DiffChange' },
+          '#81a2be'
+        ),
+      }
+    end,
   },
 }
 
@@ -94,7 +118,7 @@ end
 require('lualine').setup({
   options = {
     icons_enabled = true,
-    theme = 'base16',
+    theme = 'auto',
     section_separators = { left = '', right = '' },
     component_separators = { left = '', right = '' },
     disabled_filetypes = { 'TelescopePrompt', 'TelescopeResults' },

@@ -9,13 +9,7 @@ end
 wo.foldlevel = 1 -- To open classes folds
 wo.foldtext = 'MyFoldText()' -- Force vim-cleanfold because php-foldexpr override it
 bo.iskeyword = 'a-z,A-Z,48-57,_,128-255' -- Match PHP definition of a word
-bo.commentstring = '// %s' -- Default is /* %s */ and it doesn't play well wen comment phpdoc
-
--- Folds
-b.phpfold_use = true
-b.phpfold_group_args = false
-b.phpfold_doc_with_funcs = false
-b.phpfold_doc_fixed_foldlevel = 9
+bo.commentstring = '// %s' -- Default is /* %s */ and it doesn't play well when commenting phpdoc
 
 -- Open the word under the cursor with the official PHP documentation website
 bmap('<C-k>', [[:silent execute ':!xdg-open https://php.net/en/'. expand('<cword>')<CR>]])
@@ -28,6 +22,10 @@ bmap(',,', '->', 'i')
 bmap(',t', '$this->', 'i')
 bmap(',r', t('return ;<Esc>i'), 'i')
 bmap(',<', t('<?php<CR><CR>'), 'i')
+
+-- Do not continue comments on new lines with o and O
+-- The default indent file for php will add it automatically
+vim.g.PHP_autoformatcomment = false
 
 -- Open an interactive PHP session in an emulated terminal
 vim.cmd([[command! -buffer Repl botright split term://php\ -a | normal! i]])

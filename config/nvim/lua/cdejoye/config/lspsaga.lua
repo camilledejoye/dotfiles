@@ -25,56 +25,61 @@ map('<C-f>', [[<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1, '<c-
 map('<C-b>', [[<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1, '<c-b>')<CR>]])
 
 -- Theming
-local hi = require('cdejoye.utils').hi
-local colors = require('base16-colorscheme').colors
+local colorscheme = vim.g.colors_name
+local is_base16 = 'string' == type(colorscheme) and 'base16' == colorscheme:sub(1, 6)
 
-hi('LspSagaFinderSelection', { guifg = colors.base0B, guibg = 'NONE', gui = 'bold' })
+if is_base16 then
+  local hi = require('cdejoye.utils').hi
+  local colors = require('base16-colorscheme').colors
 
-hi('LspFloatWinBorder', 'FloatBorder')
-hi('LspFloatWinTitle', { guifg = colors.base0A, guibg = 'NONE', gui = 'bold' })
-hi('LspFloatWinTruncateLine', 'FloatBorder')
-hi('LspFloatWinNormal', 'Normal')
+  hi('LspSagaFinderSelection', { guifg = colors.base0B, guibg = 'NONE', gui = 'bold' })
 
-hi('LspSagaBorderTitle', { guifg = colors.base09, guibg = 'NONE', gui = 'bold' })
+  hi('LspFloatWinBorder', 'FloatBorder')
+  hi('LspFloatWinTitle', { guifg = colors.base0A, guibg = 'NONE', gui = 'bold' })
+  hi('LspFloatWinTruncateLine', 'FloatBorder')
+  hi('LspFloatWinNormal', 'Normal')
 
-hi('TargetWord', 'TSError')
-hi('ReferencesCount', 'TSTitle')
-hi('DefinitionCount', 'TSTitle')
-hi('TargetFileName', 'TSComment')
-hi('DefinitionIcon', 'Special')
-hi('ReferencesIcon', 'Special')
-hi('ProviderTruncateLine', 'LspFLoatWinTruncateLine')
-hi('SagaShadow', { guibg = 'bg' })
+  hi('LspSagaBorderTitle', { guifg = colors.base09, guibg = 'NONE', gui = 'bold' })
 
-hi('LspSagaFinderSelection', { guifg = colors.base0B, guibg = 'NONE', gui = 'bold' })
+  hi('TargetWord', 'TSError')
+  hi('ReferencesCount', 'TSTitle')
+  hi('DefinitionCount', 'TSTitle')
+  hi('TargetFileName', 'TSComment')
+  hi('DefinitionIcon', 'Special')
+  hi('ReferencesIcon', 'Special')
+  hi('ProviderTruncateLine', 'LspFLoatWinTruncateLine')
+  hi('SagaShadow', { guibg = 'bg' })
 
-hi('DiagnosticTruncateLine', 'LspFLoatWinTruncateLine')
+  hi('LspSagaFinderSelection', { guifg = colors.base0B, guibg = 'NONE', gui = 'bold' })
 
-hi('DefinitionPreviewTitle', 'TSTitle')
+  hi('DiagnosticTruncateLine', 'LspFLoatWinTruncateLine')
 
-hi('LspSagaDiagnosticBorder', 'LspFloatWinBorder')
-hi('LspSagaDiagnosticHeader', 'LspFloatWinTitle')
-hi('LspSagaDiagnosticTruncateLine', 'LspFloatWinTruncateLine')
-hi('LspDiagnosticsFloatingError', 'LspDiagnosticsDefaultError')
-hi('LspDiagnosticsFloatingWarn', 'LspDiagnosticsDefaultWarning')
-hi('LspDiagnosticsFloatingInfor', 'LspDiagnosticsDefaultInformation')
-hi('LspDiagnosticsFloatingHint', 'LspDiagnosticsDefaultHint')
+  hi('DefinitionPreviewTitle', 'TSTitle')
 
-hi('LspSagaShTruncateLine', 'LspFloatWinTruncateLine')
-hi('LspSagaDocTruncateLine', 'LspFloatWinTruncateLine')
+  hi('LspSagaDiagnosticBorder', 'LspFloatWinBorder')
+  hi('LspSagaDiagnosticHeader', 'LspFloatWinTitle')
+  hi('LspSagaDiagnosticTruncateLine', 'LspFloatWinTruncateLine')
+  hi('LspDiagnosticsFloatingError', 'LspDiagnosticsDefaultError')
+  hi('LspDiagnosticsFloatingWarn', 'LspDiagnosticsDefaultWarning')
+  hi('LspDiagnosticsFloatingInfor', 'LspDiagnosticsDefaultInformation')
+  hi('LspDiagnosticsFloatingHint', 'LspDiagnosticsDefaultHint')
 
-hi('LspSagaCodeActionBorder', 'LspFloatWinBorder')
-hi('LspSagaCodeActionTitle', 'LspFloatWinTitle')
-hi('LspSagaCodeActionTruncateLine', 'LspFLoatWinTruncateLine')
-hi('LspSagaCodeActionContent', 'LspFloatWinNormal')
+  hi('LspSagaShTruncateLine', 'LspFloatWinTruncateLine')
+  hi('LspSagaDocTruncateLine', 'LspFloatWinTruncateLine')
 
-hi('LspSagaRenameBorder', 'LspFloatWinBorder')
-hi('LspSagaRenamePromptPrefix', { guifg = colors.base0B, guibg = 'NONE' })
+  hi('LspSagaCodeActionBorder', 'LspFloatWinBorder')
+  hi('LspSagaCodeActionTitle', 'LspFloatWinTitle')
+  hi('LspSagaCodeActionTruncateLine', 'LspFLoatWinTruncateLine')
+  hi('LspSagaCodeActionContent', 'LspFloatWinNormal')
 
-hi('LspSagaHoverBorder', 'LspFloatWinBorder')
-hi('LspSagaSignatureHelpBorder', 'LspFloatWinBorder')
-hi('LspSagaLspFinderBorder', 'LspFloatWinBorder')
-hi('LspSagaAutoPreview', 'LspFloatWinBorder')
-hi('LspSagaDefPreviewBorder', 'LspFloatWinBorder')
+  hi('LspSagaRenameBorder', 'LspFloatWinBorder')
+  hi('LspSagaRenamePromptPrefix', { guifg = colors.base0B, guibg = 'NONE' })
 
-hi('LspSagaLightBulb', 'LspDiagnosticsDefaultHint')
+  hi('LspSagaHoverBorder', 'LspFloatWinBorder')
+  hi('LspSagaSignatureHelpBorder', 'LspFloatWinBorder')
+  hi('LspSagaLspFinderBorder', 'LspFloatWinBorder')
+  hi('LspSagaAutoPreview', 'LspFloatWinBorder')
+  hi('LspSagaDefPreviewBorder', 'LspFloatWinBorder')
+
+  hi('LspSagaLightBulb', 'LspDiagnosticsDefaultHint')
+end

@@ -10,20 +10,24 @@ require('neorg').setup {
     ['core.defaults'] = {}, -- Load all the default modules
 
     ['core.norg.journal'] = { -- Easily create files for a journal
-			-- https://github.com/nvim-neorg/neorg/wiki/Journal#Configuration
-		},
+      -- https://github.com/nvim-neorg/neorg/wiki/Journal#Configuration
+    },
 
     ['core.norg.qol.toc'] = { -- Generates a Table of Content from the Neorg file
-			-- https://github.com/nvim-neorg/neorg/wiki/Qol-Toc
-		},
+      -- https://github.com/nvim-neorg/neorg/wiki/Qol-Toc
+    },
 
     ['core.gtd.base'] = { -- Manages your tasks with Neorg using the Getting Things Done methodology
-			-- https://github.com/nvim-neorg/neorg/wiki/Getting-Things-Done
-		},
+      config = { -- https://github.com/nvim-neorg/neorg/wiki/Getting-Things-Done
+        workspace = 'default',
+      },
+    },
 
-    ['core.presenter'] = { -- Neorg module to create gorgeous presentation slides
-			-- https://github.com/nvim-neorg/neorg/wiki/Core-Presenter
-		},
+    -- ['core.presenter'] = { -- Neorg module to create gorgeous presentation slides
+    --   config = { -- https://github.com/nvim-neorg/neorg/wiki/Core-Presenter
+    --     zen_mode = 'zen-mode',
+    --   },
+    -- },
 
 
 

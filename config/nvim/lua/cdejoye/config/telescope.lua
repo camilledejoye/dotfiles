@@ -14,8 +14,29 @@ telescope.setup {
     dynamic_preview_title = true,
 
     mappings = {
-        i = { ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist },
-        n = { ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist },
+      i = {
+        ["<C-a>"] = actions.select_all,
+        ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+        ["<C-e>"] = actions.results_scrolling_down,
+        ["<C-y>"] = actions.results_scrolling_up,
+
+        ["<C-x>"] = false,
+        ["<C-s>"] = actions.select_horizontal,
+        ["<C-p>"] = "move_selection_previous",
+        ["<C-n>"] = "move_selection_next",
+
+        -- this is nicer when used with smart-history plugin.
+        ["<C-k>"] = actions.cycle_history_next,
+        ["<C-j>"] = actions.cycle_history_prev,
+
+        ["<C-space>"] = actions.complete_tag,
+      },
+      n = {
+        ["<C-a>"] = actions.select_all,
+        ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+        ["<C-e>"] = actions.results_scrolling_down,
+        ["<C-y>"] = actions.results_scrolling_up,
+      },
     },
   },
 
@@ -27,9 +48,6 @@ telescope.setup {
       mappings = {
         n = {
           ['dd'] = 'delete_buffer',
-        },
-        i = {
-          ['<C-d>'] = 'delete_buffer',
         },
       },
     },
@@ -65,15 +83,31 @@ telescope.setup {
       override_file_sorter = true,
       case_mode = 'smart_case',
     },
+
+    ['ui-select'] = {
+      require('telescope.themes').get_cursor({}),
+    },
+
+    -- TODO check it out, does not seems to work for staged_grep
+    -- https://github.com/nvim-telescope/telescope-fzf-writer.nvim
+    fzf_writer = {
+      -- Disable by default, can slow down the sorter
+      use_highlighter = false,
+      minimum_grep_characters = 4,
+      minimum_files_characters = 4,
+    },
   },
 }
 telescope.load_extension('fzf')
+telescope.load_extension('ui-select')
+telescope.load_extension('dap')
 
 -- Mappings
 map('<Leader>sf', [[<cmd>lua require('cdejoye.config.telescope').find_files()<CR>]])
 map('<Leader>sF', [[<cmd>lua require('telescope.builtin').find_files({ no_ignore = true, hidden = true })<CR>]])
 map('<Leader>sb', [[<cmd>lua require('telescope.builtin').buffers()<CR>]])
 map('<Leader>sc', [[<cmd>lua require('telescope.builtin').git_commits()<CR>]])
+map('<Leader>sC', [[<cmd>lua require('telescope.builtin').git_bcommits()<CR>]])
 map('<Leader>rg', [[<cmd>Rg<CR>]])
 map('<Leader>Rg', [[<cmd>Rg!<CR>]])
 map('<Leader>H', [[<cmd>H<CR>]])

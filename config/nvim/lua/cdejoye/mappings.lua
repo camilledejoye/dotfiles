@@ -60,6 +60,9 @@ vim.opt.pastetoggle = '<F12>'
   map('n', '!', ':!', { noremap = true, silent = true })
 
   map('n', '<C-l>', ':noh<CR>', { noremap = true, silent = true })
+
+  map('i', '<C-CR>', '<C-O>O', { noremap = true, silent = true })
+  map('i', '<S-CR>', '<C-O>o', { noremap = true, silent = true })
 -- }}}
 
 -- vim: ts=2 sw=2 et fdm=marker
