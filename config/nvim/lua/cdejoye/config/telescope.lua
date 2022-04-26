@@ -84,10 +84,6 @@ telescope.setup {
       case_mode = 'smart_case',
     },
 
-    ['ui-select'] = {
-      require('telescope.themes').get_cursor({}),
-    },
-
     -- TODO check it out, does not seems to work for staged_grep
     -- https://github.com/nvim-telescope/telescope-fzf-writer.nvim
     fzf_writer = {
@@ -99,7 +95,6 @@ telescope.setup {
   },
 }
 telescope.load_extension('fzf')
-telescope.load_extension('ui-select')
 telescope.load_extension('dap')
 
 -- Mappings

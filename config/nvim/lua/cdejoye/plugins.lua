@@ -198,12 +198,13 @@ return require('packer').startup({ function(use)
       'nvim-lua/plenary.nvim',
       'kyazdani42/nvim-web-devicons',
       { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
-      'nvim-telescope/telescope-ui-select.nvim',
       'nvim-telescope/telescope-fzf-writer.nvim',
       'nvim-telescope/telescope-symbols.nvim',
     },
     config = config('telescope'),
   }
+
+  use { 'stevearc/dressing.nvim', config = config('dressing') }
 
   use { -- lualine
     'hoob3rt/lualine.nvim',
