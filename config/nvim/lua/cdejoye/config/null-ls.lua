@@ -1,5 +1,40 @@
 local builtins = require('null-ls').builtins
 local helpers = require('null-ls.helpers')
+local utils = require('null-ls.utils')
+local state = require('null-ls.state')
+local command_resolver = require('null-ls.helpers.command_resolver')
+
+--- First try to find the command in the PATH
+--- Otherwise look into .tools/
+--- Finally check in vendor/bin/
+---@param command_name string
+local function php_command_resolver(command_name)
+  ---@param params NullLsParams
+  return function(params)
+    params.command = command_name
+
+    local resolved = state.get_resolved_command(params.bufnr, params.command)
+    if resolved then
+      return resolved.command
+    end
+
+    if utils.is_executable(params.command) then
+      state.set_resolved_command(params.bufnr, params.command, params.command)
+
+      return params.command
+    end
+
+    local command = command_resolver.generic(params, '.tool')
+    if command then
+      return command
+    end
+
+    -- Clear to be able to use generic resolver again
+    state.set_resolved_command(params.bufnr, params.command, nil)
+
+    return command_resolver.generic(params, utils.path.join('vendor', 'bin'))
+  end
+end
 
 --- Fake a linter for php-cs-fixer
 --- All the diagnostics will be shown on the first line because we don't have line information
@@ -47,7 +82,7 @@ local phpcsfixer = helpers.make_builtin {
   factory = helpers.generator_factory,
 }
 
----@class ExtendedNullLsParams @parent Params
+---@class ExtendedNullLsParams @parent NullLsParams
 ---@field bufname_match fun(glob: string): boolean #Match the bufname against a glob pattern
 
 ---@alias ShouldRunCallback fun(params: ExtendedNullLsParams): boolean
@@ -55,11 +90,11 @@ local phpcsfixer = helpers.make_builtin {
 --- Decides, at runtime, if a source should be run or not
 ---
 ---@param callback ShouldRunCallback #Callback used to determine if the source should be run
----@return fun(params: Params): boolean #Wrapper around `callback` to provide extended params
+---@return fun(params: NullLsParams): boolean #Wrapper around `callback` to provide extended params
 local function should_run(callback)
   vim.validate({callback = { callback, 'function' }})
 
-  ---@param params Params
+  ---@param params NullLsParams
   return function(params)
     local client = vim.lsp.get_client_by_id(params.client_id)
     local root_dir = client.config.root_dir
@@ -75,7 +110,7 @@ end
 
 ---@params params ExtendedNullLsParams
 local should_run_phpcsfixer = should_run(function(params)
-  return not(
+  return php_command_resolver('php-cs-fixer') and not(
     params.bufname_match('tests/')
     or params.bufname_match('vendor/*')
     or params.bufname_match('var/*')
@@ -108,9 +143,10 @@ function M.setup (on_attach, _)
       builtins.formatting.stylua,
 
       builtins.diagnostics.phpstan.with {
-        ---@params params ExtendedNullLsParams
+        command = php_command_resolver('phpstan'),
+        ---@param params ExtendedNullLsParams
         runtime_condition = should_run(function(params)
-          return not(
+          return php_command_resolver('phpstan')(params) and not(
             params.bufname_match('src/Core/Infrastructure/Migrations/*')
             or params.bufname_match('src/**/spec/*')
             or params.bufname_match('src/**/DataFixtures/*')
@@ -120,11 +156,27 @@ function M.setup (on_attach, _)
         end),
       },
 
-      builtins.formatting.phpcbf.with { runtime_condition = should_run_phpcs, },
-      builtins.diagnostics.phpcs.with { runtime_condition = should_run_phpcs, },
+      builtins.formatting.phpcbf.with {
+        command = php_command_resolver('phpcbf'),
+        runtime_condition = function(params)
+          return php_command_resolver('phpcbf')(params) and should_run_phpcs(params)
+        end,
+      },
+      builtins.diagnostics.phpcs.with {
+        command = php_command_resolver('phpcs'),
+        runtime_condition = function(params)
+          return php_command_resolver('phpcs')(params) and should_run_phpcs(params)
+        end,
+      },
 
-      builtins.formatting.phpcsfixer.with { runtime_condition = should_run_phpcsfixer, },
-      phpcsfixer.with { runtime_condition = should_run_phpcsfixer, },
+      builtins.formatting.phpcsfixer.with {
+        command = php_command_resolver('php-cs-fixer'),
+        runtime_condition = should_run_phpcsfixer,
+      },
+      phpcsfixer.with {
+        command = php_command_resolver('php-cs-fixer'),
+        runtime_condition = should_run_phpcsfixer,
+      },
     },
     on_attach = on_attach,
   }
