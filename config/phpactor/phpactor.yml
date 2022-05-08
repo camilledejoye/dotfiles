@@ -1,0 +1,8 @@
+indexer.exclude_patterns:
+  - /var/**/*
+  - /vendor/**/tests/**/*
+
+logging.enabled: true
+logging.path: /tmp/phpactor.log
+logging.level: debug
+logging.formatter: pretty
