@@ -19,12 +19,12 @@ local function php_command_resolver(command_name)
     end
 
     if utils.is_executable(params.command) then
-      state.set_resolved_command(params.bufnr, params.command, params.command)
+      state.set_resolved_command(params.bufnr, params.command, { command = params.command })
 
       return params.command
     end
 
-    local command = command_resolver.generic(params, '.tool')
+    local command = command_resolver.generic(params, 'tools')
     if command then
       return command
     end
@@ -110,7 +110,7 @@ end
 
 ---@params params ExtendedNullLsParams
 local should_run_phpcsfixer = should_run(function(params)
-  return php_command_resolver('php-cs-fixer') and not(
+  return nil ~= php_command_resolver('php-cs-fixer')(params) and not(
     params.bufname_match('tests/')
     or params.bufname_match('vendor/*')
     or params.bufname_match('var/*')
