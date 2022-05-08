@@ -158,8 +158,7 @@ local on_attach = function(client, bufnr)
 
   bmap('<leader>ls', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
 
-  bmap('<Leader>ff', '<cmd>lua vim.lsp.buf.formatting()<CR>')
-  vim.cmd [[ command! -buffer Format execute 'lua vim.lsp.buf.formatting()' ]]
+  bmap('<Leader>ff', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>')
 
   bmap('vv', [[<cmd>lua require('lsp-selection-range').trigger()<CR>]], 'n')
   bmap('vv', [[<cmd>lua require('lsp-selection-range').expand()<CR>]], 'v')
