@@ -1,5 +1,5 @@
 [options]
-  columns = "status,name,id,ports,cpu,cpus,mem"
+  columns = "status,name,id,ports,cpu,mem"
   filterStr = ""
   sortField = "mem"
 
