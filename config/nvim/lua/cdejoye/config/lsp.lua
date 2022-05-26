@@ -68,6 +68,12 @@ local servers_options = {
           proseWrap = 'Always',
           printWidth = 120, -- TODO detect it for YAML config ?
         },
+        schemas = {
+          ["https://json.schemastore.org/taskfile.json"] = {
+            "Taskfile.dist.yaml",
+            "*Taskfile.yaml",
+          },
+        },
       },
     },
   },
