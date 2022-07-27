@@ -136,8 +136,7 @@ return require('packer').startup({ function(use)
     requires = {
       { 'j-hui/fidget.nvim', config = function() require('fidget').setup({ text = { spinner = 'dots' } }) end },
       -- Use a fork insteaf because the original plugin was not updated for more than 6 months
-      -- { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
-      { 'tami5/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
+      { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
       { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
       { 'camilledejoye/nvim-lsp-selection-range' },
       { 'b0o/schemastore.nvim' }, -- used by jsonls server to retrieve json schemas

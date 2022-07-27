@@ -157,8 +157,8 @@ local on_attach = function(client, bufnr)
   -- vim.cmd([[ autocmd! CursorHoldI <buffer> lua vim.lsp.buf.document_highlight() ]])
   -- vim.cmd([[ autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references() ]])
 
-  bmap('[d', [[<cmd>lua require('lspsaga.diagnostic').navigate('prev')()<CR>]])
-  bmap(']d', [[<cmd>lua require('lspsaga.diagnostic').navigate('next')()<CR>]])
+  bmap('[d', require("lspsaga.diagnostic").goto_prev)
+  bmap(']d', require("lspsaga.diagnostic").goto_next)
   bmap('<leader>od', [[<cmd>lua require('trouble').open('lsp_document_diagnostics')<CR>]])
   bmap('<leader>ld', [[<cmd>lua require('telescope.builtin').diagnostics()<CR>]])
 

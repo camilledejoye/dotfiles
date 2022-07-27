@@ -3,21 +3,9 @@ local map = require('cdejoye.utils').map
 
 -- Config
 require('lspsaga').init_lsp_saga {
-  use_saga_diagnostic_sign = false,
-
-  code_action_icon = ' ',
-  code_action_prompt = {
-    enable = false,
+  code_action_lightbulb = {
     sign = false,
-    sign_priority = 20,
-    virtual_text = true,
   },
-
-  rename_prompt_prefix = '❯',
-  rename_action_keys = {
-    quit = { '<Esc>', '<C-c>' },
-  },
-  rename_prompt_populate = false, -- Disable populating the prompt with the current word under the cursor
 }
 
 -- Mappings
