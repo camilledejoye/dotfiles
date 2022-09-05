@@ -8,10 +8,6 @@ require('lspsaga').init_lsp_saga {
   },
 }
 
--- Mappings
-map('<C-f>', [[<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1, '<c-f>')<CR>]])
-map('<C-b>', [[<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1, '<c-b>')<CR>]])
-
 -- Theming
 local colorscheme = vim.g.colors_name
 local is_base16 = 'string' == type(colorscheme) and 'base16' == colorscheme:sub(1, 6)
