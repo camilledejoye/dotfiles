@@ -50,6 +50,8 @@ local servers_options = {
             "**/var/log/**",
           },
         },
+        -- Does not work: https://github.com/bmewburn/vscode-intelephense/issues/2003
+        format = { enable = false },
       },
     },
   },
@@ -72,6 +74,8 @@ local servers_options = {
           ["https://json.schemastore.org/taskfile.json"] = {
             "Taskfile.dist.yaml",
             "*Taskfile.yaml",
+            "tasks/*.yml",
+            "tasks/*.yaml",
           },
         },
       },
@@ -82,6 +86,7 @@ local servers_options = {
   sumneko_lua = require('lua-dev').setup(),
 }
 
+lsp_installer.setup({})
 -- -- Uncomment to install/update all pre-configured servers when start Neovim
 -- local settings = require('nvim-lsp-installer.settings')
 -- local JobExecutionPool = require('nvim-lsp-installer.jobs.pool')
@@ -164,7 +169,23 @@ local on_attach = function(client, bufnr)
 
   bmap('<leader>ls', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
 
-  bmap('<Leader>ff', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>')
+  if 8 == vim.version().minor then
+    bmap('<Leader>ff', function ()
+      vim.lsp.buf.format({
+        async = true,
+        filter = function (formatting_client)
+          -- Only allowed specific servers to format
+          return 'null-ls' == formatting_client.name
+          or 'jsonls' == formatting_client.name
+        end,
+      })
+    end)
+  else
+    bmap('<Leader>ff', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>')
+    if not ('null-ls' == client.name or 'jsonls' == client.name) then
+      client.server_capabilities.document_formatting = false
+    end
+  end
 
   bmap('vv', [[<cmd>lua require('lsp-selection-range').trigger()<CR>]], 'n')
   bmap('vv', [[<cmd>lua require('lsp-selection-range').expand()<CR>]], 'v')
@@ -198,24 +219,20 @@ if use_phpactor then
 end
 
 -- Setup the installed servers
-lsp_installer.on_server_ready(function(server)
+for server_name, server_options in pairs(servers_options) do
   local options = {
     on_attach = on_attach,
     capabilities = capabilities,
   }
 
-  if servers_options[server.name] then
-    local server_options = servers_options[server.name]
-
-    if 'function' == type(server_options) then
-      options = server_options(options)
-    elseif 'table' == type(server_options) then
-      options = vim.tbl_extend('force', options, server_options)
-    end
-
-    server:setup(options)
+  if 'function' == type(server_options) then
+    options = server_options(options)
+  elseif 'table' == type(server_options) then
+    options = vim.tbl_extend('force', options, server_options)
   end
-end)
+
+  require('lspconfig')[server_name].setup(options)
+end
 
 -- Setup null-ls
 require('cdejoye.config.null-ls').setup(on_attach, capabilities)
