@@ -1,39 +1,29 @@
 local builtins = require('null-ls').builtins
 local helpers = require('null-ls.helpers')
 local utils = require('null-ls.utils')
-local state = require('null-ls.state')
+local cache = require('null-ls.helpers.cache')
 local command_resolver = require('null-ls.helpers.command_resolver')
 
 --- First try to find the command in the PATH
---- Otherwise look into .tools/
+--- Otherwise look into tools/
 --- Finally check in vendor/bin/
 ---@param command_name string
 local function php_command_resolver(command_name)
   ---@param params NullLsParams
-  return function(params)
+  return cache.by_bufnr(function(params)
     params.command = command_name
 
-    local resolved = state.get_resolved_command(params.bufnr, params.command)
-    if resolved then
-      return resolved.command
-    end
-
     if utils.is_executable(params.command) then
-      state.set_resolved_command(params.bufnr, params.command, { command = params.command })
-
       return params.command
     end
 
-    local command = command_resolver.generic(params, 'tools')
+    local command = command_resolver.generic('tools')(params)
     if command then
       return command
     end
 
-    -- Clear to be able to use generic resolver again
-    state.set_resolved_command(params.bufnr, params.command, nil)
-
-    return command_resolver.generic(params, utils.path.join('vendor', 'bin'))
-  end
+    return command_resolver.generic(utils.path.join('vendor', 'bin'))(params)
+  end)
 end
 
 --- Fake a linter for php-cs-fixer
@@ -43,7 +33,11 @@ end
 --- I don't see how to link the diffs to the correct rule so even with this solution I might need
 --- to show all errors on each impacted line ?
 local phpcsfixer = helpers.make_builtin {
-  name = 'php-cs',
+  name = 'phpcsfixer',
+  meta = {
+    url = "https://github.com/FriendsOfPhp/PHP-CS-Fixer",
+    description = "Formatter for php files.",
+  },
   method = require('null-ls.methods').internal.DIAGNOSTICS,
   filetypes = { 'php' },
   generator_opts = {
