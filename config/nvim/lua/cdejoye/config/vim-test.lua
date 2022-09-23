@@ -7,6 +7,7 @@ g['test#php#behat#use_suite_in_args'] = 1
 -- For Worldia because we don't have a file matching the default glob pattern:
 -- features/bootstrap/**/*.php
 g['test#php#behat#bootstrap_directory'] = '*'
+g['test#php#behat#nearest_use_exact_regex'] = 1
 
 -- Don't run *Test.php with codeception
 g['test#php#codeception#file_pattern'] = [[\v((c|C)e(p|s)t\.php$|\.feature$)]]
@@ -21,14 +22,14 @@ g['test#php#phpunit#patterns'] = {
 }
 g['test#php#phpunit#options'] = '--testdox' -- Use testdox format for PHPUnit
 
-g['test#php#phpspec#executable'] = 'docker-compose exec php vendor/bin/phpspec'
+g['test#php#phpspec#executable'] = 'phpspec'
 g['test#php#phpspec#options'] = {
-  nearest = '--format=pretty',
+  nearest = '--format=pretty --verbose',
   all = '--format=pretty',
   suite = '--format=progress',
 }
 
-g['test#php#behat#executable'] = 'docker-compose exec php vendor/bin/behat'
+g['test#php#behat#executable'] = 'behat'
 
 g['test#strategy'] = 'neovim'
 g.ultest_loaded = 1
