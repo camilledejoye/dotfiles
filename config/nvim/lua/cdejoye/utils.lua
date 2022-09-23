@@ -14,12 +14,20 @@ local function convert_opts(opts)
 end
 
 function M.map(lhs, rhs, modes, opts, bufnr)
+  vim.validate({
+    rhs = { rhs, { 'string', 'function' } },
+  })
   modes = modes or 'n'
   opts = convert_opts(opts or {})
   opts = vim.tbl_extend('keep', opts, {
     noremap = true,
     silent = true,
   })
+
+  if 'function' == type(rhs) then
+    opts.callback = rhs
+    rhs = ''
+  end
 
   modes:gsub('.', function(mode)
     if not bufnr then
@@ -47,13 +55,9 @@ function M.hi(name, definition, default)
     definition = table.concat(stringified_opts, ' ')
   end
 
-  vim.cmd(string.format(
-    'highlight%s %s %s %s',
-    default and ' default' or '!',
-    is_link and 'link' or '',
-    name,
-    definition
-  ))
+  vim.cmd(
+    string.format('highlight%s %s %s %s', default and ' default' or '!', is_link and 'link' or '', name, definition)
+  )
 end
 
 return M
