@@ -103,7 +103,10 @@ cmp.setup {
       -- set the detail as menu
       if 'nvim_lsp' == entry.source.name then
         if 'phpactor' == entry.source.source.client.name then
-          vim_item.menu = entry.completion_item.detail .. ' ' .. vim_item.menu
+          -- Check if the completion_item.detail has been removed or just not present on all results
+          if entry.completion_item.detail then
+            vim_item.menu = entry.completion_item.detail .. ' ' .. vim_item.menu
+          end
         end
       end
 
