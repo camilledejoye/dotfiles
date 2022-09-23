@@ -97,6 +97,7 @@ return require('packer').startup({ function(use)
 
   use { -- Neorg
     'nvim-neorg/neorg',
+    run = ":Neorg sync-parsers",
     -- No more unstable branch in new repo ?
     -- branch = 'unstable',
     requires = { 'nvim-lua/plenary.nvim', 'vhyrro/neorg-telescope' },

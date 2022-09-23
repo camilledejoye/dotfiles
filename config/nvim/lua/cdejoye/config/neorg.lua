@@ -1,7 +1,7 @@
 local workspaces = {
   default = '~/notes',
   wiki = '~/vimwiki',
-  worldia ='~/work/worldia/api/notes'
+  worldia ='~/work/worldia/platform/api/notes'
 }
 
 require('neorg').setup {
