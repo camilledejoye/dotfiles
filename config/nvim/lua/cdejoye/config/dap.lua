@@ -8,8 +8,27 @@ dapui.setup {
   mappings = {
     expand = { 'za', '<CR>', '<2-LeftMouse>' },
   },
-  sidebar = { position = 'right', size = 80 },
-  tray = { elements = {} },
+  layouts = {
+    {
+      elements = {
+      -- Elements can be strings or table with id and size keys.
+        { id = "scopes", size = 0.25 },
+        "breakpoints",
+        "stacks",
+        "watches",
+      },
+      size = 80,
+      position = "right",
+    },
+    {
+      elements = {
+        -- "repl",
+        -- "console",
+      },
+      size = 10,
+      position = "bottom",
+    },
+  },
 }
 
 -- Not sure it's working...
