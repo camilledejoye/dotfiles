@@ -1,0 +1,15 @@
+priority 1
+
+snippet let "PHPSpec / Setup method" b
+public function let(${1}): void
+{
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet it "PHPSpec / Test method" b
+public function it_${1}(${2}): void
+{
+	${VISUAL}${0}
+}
+endsnippet

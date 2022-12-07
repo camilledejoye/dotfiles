@@ -4,11 +4,28 @@ global !p
 import sniphpets
 endglobal
 
+snippet pucase "PHPUnit / Test case" b
+<?php`!v sniphpets#header()`
+
+namespace `!v sniphpets#namespace()`;
+
+use `!v sniphpets#unittest#alternate()`;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * @covers `!v sniphpets#tail(sniphpets#unittest#alternate(), '\')`
+ */
+class `!v sniphpets#basename()` extends TestCase
+{
+	${VISUAL}${0}
+}
+endsnippet
+
 snippet putest "PHPUnit / Test method" b
 /**
  * @test
  */
-public function should${1}(): void
+public function it${1}(): void
 {
 	${VISUAL}${0}
 }
@@ -19,7 +36,7 @@ snippet putestdepends "PHPUnit / Test method with dependency" b
  * @test
  * @depends ${1}
  */
-public function should${2}(${3}): void
+public function it${2}(${3}): void
 {
 	${VISUAL}${0}
 }
@@ -30,7 +47,7 @@ snippet putestprovider "PHPUnit / Test method with data provider" b
  * @test
  * @dataProvider ${1}
  */
-public function should${2}(${3}): void
+public function it${2}(${3}): void
 {
 	${VISUAL}${0}
 }
