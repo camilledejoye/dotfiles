@@ -50,7 +50,7 @@ return require('packer').startup({ function(use)
     -- https://github.com/antoinemadec/FixCursorHold.nvim
     -- See: https://github.com/neovim/neovim/issues/12587
     "antoinemadec/FixCursorHold.nvim",
-    setup = [[vim.g.cursorhold_updatetime = 1000]]
+    setup = [[vim.g.cursorhold_updatetime = 100]]
   }
 
   use { -- Add documentation around Lua
