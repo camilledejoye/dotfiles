@@ -105,6 +105,21 @@ vim.g.projectionist_heuristics = {
               'spec/{}Spec.php',
             }
         },
+        ['tests/Unit/*Test.php'] = {
+            ['type'] = 'test',
+            ['skeleton'] = 'pucase',
+            ['alternate'] = 'src/{}.php',
+        },
+        ['tests/Integration/*Test.php'] = {
+            ['type'] = 'test',
+            ['skeleton'] = 'pucase',
+            ['alternate'] = 'src/{}.php',
+        },
+        ['tests/Functional/*Test.php'] = {
+            ['type'] = 'test',
+            ['skeleton'] = 'pucase',
+            ['alternate'] = 'src/{}.php',
+        },
         ['tests/*Test.php'] = {
             ['type'] = 'test',
             ['skeleton'] = 'pucase',
