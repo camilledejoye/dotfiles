@@ -38,6 +38,10 @@ alt + o ; {b,e,w}
 super + l
     loginctl lock-session
 
+# Take a screenshot of a selection
+ctrl + alt + s
+    scrot -e 'xclip -selection clipboard -t image/png -i $f && rm $f' -s
+
 # }}}
 
 # Media keys {{{
