@@ -1,13 +1,17 @@
 local config = {
   input = {
     border = 'single', -- try "solid": adds padding by a single whitespace cell
-    winblend = 0, -- I don't like transparency
+    win_options = {
+      winblend = 0, -- I don't like transparency
+    },
     insert_only = false,
   },
   select = {
     builtin = {
       border = 'single', -- try "solid": adds padding by a single whitespace cell
-      winblend = 0, -- I don't like transparency
+      win_options = {
+        winblend = 0, -- I don't like transparency
+      },
     },
   },
 }
