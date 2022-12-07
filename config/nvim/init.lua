@@ -31,7 +31,7 @@ opt.swapfile = false
 opt.number = true
 opt.relativenumber = true
 opt.cursorline = true
--- opt.laststatus = 2
+opt.laststatus = 2
 opt.modelines = 1
 opt.tabstop = 4
 opt.softtabstop = 4
@@ -53,7 +53,6 @@ opt.diffopt:append({ 'vertical', 'hiddenoff', 'algorithm:minimal' })
 opt.wildmenu = true
 opt.inccommand = 'nosplit'
 opt.termguicolors = true
-opt.clipboard = 'unnamedplus'
 opt.equalalways = false -- don't automatically resize windows
 opt.updatetime = 1000 -- Make updates happen faster
 opt.mouse = 'n'
