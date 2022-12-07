@@ -247,9 +247,7 @@ return require('packer').startup({ function(use)
   }
 
   use { -- vim-test
-    'rcarriga/vim-ultest',
-    run = ":UpdateRemotePlugins" ,
-    requires = {"vim-test/vim-test"},
+    'vim-test/vim-test',
     config = config('vim-test'),
   }
 
