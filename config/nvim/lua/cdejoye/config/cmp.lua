@@ -34,7 +34,8 @@ cmp.setup {
     }, keyword_length = 5 },
     { name = 'spell', keyword_length = 5 },
     { name = 'emoji' },
-    { name = 'ultisnips' },
+    -- { name = 'ultisnips' },
+    { name = 'luasnip' },
     { name = 'neorg' },
   }),
 
@@ -50,8 +51,8 @@ cmp.setup {
 
   snippet = {
     expand = function(args)
-      -- luasnip.lsp_expand(args.body)
-      vim.fn['UltiSnips#Anon'](args.body)
+      require('luasnip').lsp_expand(args.body)
+      -- vim.fn['UltiSnips#Anon'](args.body)
     end,
   },
 

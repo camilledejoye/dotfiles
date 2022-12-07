@@ -105,11 +105,11 @@ return require('packer').startup({ function(use)
     config = config('neorg'),
   }
 
-  -- use {
-  --   'L3MON4D3/LuaSnip',
-  --   -- requires = { 'rafamadriz/friendly-snippets' },
-  --   config = config('luasnip'),
-  -- }
+  use {
+    'L3MON4D3/LuaSnip',
+    -- requires = { 'rafamadriz/friendly-snippets' },
+    config = config('luasnip'),
+  }
 
   use { 'onsails/lspkind-nvim', config = config('lspkind') }
 
@@ -122,9 +122,9 @@ return require('packer').startup({ function(use)
       'hrsh7th/cmp-nvim-lsp',
       'ray-x/lsp_signature.nvim',
       -- Disable while I'm still using UltiSnips (no need for LSP)
-      -- 'saadparwaiz1/cmp_luasnip',
-      -- 'L3MON4D3/LuaSnip',
-      'quangnguyen30192/cmp-nvim-ultisnips',
+      'saadparwaiz1/cmp_luasnip',
+      'L3MON4D3/LuaSnip',
+      -- 'quangnguyen30192/cmp-nvim-ultisnips',
       'hrsh7th/cmp-emoji',
       'f3fora/cmp-spell',
     },
@@ -163,34 +163,34 @@ return require('packer').startup({ function(use)
     end,
   }
 
-  use { -- Snippets
-    -- 'SirVer/ultisnips', -- The engine
-    'camilledejoye/ultisnips', branch = 'develop', -- Until the handling of floating windows is fixed
-    requires = {
-      'honza/vim-snippets', -- The snippets definitions
-      { -- PHP snippets
-        'sniphpets/sniphpets',
-        requires = {
-          'sniphpets/sniphpets-common',
-          'sniphpets/sniphpets-symfony',
-          'sniphpets/sniphpets-phpunit',
-          'sniphpets/sniphpets-doctrine',
-          'sniphpets/sniphpets-postfix-codes',
-        },
-        config = function()
-          -- Disable because mappings starting with ; causes issues with lsp-signature
-          -- The timeout for the mapping resolution make the popup window appears again
-          vim.g.sniphpets_common_disable_shortcuts = 1
-        end,
-      },
-    },
-    config = function()
-      vim.g.UltiSnipsExpandTrigger		= "<Tab>"
-      vim.g.UltiSnipsJumpForwardTrigger	= "<C-j>"
-      vim.g.UltiSnipsJumpBackwardTrigger	= "<C-k>"
-      vim.g.UltiSnipsRemoveSelectModeMappings = 0
-    end,
-  }
+  -- use { -- Snippets
+  --   -- 'SirVer/ultisnips', -- The engine
+  --   'camilledejoye/ultisnips', branch = 'develop', -- Until the handling of floating windows is fixed
+  --   requires = {
+  --     'honza/vim-snippets', -- The snippets definitions
+  --     { -- PHP snippets
+  --       'sniphpets/sniphpets',
+  --       requires = {
+  --         'sniphpets/sniphpets-common',
+  --         'sniphpets/sniphpets-symfony',
+  --         'sniphpets/sniphpets-phpunit',
+  --         'sniphpets/sniphpets-doctrine',
+  --         'sniphpets/sniphpets-postfix-codes',
+  --       },
+  --       config = function()
+  --         -- Disable because mappings starting with ; causes issues with lsp-signature
+  --         -- The timeout for the mapping resolution make the popup window appears again
+  --         vim.g.sniphpets_common_disable_shortcuts = 1
+  --       end,
+  --     },
+  --   },
+  --   config = function()
+  --     vim.g.UltiSnipsExpandTrigger		= "<Tab>"
+  --     vim.g.UltiSnipsJumpForwardTrigger	= "<C-j>"
+  --     vim.g.UltiSnipsJumpBackwardTrigger	= "<C-k>"
+  --     vim.g.UltiSnipsRemoveSelectModeMappings = 0
+  --   end,
+  -- }
 
   use { -- Telescope
     'nvim-telescope/telescope.nvim',

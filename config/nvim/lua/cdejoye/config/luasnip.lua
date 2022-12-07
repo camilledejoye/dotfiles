@@ -1,238 +1,430 @@
-local luasnip = require('luasnip')
+local ls = require('luasnip')
 local types = require('luasnip.util.types')
-local snippet = luasnip.snippet
-local snippet_node = luasnip.snippet_node
-local indent = luasnip.indent_snippet_node
-local text = luasnip.text_node
-local insert = luasnip.insert_node
-local func = luasnip.function_node
-local choice = luasnip.choice_node
-local dynamic = luasnip.dynamic_node
+local s = ls.snippet
+local sn = ls.snippet_node
+local indent = ls.indent_snippet_node
+local t = ls.text_node
+local i = ls.insert_node
+local f = ls.function_node
+local c = ls.choice_node
+local d = ls.dynamic_node
+local l = require('luasnip.extras').lambda
+local fmt = require('luasnip.extras.fmt').fmt
+local postfix = function(context, nodes, opts)
+  if 'string' == type(context) then
+    context = { trig = context }
+  end
 
-luasnip.config.setup {
-  history = true,
+  -- Match the full line without the indentation by default
+  context = vim.tbl_deep_extend('keep', context, { match_pattern = '^%s*(.+)$' })
+
+  return require('luasnip.extras.postfix').postfix(context, nodes, opts)
+end
+
+ls.config.setup({
+  history = false,
   -- Update more often, :h events for more info.
-  updateevents = "TextChanged,TextChangedI",
-  -- Disable while I'm still using UltiSnips (no need for LSP)
-  -- store_selection_keys = '<Tab>',
+  updateevents = 'TextChanged,TextChangedI',
+  store_selection_keys = '<Tab>',
   ext_opts = {
     [types.choiceNode] = {
       active = {
-        virt_text = {{"●", "TSError"}}
-      }
+        virt_text = { { '●', 'TSMethod' } },
+      },
     },
-    [types.insertNode] = {
-      active = {
-        virt_text = {{"●", "TSMethod"}}
-      }
-    }
   },
 
   -- treesitter-hl has 100, use something higher (default is 200).
   ext_base_prio = 300,
   -- minimal increase in priority.
   ext_prio_increase = 1,
-  enable_autosnippets = true,
-}
+  -- Disable since I don't remember what it does, to check
+  -- enable_autosnippets = true,
 
-local function php_visibility(visibility_letter)
-  return 'u' == visibility_letter and 'public '
-  or 'o' == visibility_letter and 'protected '
-  or 'i' == visibility_letter and 'private '
+  -- Implement nested placeholders
+  -- Doesn't work perfectly(yet): if the entire placeholder is replaced, the nested tabstops won't be skipped.
+  parser_nested_assembler = function(_, snippet)
+    local select = function(snip, no_move)
+      snip.parent:enter_node(snip.indx)
+      -- upon deletion, extmarks of inner nodes should shift to end of
+      -- placeholder-text.
+      for _, node in ipairs(snip.nodes) do
+        node:set_mark_rgrav(true, true)
+      end
+
+      -- SELECT all text inside the snippet.
+      if not no_move then
+        vim.api.nvim_feedkeys(
+          vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
+          "n",
+          true
+        )
+        node_util.select_node(snip)
+      end
+    end
+    function snippet:jump_into(dir, no_move)
+      if self.active then
+        -- inside snippet, but not selected.
+        if dir == 1 then
+          self:input_leave()
+          return self.next:jump_into(dir, no_move)
+        else
+          select(self, no_move)
+          return self
+        end
+      else
+        -- jumping in from outside snippet.
+        self:input_enter()
+        if dir == 1 then
+          select(self, no_move)
+          return self
+        else
+          return self.inner_last:jump_into(dir, no_move)
+        end
+      end
+    end
+
+    -- this is called only if the snippet is currently selected.
+    function snippet:jump_from(dir, no_move)
+      if dir == 1 then
+        return self.inner_first:jump_into(dir, no_move)
+      else
+        self:input_leave()
+        return self.prev:jump_into(dir, no_move)
+      end
+    end
+
+    return snippet
+  end,
+})
+
+local function map(mode, lhs, rhs, opts)
+  vim.keymap.set(mode, lhs, rhs, vim.tbl_extend('force', { noremap = true, silent = true }, opts or {}))
+end
+local function feedkeys(keys)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, true, true), 'n', false)
 end
 
-luasnip.snippets = {
-  all = {},
+map({ 'i', 's' }, '<Tab>', function()
+  if ls.expandable() then
+    return ls.expand({})
+  end
 
-  -- Disable for now, I will keep using UltiSnips to limit the amount of work
-  -- And only use luasnip for LSP snippets since I can't manage to make UltiSnips works
-  -- properly in this situation
-  -- php = {
-  --   -- Constructor
-  --   snippet({ trig = 'c([uoi])', regTrig = true }, {
-  --     func(function(args)
-  --       return php_visibility(args[1].captures[1])
-  --     end, {}),
-  --     text(' function __construct('),
-  --     insert(1),
-  --     text({ ')', '{' }),
-  --     text({ '', '\t' }),
-  --     func(function(args) return args[1].env.TM_SELECTED_TEXT end, {}),
-  --     insert(0),
-  --     text({ '', '}' }),
-  --   }),
+  feedkeys('<Tab>')
+end)
 
-  --   -- Property declaration
-  --   snippet({ trig = 'p([uoi])(s?)', regTrig = true }, {
-  --     func(function(args)
-  --       return php_visibility(args[1].captures[1])
-  --     end, {}),
-  --     func(function(args)
-  --       return 's' == args[1].captures[3] and 'static ' or ''
-  --     end, {}),
-  --     insert(1, 'Type'),
-  --     text(' $'),
-  --     insert(2, 'propertyName'),
-  --     insert(3, ' = null'),
-  --     text(';'),
-  --     insert(0),
-  --   }),
+map({ 'i', 's' }, '<C-k>', function()
+  if ls.jumpable(-1) then
+    return ls.jump(-1)
+  end
 
-  --   -- Method
-  --   snippet({ trig = 'm([a;]?)([uoi])(s?)', regTrig = true }, {
-  --     func(function(args)
-  --       return php_visibility(args[1].captures[2])
-  --     end, {}),
-  --     func(function(args)
-  --       return 'a' == args[1].captures[1] and 'abstract ' or ''
-  --     end, {}),
-  --     func(function(args)
-  --       return 's' == args[1].captures[3] and 'static ' or ''
-  --     end, {}),
-  --     text('function '),
-  --     insert(1, 'method'),
-  --     text('('),
-  --     insert(2),
-  --     text(')'),
-  --     insert(3, ': void'),
-  --     dynamic(4, function(args)
-  --       if '' ~= args[1].captures[1] then
-  --         return snippet_node(nil, text(';'))
-  --       end
+  feedkeys('<C-k>')
+end)
 
-  --       return snippet_node(nil, {
-  --         text({ '', '{' }),
-  --         text({ '', '\t' }),
-  --         func(function(args2)
-  --           return args2[1].env.TM_SELECTED_TEXT
-  --         end, {}),
-  --         insert(1), -- Can't use insert(0) here sadly
-  --         text({ '', '}' }),
-  --       })
-  --     end, {}),
-  --   }),
+map({ 'i', 's' }, '<C-j>', function()
+  if ls.jumpable(1) then
+    return ls.jump(1)
+  end
 
-  --   -- Class
-  --   snippet('class', {
-  --     text('<?php'),
-  --     text({ '', '' }),
-  --     text({ '', 'namespace ' }),
-  --     func(function(_)
-  --       return vim.call('phpactor#GetNamespace')
-  --     end, {}),
-  --     text(';'),
-  --     text({ '', '' }),
-  --     text({ '', 'class ' }),
-  --     insert(1, 'ClassName'),
-  --     text({ '', '{' }),
-  --     text({ '', '\t' }),
-  --     func(function(args) return args[1].env.TM_SELECTED_TEXT end, {}),
-  --     insert(0),
-  --     text({ '', '}' }),
-  --   }),
-  -- },
-}
+  feedkeys('<C-j>')
+end)
 
-luasnip.autosnippets = {
-  php = {
-    -- snippet(',t', text('$this->')),
-    -- snippet(',r', { text('return '), insert(1), text(';'), insert(0) }),
-  }
-}
+map({ 'i', 's' }, '<C-p>', function()
+  if ls.choice_active() then
+    return ls.change_choice(-1)
+  end
 
--- Disable while I'm still using UltiSnips
--- require('luasnip.loaders.from_vscode').lazy_load() -- Load snippets from friendly-snippets
+  feedkeys('<C-p>')
+end)
 
--- Disable since I don't think LSP snippet will be parsed into choices
--- This is just a POC from the github repository, it needs a bit of work to avoid having
--- windows floating indefinitely
--- local current_nsid = vim.api.nvim_create_namespace("LuaSnipChoiceListSelections")
--- local current_win = nil
+map({ 'i', 's' }, '<C-n>', function()
+  if ls.choice_active() then
+    return ls.change_choice(1)
+  end
 
--- local function window_for_choiceNode(choiceNode)
---   local buf = vim.api.nvim_create_buf(false, true)
---   local buf_text = {}
---   local row_selection = 0
---   local row_offset = 0
---   local docstring
---   for _, node in ipairs(choiceNode.choices) do
---     docstring = node:get_docstring()
---     -- find one that is currently showing
---     if node == choiceNode.active_choice then
---       -- current line is starter from buffer list which is length usually
---       row_selection = #buf_text
---       -- finding how many lines total within a choice selection
---       row_offset = #docstring
---     end
---     vim.list_extend(buf_text, docstring)
---   end
+  feedkeys('<C-n>')
+end)
 
---   vim.api.nvim_buf_set_text(buf, 0,0,0,0, buf_text)
---   local w, h = vim.lsp.util._make_floating_popup_size(buf_text)
+map({ 'i', 's' }, '<C-l>', function()
+  if ls.choice_active() then
+    require('luasnip.extras.select_choice')()
+  end
+end)
 
---   -- adding highlight so we can see which one is been selected.
---   local extmark = vim.api.nvim_buf_set_extmark(buf,current_nsid,row_selection ,0,
---     {hl_group = 'incsearch',end_line = row_selection + row_offset})
+local function php_visibility(visibility_letter)
+  return 'u' == visibility_letter and 'public'
+      or 'o' == visibility_letter and 'protected'
+      or 'i' == visibility_letter and 'private'
+end
 
---   -- shows window at a beginning of choiceNode.
---   local win = vim.api.nvim_open_win(buf, false, {
---     relative = "win", width = w, height = h, bufpos = choiceNode.mark:pos_begin_end(), style = "minimal", border = 'rounded'})
+local function f_visibility(i)
+  return f(function(_, snip)
+    return php_visibility(snip.captures[i or 1])
+  end)
+end
 
---   -- return with 3 main important so we can use them again
---   return {win_id = win,extmark = extmark,buf = buf}
--- end
+local function f_tm_selected()
+  return f(function(_, snip)
+    return snip.env.TM_SELECTED_TEXT
+  end)
+end
 
--- function choice_popup(choiceNode)
---   -- build stack for nested choiceNodes.
---   if current_win then
---     vim.api.nvim_win_close(current_win.win_id, true)
---     vim.api.nvim_buf_del_extmark(current_win.buf,current_nsid,current_win.extmark)
---   end
---   local create_win = window_for_choiceNode(choiceNode)
---   current_win = {
---     win_id = create_win.win_id,
---     prev = current_win,
---     node = choiceNode,
---     extmark = create_win.extmark,
---     buf = create_win.buf
---   }
--- end
+local function sn_insert_default_selected(_, snip)
+  return sn(nil, {
+    f(function()
+      return snip.env.TM_SELECTED_TEXT
+    end),
+    i(1),
+  })
+end
 
--- function update_choice_popup(choiceNode)
---   if current_win then
---     vim.api.nvim_win_close(current_win.win_id, true)
---     vim.api.nvim_buf_del_extmark(current_win.buf,current_nsid,current_win.extmark)
---   end
+local function sn_phptag(_, snip)
+  local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+  if vim.startswith(first_line, '<?') then
+    return sn(nil, t(''))
+  end
 
---   local create_win = window_for_choiceNode(choiceNode)
---   current_win.win_id = create_win.win_id
---   current_win.extmark = create_win.extmark
---   current_win.buf = create_win.buf
--- end
+  return sn(nil, t({ '<?php', '', '' }))
+end
 
--- function Choice_popup_close()
---   if not current_win then
---     return
---   end
+local function sn_namespace(_, snip)
+  local lines = vim.api.nvim_buf_get_lines(0, 0, tonumber(snip.env.TM_LINE_INDEX), false)
+  for _, line in ipairs(lines) do
+    if nil ~= line:match('^%s*namespace') then
+      return sn(nil, t(''))
+    end
+  end
 
---   vim.api.nvim_win_close(current_win.win_id, true)
---   vim.api.nvim_buf_del_extmark(current_win.buf,current_nsid,current_win.extmark)
---   -- now we are checking if we still have previous choice we were in after exit nested choice
---   current_win = current_win.prev
---   if current_win then
---     -- reopen window further down in the stack.
---     local create_win = window_for_choiceNode(current_win.node)
---     current_win.win_id = create_win.win_id
---     current_win.extmark = create_win.extmark
---     current_win.buf = create_win.buf
---   end
--- end
+  local namespace = vim.fn.exists('*phpactor#GetNamespace') and vim.call('phpactor#GetNamespace')
 
--- vim.cmd([[
--- augroup choice_popup
--- au!
--- au User LuasnipChoiceNodeEnter lua Choice_popup(require("luasnip").session.event_node)
--- au User LuasnipChoiceNodeLeave lua Choice_popup_close()
--- au User LuasnipChangeChoice lua Update_choice_popup(require("luasnip").session.event_node)
--- augroup END
--- ]])
+  return sn(nil, {
+    t('namespace '),
+    nil ~= namespace and vim.NIL ~= namespace and t(namespace) or i(1),
+    t({ ';', '', '' })
+  })
+end
+
+ls.cleanup() -- Needed to reload the snippets when sourcing the file
+
+ls.add_snippets('all', {
+  s('date', { f(function()
+    return os.date('%Y-%m-%d')
+  end) }),
+  s('datetime', { f(function()
+    return os.date('%Y-%m-%d %T')
+  end) }),
+})
+
+-- Disable for now, I will keep using UltiSnips to limit the amount of work
+-- And only use luasnip for LSP snippets since I can't manage to make UltiSnips works
+-- properly in this situation
+ls.add_snippets('php', {
+  -- Class
+  s({ trig = '([af]?)class', regTrig = true }, fmt('{phptag}{namespace}{type}class {name}\n{{\n\t{body}\n}}', {
+    phptag = d(1, sn_phptag),
+    namespace = d(2, sn_namespace),
+    type = f(function(_, snip)
+      return 'f' == snip.captures[1] and 'final ' or 'a' == snip.captures[1] and 'abstract ' or ''
+    end),
+    name = i(3, 'Class'),
+    body = d(4, sn_insert_default_selected),
+  })),
+
+  -- Interface
+  s({ trig = 'interface' }, fmt('{phptag}{namespace}interface {name}\n{{\n\t{body}\n}}', {
+    phptag = d(1, sn_phptag),
+    namespace = d(2, sn_namespace),
+    name = i(3, 'Interface'),
+    body = d(4, sn_insert_default_selected),
+  })),
+
+  -- Constructor
+  s(
+    { trig = 'c([uoi])', regTrig = true },
+    fmt('{visibility} function __construct({args})\n{{\n\t{selected}{body}\n}}', {
+        visibility = f_visibility(),
+        args = i(1),
+        selected = f_tm_selected(),
+        body = i(0),
+    })
+  ),
+
+  -- Property declaration
+  s(
+    { trig = 'p([uoi])(s?)', regTrig = true },
+    fmt('{visibility}{static} {type}${name}{default};', {
+      visibility = f_visibility(),
+      static = f(function(_, snip)
+        return 's' == snip.captures[2] and ' static' or ''
+      end),
+      type = c(1, {
+        sn(nil, { i(1, 'string'), t(' ') }),
+        t(''),
+      }),
+      name = i(2, 'property'),
+      default = c(3, {
+        t(''),
+        sn(nil, { t(' = '), i(1, 'null') }),
+      }),
+    })
+  ),
+
+  -- Method
+  s(
+    { trig = 'm([a;]?)([uoi])(s?)', regTrig = true },
+    fmt('{visibility} function {name}({args}){rtype}{body}', {
+      visibility = f(function(_, snip)
+        local captures = snip.captures
+        local result = php_visibility(captures[2])
+
+        if 'a' == captures[1] then
+          result = 'abstract ' .. result
+        end
+
+        if 's' == captures[3] then
+          result = result .. ' static'
+        end
+
+        return result
+      end),
+      name = i(1, 'method'),
+      args = i(2),
+      rtype = c(3, {
+        sn(nil, { t(': '), i(1, 'void') }),
+        t('two'),
+        t('three'),
+        t(''),
+      }),
+      body = d(4, function(_, snip)
+        if '' ~= snip.captures[1] then
+          return sn(nil, t(';'))
+        end
+
+        return sn(nil, {
+          t({ '', '{' }),
+          t({ '', '\t' }),
+          f(function()
+            return snip.env.TM_SELECTED_TEXT
+          end),
+          i(1),
+          t({ '', '}' }),
+        })
+      end),
+    })
+  ),
+
+  -- function
+  s(
+    { trig = 'f(s?)(;?)', regTrig = true },
+    fmt([[
+{static}function {name}({args}){rtype} {{
+    {body}
+}}{semicolon}
+    ]], {
+      static = f(function(_, snip) return 's' == snip.captures[1] and 'static ' or '' end),
+      name = i(1, 'function'),
+      args = i(2),
+      rtype = c(3, {
+        sn(nil, { t(': '), i(1, 'void') }),
+        t(''),
+      }),
+      body = d(4, sn_insert_default_selected),
+      semicolon = f(function(_, snip) return ';' == snip.captures[2] and ';' or '' end),
+    })
+  ),
+
+  -- if
+  postfix({ trig = '.if' }, fmt('if ({condition}) {{\n\t{body}\n}}', {
+    condition = l(l.POSTFIX_MATCH),
+    body = i(1),
+  })),
+  postfix({ trig = ';if' }, fmt('if ({condition}) {{\n\t{body}\n}}', {
+    condition = i(1, 'true'),
+    body = l(l.POSTFIX_MATCH .. ';'),
+  })),
+  s({ trig = 'if' }, fmt('if ({condition}) {{\n\t{body}\n}}', {
+    condition = i(1, 'true'),
+    body = d(2, sn_insert_default_selected),
+  })),
+
+  -- foreach
+  postfix({ trig = ';foreach' }, fmt('foreach (${list} as {item}) {{\n\t{body}\n}}', {
+    list = i(1, 'list'),
+    item = c(2, {
+      sn(nil, { t('$'), i(1, 'item') }),
+      sn(nil, fmt('${key} => ${value}', { key = i(1, 'key'), value = i(2, 'value') })),
+    }),
+    body = l(l.POSTFIX_MATCH .. ';'),
+  })),
+  s({ trig = 'foreach' }, fmt('foreach (${list} as {item}) {{\n\t{body}\n}}', {
+    list = i(1, 'list'),
+    item = c(2, {
+      sn(nil, { t('$'), i(1, 'item') }),
+      sn(nil, fmt('${key} => ${value}', { key = i(1, 'key'), value = i(2, 'value') })),
+    }),
+    body = d(3, sn_insert_default_selected),
+  })),
+
+  -- try/catch
+  s({ trig = 'tc' }, fmt('try {{\n\t{body}\n}} catch {{\n\t{catch}\n}}', {
+    body = d(1, sn_insert_default_selected),
+    catch = i(2),
+  })),
+  s({ trig = 'tf' }, fmt('try {{\n\t{body}\n}} finally {{\n\t{finally}\n}}', {
+    body = d(1, sn_insert_default_selected),
+    finally = i(2),
+  })),
+  s({ trig = 'tcf' }, fmt('try {{\n\t{body}\n}} catch {{\n\t{catch}\n}} finally {{\n\t{finally}\n}}', {
+    body = d(1, sn_insert_default_selected),
+    catch = i(2),
+    finally = i(3),
+  })),
+
+  -- phpunit
+  s({ trig = 'puc' }, fmt([[
+{phptag}{namespace}use PHPUnit\Framework\TestCase;
+
+/**
+ * @covers {covers}
+ */
+final class {name}Test extends TestCase
+{{
+	{body}
+}}
+    ]], {
+    phptag = d(1, sn_phptag),
+    namespace = d(2, sn_namespace),
+    covers = f(function (values, _)
+      return values[1][1]
+    end, {3}),
+    name = i(3, 'Class'),
+    body = d(4, sn_insert_default_selected),
+  })),
+
+  s({ trig = 'put' }, fmt([[
+/**
+ * @test
+ */
+public function it{test}(): void
+{{
+	{body}
+}}
+  ]], {
+    test = i(1, 'TestSomething'),
+    body = d(2, sn_insert_default_selected),
+  })),
+
+  s({ trig = 'pua' }, fmt('$this->assert{assertion}', { assertion = i(1, 'True') })),
+  s({ trig = 'puae' }, fmt('$this->assertEquals(${expected}, ${actual});', {
+    expected = i(1, 'expected'),
+    actual = i(2, 'actual'),
+  })),
+
+  s({ trig = 'pue' }, fmt('$this->expectException{choice}', { choice = c(1, {
+    t(''),
+    t('Object'),
+    t('Message'),
+    t('MessageMatches'),
+    t('MessageCode'),
+  }) }))
+})
