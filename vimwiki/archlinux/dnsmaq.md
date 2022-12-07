@@ -65,7 +65,7 @@ resolv-file=/etc/dnsmasq-resolv.conf
 
 Now that openresolv handle this file automatically we must generate it:
 ```sh
-openresolv -u
+resolvconf -u
 ```
 
 Sometime I have an error like:
