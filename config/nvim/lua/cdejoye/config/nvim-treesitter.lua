@@ -1,30 +1,5 @@
 -- To run before: require('nvim-treesitter.configs').setup()
 -- https://github.com/vhyrro/neorg#setting-up-treesitter
-local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
-
--- parser_configs.norg_meta = {
---   install_info = {
---     url = "https://github.com/nvim-neorg/tree-sitter-norg-meta",
---     files = { "src/parser.c" },
---     branch = "main"
---   },
--- }
-
--- parser_configs.norg_table = {
---   install_info = {
---     url = "https://github.com/nvim-neorg/tree-sitter-norg-table",
---     files = { "src/parser.c" },
---     branch = "main"
---   },
--- }
-
-parser_configs.norg_table = {
-  install_info = {
-    url = "https://github.com/nvim-neorg/tree-sitter-norg-table",
-    files = { "src/parser.c" },
-    branch = "main"
-  },
-}
 
 require('nvim-treesitter.configs').setup {
   ensure_installed = 'all', -- Install all modules, allows to include norg which is not part of maintained
@@ -46,7 +21,7 @@ require('nvim-treesitter.configs').setup {
   },
 
   indent = {
-    enable = true,
+    enable = false,
     disable = {
       'php', -- Does not work for method calls on multiple lines and phpdoc
     },
@@ -55,6 +30,8 @@ require('nvim-treesitter.configs').setup {
   textobjects = {
     select = {
       enable = true,
+      -- Automatically jump forward to textobj, similar to targets.vim
+      lookahead = true,
       keymaps = {
         ['af'] = '@function.outer',
         ['if'] = '@function.inner',
@@ -72,6 +49,18 @@ require('nvim-treesitter.configs').setup {
         ['am'] = '@call.outer',
         ['im'] = '@call.inner',
       },
+      -- Only works when used in operator pending mode
+      -- Example to select a function characterwise `vaf`, linewise `Vaf`
+      -- To use the following config `daf`
+      selection_modes = {
+        ['@function.inner'] = 'V',
+        ['@function.outer'] = 'V',
+      },
+      -- If you set this to `true` (default is `false`) then any textobject is
+      -- extended to include preceding xor succeeding whitespace. Succeeding
+      -- whitespace has priority in order to act similarly to eg the built-in
+      -- `ap`.
+      include_surrounding_whitespace = false,
     },
     swap = {
       enable = true,
