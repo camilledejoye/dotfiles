@@ -16,7 +16,9 @@ export VIMRC="$HOME/.config/nvim/init.vim"
 export TMUXRC="$HOME/.tmux.conf"
 
 # Paths
-export COMPOSER_HOME="$HOME/.config/composer"
+export XDG_CONFIG_HOME="$HOME/.config"
+
+export COMPOSER_HOME="$XDG_CONFIG_HOME/composer"
 export COMPOSER_BIN="$COMPOSER_HOME/vendor/bin"
 
 # Defautl programs

@@ -119,6 +119,12 @@ alias ct='composer test'
 
 # }}}
 
+# Task {{{
+
+alias task='go-task'
+
+# }}}
+
 # }}}
 
 # MANPAGER {{{

@@ -55,6 +55,7 @@ plugins=(
   pass
   docker
   docker-compose
+  helm
 )
 
 source $ZSH/oh-my-zsh.sh
