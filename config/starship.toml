@@ -6,3 +6,6 @@ symbol = " "
 
 [python]
 symbol = " "
+
+[gcloud]
+disabled = true
