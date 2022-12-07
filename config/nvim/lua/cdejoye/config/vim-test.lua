@@ -20,16 +20,26 @@ g['test#php#phpunit#patterns'] = {
   },
   namespace = {},
 }
+-- If `phpunit` is in the PATH (custom script) then use this instead
+if vim.fn.executable('phpunit') then
+  g['test#php#phpunit#executable'] = 'phpunit'
+end
 g['test#php#phpunit#options'] = '--testdox' -- Use testdox format for PHPUnit
 
-g['test#php#phpspec#executable'] = 'phpspec'
+-- If `phpspec` is in the PATH (custom script) then use this instead
+if vim.fn.executable('phpspec') then
+  g['test#php#phpspec#executable'] = 'phpspec'
+end
 g['test#php#phpspec#options'] = {
   nearest = '--format=pretty --verbose',
   all = '--format=pretty',
   suite = '--format=progress',
 }
 
-g['test#php#behat#executable'] = 'behat'
+-- If `behat` is in the PATH (custom script) then use this instead
+if vim.fn.executable('behat') then
+  g['test#php#behat#executable'] = 'behat'
+end
 
 g['test#strategy'] = 'neovim'
 g.ultest_loaded = 1
