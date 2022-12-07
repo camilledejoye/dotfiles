@@ -27,6 +27,9 @@ vim.diagnostic.config({virtual_text = false})
 -- To quickly switch between php servers
 local use_phpactor = false
 
+-- Must be setup before lspconfig
+require('neodev').setup({})
+
 -- Servers to enable with their specific configuration
 local servers_options = {
   intelephense = {
@@ -83,7 +86,18 @@ local servers_options = {
   },
   lemminx = {}, -- XML
   tsserver = {},
-  sumneko_lua = require('lua-dev').setup(),
+  sumneko_lua = {
+    settings = {
+      Lua = {
+        completion = {
+          callSnippet = "Replace"
+        }
+      }
+    }
+  },
+  bashls = {},
+  dockerls = {},
+  vimls = {},
 }
 
 lsp_installer.setup({})
@@ -204,7 +218,7 @@ end
 
 -- nvim-cmp supports additional completion capabilities
 if pcall(require, 'cmp_nvim_lsp') then
-  capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+  capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 end
 
 capabilities = lsp_selection_range.update_capabilities(capabilities)
