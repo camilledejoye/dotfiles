@@ -183,7 +183,7 @@ local on_attach = function(client, bufnr)
 
   bmap('<leader>ls', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
 
-  if 8 == vim.version().minor then
+  if 8 <= vim.version().minor then
     bmap('<Leader>ff', function ()
       vim.lsp.buf.format({
         async = true,
