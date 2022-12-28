@@ -10,29 +10,45 @@ dapui.setup {
   },
   layouts = {
     {
-      elements = {
       -- Elements can be strings or table with id and size keys.
-        { id = "scopes", size = 0.25 },
-        "breakpoints",
-        "stacks",
-        "watches",
+      elements = {
+        { id = 'scopes', size = 0.60 },
+        { id = 'breakpoints', size = 0.20 },
+        { id = 'stacks', size = 0.20 },
       },
-      size = 80,
-      position = "right",
+      size = 0.30,
+      position = 'right',
     },
     {
       elements = {
-        -- "repl",
-        -- "console",
+        'watches',
+        -- 'repl',
+        -- 'console',
       },
-      size = 10,
-      position = "bottom",
+      size = 0.20,
+      position = 'bottom',
+    },
+  },
+  controls = {
+    -- Requires Neovim nightly (or 0.8 when released)
+    enabled = true,
+    -- Display controls in this element
+    element = 'watches',
+    icons = {
+      pause = '',
+      play = '',
+      step_into = '',
+      step_over = '',
+      step_out = '',
+      step_back = '',
+      run_last = '',
+      terminate = '',
     },
   },
 }
 
 -- Not sure it's working...
-require('nvim-dap-virtual-text').setup()
+require('nvim-dap-virtual-text').setup({})
 
 -- Theme
 local sign = vim.fn.sign_define
