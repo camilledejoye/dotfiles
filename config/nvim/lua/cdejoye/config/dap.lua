@@ -109,24 +109,3 @@ map('<Leader>db', [[<cmd>lua require('dap').toggle_breakpoint()<CR>]])
 map('<Leader>dB', [[<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]])
 map('<Leader>dr', [[<cmd>lua require('dap').repl.open()<CR>]])
 map('<Leader>de', [[<cmd>lua require('dapui').eval()<CR>]], 'nv')
-
--- Adapters
--- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#php
-local php_adapter_dir = vim.env.VSCODE_PHP_DEBUG_HOME or '/home/cdejoye/work/vscode-php-debug'
-
-dap.adapters.php = {
-  type = 'executable',
-  command = 'node',
-  args = { php_adapter_dir .. '/out/phpDebug.js' },
-}
-dap.configurations.php = {
-  {
-    type = 'php',
-    request = 'launch',
-    name = 'Listen for Xdebug',
-    port = 9003,
-    pathMappings = {
-      ['/var/www/html'] = '${workspaceFolder}',
-    }
-  }
-}

@@ -174,6 +174,13 @@ function M.setup (on_attach, _)
     },
     on_attach = on_attach,
   }
+
+  -- Automatically install linters & formatters configured
+  if pcall(require, 'mason-null-ls') then
+    require('mason-null-ls').setup({
+      automatic_installation = { exclude = { 'phpcbf', 'phpcs', 'phpstan', 'phpcsfixer' } },
+    })
+  end
 end
 
 return M

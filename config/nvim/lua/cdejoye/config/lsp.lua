@@ -1,7 +1,6 @@
 -- vim.lsp.set_log_level('debug')
 -- LSP settings
 local lsp_signature = require('lsp_signature')
-local lsp_installer = require('nvim-lsp-installer')
 local lsp_selection_range = require('lsp-selection-range')
 local lsr_client = require('lsp-selection-range.client')
 local hi = require('cdejoye.utils').hi
@@ -99,46 +98,6 @@ local servers_options = {
   dockerls = {},
   vimls = {},
 }
-
-lsp_installer.setup({})
--- -- Uncomment to install/update all pre-configured servers when start Neovim
--- local settings = require('nvim-lsp-installer.settings')
--- local JobExecutionPool = require('nvim-lsp-installer.jobs.pool')
--- -- Limit the number of server installed at the same time to limit the resource consumption
--- local job_pool = JobExecutionPool:new({
---   size = settings.current.max_concurrent_installers,
--- })
--- for server_name, _ in pairs(servers_options) do
---   local log_levels = vim.log.levels
---   local server_was_found, server = lsp_installer.get_server(server_name)
---   if server_was_found and not server:is_installed() then
---     local notification_id = require('notifier').notify('Installing...', log_levels.INFO, {
---       summary = string.format('[LSP Installer] %s', server.name),
---       timeout = 0,
---     })
-
---     job_pool:supply(function(callback)
---       server:install_attached({
---         requested_server_version = nil,
---         stdio_sink = {
---           stdout = function(_) end,
---           stderr = function(_) end,
---         }
---       }, function(success)
---         local log_level = success and log_levels.INFO or log_levels.ERROR
---         local message = success and 'Installed' or 'An error occurred'
-
---         require('notifier').notify(message, log_level, {
---           -- icon = '', -- Not yet part of notifier options
---           replaces_id = notification_id,
---           timeout = 2000,
---         })
-
---         callback()
---       end)
---     end)
---   end
--- end
 
 -- Setup the default client capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()

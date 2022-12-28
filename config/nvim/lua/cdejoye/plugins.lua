@@ -131,16 +131,26 @@ return require('packer').startup(function(use)
     config = config('cmp'),
   }
 
+  -- Must be loaded before lspconfig
+  use { -- mason - 3rd party installer
+    'williamboman/mason.nvim',
+    requires = {
+      'williamboman/mason-lspconfig.nvim',
+      'jayp0521/mason-nvim-dap.nvim',
+      'jayp0521/mason-null-ls.nvim',
+    },
+    config = config('mason'),
+  }
+
   use { -- nvim-lspconfig
     'neovim/nvim-lspconfig',
-    after = { 'nvim-cmp' }, -- use an alias like completor to be more generic ?
+    after = { 'nvim-cmp', 'mason.nvim' }, -- use an alias like completor to be more generic ?
     requires = {
       { 'j-hui/fidget.nvim', config = function() require('fidget').setup({ text = { spinner = 'dots' } }) end },
       { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
       { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
       { 'camilledejoye/nvim-lsp-selection-range' },
       { 'b0o/schemastore.nvim' }, -- used by jsonls server to retrieve json schemas
-      { 'williamboman/nvim-lsp-installer' },
     },
     config = config('lsp'),
   }
