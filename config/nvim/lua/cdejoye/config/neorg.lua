@@ -17,11 +17,12 @@ require('neorg').setup {
       -- https://github.com/nvim-neorg/neorg/wiki/Qol-Toc
     },
 
-    ['core.gtd.base'] = { -- Manages your tasks with Neorg using the Getting Things Done methodology
-      config = { -- https://github.com/nvim-neorg/neorg/wiki/Getting-Things-Done
-        workspace = 'default',
-      },
-    },
+    -- Disable because I'm not using it right now and I had errors when trying to load the module
+    -- ['core.gtd.base'] = { -- Manages your tasks with Neorg using the Getting Things Done methodology
+    --   config = { -- https://github.com/nvim-neorg/neorg/wiki/Getting-Things-Done
+    --     workspace = 'default',
+    --   },
+    -- },
 
     -- ['core.presenter'] = { -- Neorg module to create gorgeous presentation slides
     --   config = { -- https://github.com/nvim-neorg/neorg/wiki/Core-Presenter
