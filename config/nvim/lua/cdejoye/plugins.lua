@@ -4,23 +4,23 @@ local function config(name)
   return cmd:format(name)
 end
 
--- Install packer if not already present - allow to install from the AUR
-if not pcall(require, 'packer') then
-  local package_root = vim.fn.stdpath('data') .. '/site/pack' -- default value in packer
-  local packer_path = package_root .. '/packer/opt/packer.nvim'
-
-  print('Installing packer.nvim ...')
-  vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', packer_path})
-  vim.cmd('packadd packer.nvim')
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    vim.cmd [[packadd packer.nvim]]
+    return true
+  end
+  return false
 end
 
-return require('packer').startup({ function(use)
-  use { 'RRethy/nvim-base16', config = config('colorscheme') }
+local packer_bootstrap = ensure_packer()
 
-  use { -- Packer can manage itself
-    'wbthomason/packer.nvim',
-    cmd = { 'PackerInstall', 'PackerUpdate', 'PackerSync', 'PackerClean', 'PackerCompile' },
-  }
+return require('packer').startup(function(use)
+  use 'wbthomason/packer.nvim'
+
+  use { 'RRethy/nvim-base16', config = config('colorscheme') }
 
   use { -- Miscelanous
     'camilledejoye/vim-cleanfold',
@@ -44,7 +44,7 @@ return require('packer').startup({ function(use)
     ft = 'markdown',
   }
 
-  use('wellle/targets.vim') -- Adds a bunch of text objects, especially argument text object
+  use 'wellle/targets.vim'  -- Adds a bunch of text objects, especially argument text object
 
   use { -- Fix CursorHold performance issue on Neovim:
     -- https://github.com/antoinemadec/FixCursorHold.nvim
@@ -93,7 +93,7 @@ return require('packer').startup({ function(use)
     config = config('gitsigns'),
   }
 
-  use{ 'rhysd/git-messenger.vim', config = config('git-messenger') }
+  use { 'rhysd/git-messenger.vim', config = config('git-messenger') }
 
   use { -- Neorg
     'nvim-neorg/neorg',
@@ -121,9 +121,9 @@ return require('packer').startup({ function(use)
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp',
       'ray-x/lsp_signature.nvim',
-      -- Disable while I'm still using UltiSnips (no need for LSP)
       'saadparwaiz1/cmp_luasnip',
       'L3MON4D3/LuaSnip',
+      -- Disable while testing LuaSnip
       -- 'quangnguyen30192/cmp-nvim-ultisnips',
       'hrsh7th/cmp-emoji',
       'f3fora/cmp-spell',
@@ -136,7 +136,6 @@ return require('packer').startup({ function(use)
     after = { 'nvim-cmp' }, -- use an alias like completor to be more generic ?
     requires = {
       { 'j-hui/fidget.nvim', config = function() require('fidget').setup({ text = { spinner = 'dots' } }) end },
-      -- Use a fork insteaf because the original plugin was not updated for more than 6 months
       { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
       { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
       { 'camilledejoye/nvim-lsp-selection-range' },
@@ -215,6 +214,11 @@ return require('packer').startup({ function(use)
     config = config('lualine'),
   }
 
+  -- TODO try again later
+  -- There is no equivalent to `gcu` by default, we should do it ourserlves using a textobject
+  -- from another plugin, for instance a treesitter extension
+  -- use { 'numToStr/Comment.nvim', config = config('comment') }
+
   use { -- tpope plugins
     { 'tpope/vim-surround', setup = function() vim.g.surround_no_insert_mappings = true end },
     'tpope/vim-commentary',
@@ -240,6 +244,11 @@ return require('packer').startup({ function(use)
     config = config('nvim-treesitter'),
   }
 
+  use {
+    'nvim-treesitter/playground',
+    requires = { 'nvim-treesitter/nvim-treesitter' },
+  }
+
   use { -- vim-argwrap
     -- 'FooSoft/vim-argwrap',
     'camilledejoye/vim-argwrap', branch = 'imp/php-always-tail-comma-for-method-declaration',
@@ -251,6 +260,50 @@ return require('packer').startup({ function(use)
     config = config('vim-test'),
   }
 
+  -- TODO: try to make it work with containers
+  -- use {
+  --   "nvim-neotest/neotest",
+  --   requires = {
+  --     'nvim-lua/plenary.nvim',
+  --     'nvim-treesitter/nvim-treesitter',
+  --     'antoinemadec/FixCursorHold.nvim',
+  --     'nvim-neotest/neotest-plenary',
+  --     'olimorris/neotest-phpunit',
+  --     -- 'nvim-neotest/neotest-vim-test',
+  --     -- 'vim-test/vim-test', -- To fallback if no adapter exists
+  --   },
+  --   config = function ()
+  --     require('neotest').setup({
+  --       adapters = {
+  --         -- require('neotest-vim-test'),
+  --         require('neotest-plenary'),
+  --         require('neotest-phpunit')({
+  --           phpunit_cmd = function()
+  --             -- To test only, seems again to be hard to run that in a container :(
+  --             return "vendor/bin/phpunit"
+  --             -- for _, cmd in pairs({"phpunit", "tools/phpunit", "vendor/bin/phpunit"}) do
+  --             --   if 1 == vim.fn.executable(cmd) then
+  --             --     return cmd
+  --             --   end
+  --             -- end
+  --             -- return "vendor/bin/phpunit"
+  --           end
+  --         }),
+  --       },
+  --     })
+  --     vim.keymap.set('n', '<Leader>tS', require('neotest').summary.toggle)
+  --     vim.keymap.set('n', '<Leader>tn', require('neotest').run.run)
+  --     vim.keymap.set('n', '<Leader>tdn', function()
+  --       require('neotest').run.run({ strategy = 'dap' })
+  --     end)
+  --     vim.keymap.set('n', '<Leader>ta', require('neotest').run.attach)
+  --     vim.keymap.set('n', '<Leader>ts', require('neotest').run.stop)
+  --     vim.keymap.set('n', '<Leader>tf', function()
+  --       require('neotest').run.run(vim.fn.expand('%'))
+  --     end)
+  --   end
+  -- }
+
   use { -- lir.nvim
     'tamago324/lir.nvim',
     requires = {
@@ -260,6 +313,27 @@ return require('packer').startup({ function(use)
     },
     config = config('lir'),
   }
-end, config = {
-  disable_commands = true,
-}})
+
+  use {
+    'ahmedkhalf/project.nvim',
+    requires = { 'nvim-telescope/telescope.nvim' },
+    config = config('project'),
+  }
+
+  use {
+    'rcarriga/nvim-notify',
+    config = function()
+      -- vim.notify = require('notify').notify
+
+      if pcall(require, 'telescope') then
+        require('telescope').load_extension('notify');
+      end
+    end,
+  }
+
+  -- Automatically set up your configuration after cloning packer.nvim
+  -- Put this at the end after all plugins
+  if packer_bootstrap then
+    require('packer').sync()
+  end
+end)

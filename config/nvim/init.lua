@@ -67,12 +67,7 @@ opt.formatoptions = opt.formatoptions
   + 'n' -- Auto indent in numbered lists
   - '2' -- Don't have special paragraph formatting, does play well with 'n'
 
--- Setup packer command to use it as an optional plugin
-cmd [[command! PackerInstall packadd packer.nvim | lua require('cdejoye.plugins').install()]]
-cmd [[command! PackerUpdate packadd packer.nvim | lua require('cdejoye.plugins').update()]]
-cmd [[command! PackerSync packadd packer.nvim | lua require('cdejoye.plugins').sync()]]
-cmd [[command! PackerClean packadd packer.nvim | lua require('cdejoye.plugins').clean()]]
-cmd [[command! PackerCompile packadd packer.nvim | lua require('cdejoye.plugins').compile()]]
+require('cdejoye.plugins')
 
 -- cmd([[source /home/cdejoye/.config/nvim/config/50-fzf.vim]])
 require('cdejoye.mappings') -- Load custom mappings
