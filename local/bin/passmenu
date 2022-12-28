@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+type clipctl > /dev/null && clipctl disable
+/usr/bin/passmenu
+type clipctl > /dev/null && clipctl enable
