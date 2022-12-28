@@ -106,7 +106,7 @@ map('<Leader>dd', [[<cmd>lua require('dap').step_over()<CR>]])
 map('<Leader>di', [[<cmd>lua require('dap').step_into()<CR>]])
 map('<Leader>do', [[<cmd>lua require('dap').step_out()<CR>]])
 map('<Leader>db', [[<cmd>lua require('dap').toggle_breakpoint()<CR>]])
-map('<Leader>db', [[<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]])
+map('<Leader>dB', [[<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]])
 map('<Leader>dr', [[<cmd>lua require('dap').repl.open()<CR>]])
 map('<Leader>de', [[<cmd>lua require('dapui').eval()<CR>]], 'nv')
 
