@@ -1,6 +1,6 @@
 {
 	"auths": {
-		"docker-push.wynd.eu": {}
+		"registry.worldia.com": {}
 	},
-	"credsStore": "secretservice"
+	"credsStore": "pass"
 }
