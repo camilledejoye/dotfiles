@@ -204,6 +204,12 @@ local function sn_namespace(_, snip)
   })
 end
 
+local function sn_classname(_, _)
+  return sn(nil, {
+    i(1, vim.fn.expand('%:t:r'))
+  })
+end
+
 ls.cleanup() -- Needed to reload the snippets when sourcing the file
 
 ls.add_snippets('all', {
@@ -226,7 +232,7 @@ ls.add_snippets('php', {
     type = f(function(_, snip)
       return 'f' == snip.captures[1] and 'final ' or 'a' == snip.captures[1] and 'abstract ' or ''
     end),
-    name = i(3, 'Class'),
+    name = d(3, sn_classname),
     body = d(4, sn_insert_default_selected),
   })),
 
@@ -234,7 +240,7 @@ ls.add_snippets('php', {
   s({ trig = 'interface' }, fmt('{phptag}{namespace}interface {name}\n{{\n\t{body}\n}}', {
     phptag = d(1, sn_phptag),
     namespace = d(2, sn_namespace),
-    name = i(3, 'Interface'),
+    name = d(3, sn_classname),
     body = d(4, sn_insert_default_selected),
   })),
 
@@ -382,12 +388,12 @@ ls.add_snippets('php', {
 
   -- phpunit
   s({ trig = 'puc' }, fmt([[
-{phptag}{namespace}use PHPUnit\Framework\TestCase;
+{phptag}{namespace}use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
-/**
- * @covers {covers}
- */
-final class {name}Test extends TestCase
+#[CoversClass({covers}::class)]
+final class {name} extends TestCase
 {{
 	{body}
 }}
@@ -395,17 +401,15 @@ final class {name}Test extends TestCase
     phptag = d(1, sn_phptag),
     namespace = d(2, sn_namespace),
     covers = f(function (values, _)
-      return values[1][1]
+      return values[1][1]:gsub('%Test', '')
     end, {3}),
-    name = i(3, 'Class'),
+    name = d(3, sn_classname),
     body = d(4, sn_insert_default_selected),
   })),
 
   s({ trig = 'put' }, fmt([[
-/**
- * @test
- */
-public function it{test}(): void
+#[Test]
+public function {test}(): void
 {{
 	{body}
 }}
