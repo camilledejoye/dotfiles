@@ -148,7 +148,10 @@ require('lualine').setup({
     lualine_z = {},
   },
   tabline = {
-    lualine_a = { 'windows', truncate },
+    lualine_a = { { 'windows', windows_color = {
+      active = {}, -- Use insert mode highlight group for the current buffer
+      inactive = 'lualine_a_inactive',
+    } }, truncate },
     lualine_b = {},
     lualine_c = {},
     lualine_x = {},
