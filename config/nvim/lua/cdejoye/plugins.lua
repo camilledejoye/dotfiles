@@ -64,7 +64,12 @@ return require('packer').startup(function(use)
   use { 'monaqa/dial.nvim', config = config('dial') } -- Improved increment/decrement
   use { 'tommcdo/vim-lion' } -- Align text
 
-  use { 'jiangmiao/auto-pairs', config = config('auto-pairs') }
+  use {
+    'windwp/nvim-autopairs',
+    config = function()
+      require('nvim-autopairs').setup({})
+    end,
+  }
 
   use { -- Colorizer
     'norcalli/nvim-colorizer.lua',
