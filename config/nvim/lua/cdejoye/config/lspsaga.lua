@@ -2,11 +2,15 @@
 local map = require('cdejoye.utils').map
 
 -- Config
-require('lspsaga').init_lsp_saga {
+require('lspsaga').setup({
   code_action_lightbulb = {
     sign = false,
   },
-}
+  symbol_in_winbar = {
+    enable = true,
+    show_file = false,
+  },
+})
 
 -- Theming
 local colorscheme = vim.g.colors_name
