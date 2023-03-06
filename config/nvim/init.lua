@@ -53,7 +53,7 @@ opt.diffopt:append({ 'vertical', 'hiddenoff', 'algorithm:minimal' })
 opt.wildmenu = true
 opt.inccommand = 'nosplit'
 opt.termguicolors = true
-opt.equalalways = false -- don't automatically resize windows
+opt.equalalways = true -- automatically resize windows
 opt.updatetime = 1000 -- Make updates happen faster
 opt.mouse = 'n'
 opt.formatoptions = opt.formatoptions
