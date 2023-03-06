@@ -222,6 +222,12 @@ return require('packer').startup(function(use)
 
   use { 'stevearc/dressing.nvim', config = config('dressing') }
 
+  use {
+    'petertriho/nvim-scrollbar',
+    after = { 'gitsigns.nvim' },
+    config = config('scrollbar'),
+  }
+
   use { -- lualine
     'hoob3rt/lualine.nvim',
     after = 'nvim-base16',
