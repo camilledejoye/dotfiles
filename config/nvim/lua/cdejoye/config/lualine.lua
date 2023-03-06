@@ -1,4 +1,3 @@
-local utils = require('lualine.utils.utils')
 local highlight = require('lualine.highlight')
 
 vim.o.showmode = false
@@ -58,62 +57,16 @@ local function get_hl(section_letter, suffix)
   return section .. '_' .. suffix
 end
 
-local diagnostics = {
-  'diagnostics',
-  sources = { 'nvim_diagnostic' },
-  diagnostics_color = {
-    error = function(context)
-      return {
-        fg = utils.extract_highlight_colors(get_hl(context.section, 'normal'), 'fg'),
-        bg = utils.extract_color_from_hllist(
-          'fg',
-          { 'DiagnosticError', 'LspDiagnosticsDefaultError', 'DiffDelete' },
-          '#cc6666'
-        ),
-      }
-    end,
-    warn = function(context)
-      return {
-        fg = utils.extract_highlight_colors(get_hl(context.section, 'normal'), 'fg'),
-        bg = utils.extract_color_from_hllist(
-          'fg',
-          { 'DiagnosticWarn', 'LspDiagnosticsDefaultWarning', 'DiffText' },
-          '#de935f'
-        ),
-      }
-    end,
-    info = function(context)
-      return {
-        fg = utils.extract_highlight_colors(get_hl(context.section, 'normal'), 'fg'),
-        bg = utils.extract_color_from_hllist(
-          'fg',
-          { 'DiagnosticInfo', 'LspDiagnosticsDefaultInformation', 'Normal' },
-          '#e0e0e0'
-        ),
-      }
-    end,
-    hint = function(context)
-      return {
-        fg = utils.extract_highlight_colors(get_hl(context.section, 'normal'), 'fg'),
-        bg = utils.extract_color_from_hllist(
-          'fg',
-          { 'DiagnosticHint', 'LspDiagnosticsDefaultHint', 'DiffChange' },
-          '#81a2be'
-        ),
-      }
-    end,
-  },
-}
+local icons = require('cdejoye.icons')
 
--- TODO implement $/progress on phpactor
--- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#progress
--- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#workDoneProgress
--- TODO create a handler for messages usin notification with https://github.com/rcarriga/nvim-notify ?
-local function lsp_messages()
-  local loaded, lsp_status = pcall(require, 'lsp-status')
+local diagnostics = { 'diagnostics', symbols = {
+  error = icons.diagnostics.error..' ',
+  warn = icons.diagnostics.warn..' ',
+  info = icons.diagnostics.info..' ',
+  hint = icons.diagnostics.hint..' ',
+}}
 
-  return loaded and lsp_status.status_progress() or ''
-end
+local branch = { 'branch', icon = icons.git.branch }
 
 require('lualine').setup({
   options = {
@@ -130,20 +83,20 @@ require('lualine').setup({
       { spell, left_padding = 0, condition = condition.width.gt(100) },
       { paste, left_padding = 0, condition = condition.width.gt(50) },
     },
-    lualine_b = { truncate, 'branch' },
+    lualine_b = { truncate, branch },
     lualine_c = { fileicon, filename },
-    lualine_x = { lsp_messages },
+    lualine_x = { diagnostics },
     lualine_y = {
       { percent, condition = condition.width.gt(50) },
       { maxline, condition = condition.width.gt(100) },
     },
-    lualine_z = { 'location', diagnostics },
+    lualine_z = { 'location' },
   },
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
     lualine_c = { fileicon, filename },
-    lualine_x = {},
+    lualine_x = { diagnostics },
     lualine_y = {},
     lualine_z = {},
   },
