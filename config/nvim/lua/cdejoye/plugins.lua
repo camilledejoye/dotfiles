@@ -56,7 +56,6 @@ return require('packer').startup(function(use)
   use { -- Add documentation around Lua
     'nanotee/luv-vimdocs',
     'milisims/nvim-luaref',
-    'folke/lua-dev.nvim', -- Help configuring sumneko lua language server
   }
 
   use { 'kyazdani42/nvim-web-devicons' }
@@ -137,7 +136,6 @@ return require('packer').startup(function(use)
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp',
-      'ray-x/lsp_signature.nvim',
       'saadparwaiz1/cmp_luasnip',
       'L3MON4D3/LuaSnip',
       -- Disable while testing LuaSnip
@@ -148,28 +146,22 @@ return require('packer').startup(function(use)
     config = config('cmp'),
   }
 
-  -- Must be loaded before lspconfig
-  use { -- mason - 3rd party installer
-    'williamboman/mason.nvim',
-    requires = {
-      'williamboman/mason-lspconfig.nvim',
-      'jayp0521/mason-nvim-dap.nvim',
-      'jayp0521/mason-null-ls.nvim',
+  use { -- LSP
+    'folke/neodev.nvim', -- Help configuring sumneko lua language server
+    'williamboman/mason.nvim', -- 3rd party installer
+    'williamboman/mason-lspconfig.nvim',
+    'jayp0521/mason-nvim-dap.nvim',
+    'jayp0521/mason-null-ls.nvim',
+    {
+      'neovim/nvim-lspconfig',
+      after = { 'nvim-cmp' }, -- To be able to add cmp capabilities it must be loaded first
+      config = config('lspconfig'),
     },
-    config = config('mason'),
-  }
-
-  use { -- nvim-lspconfig
-    'neovim/nvim-lspconfig',
-    after = { 'nvim-cmp', 'mason.nvim' }, -- use an alias like completor to be more generic ?
-    requires = {
-      { 'j-hui/fidget.nvim', config = function() require('fidget').setup({ text = { spinner = 'dots' } }) end },
-      { 'glepnir/lspsaga.nvim', config = config('lspsaga'), after = 'nvim-base16' },
-      { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
-      { 'camilledejoye/nvim-lsp-selection-range' },
-      { 'b0o/schemastore.nvim' }, -- used by jsonls server to retrieve json schemas
-    },
-    config = config('lsp'),
+    'ray-x/lsp_signature.nvim',
+    { 'glepnir/lspsaga.nvim', config = config('lspsaga') },
+    { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
+    { 'camilledejoye/nvim-lsp-selection-range' },
+    { 'b0o/schemastore.nvim' }, -- used by jsonls server to retrieve json schemas
   }
 
   use { -- Phpactor
