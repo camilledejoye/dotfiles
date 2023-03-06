@@ -1,12 +1,14 @@
 local M = {}
 
+local icons = require('cdejoye.icons')
+
 function M.setup()
   require('mason').setup({
     ui = {
       icons = {
-        package_installed = '✓',
-        package_pending = '➜',
-        package_uninstalled = '✗',
+        package_installed = icons.check.default,
+        package_pending = icons.arrow.thick,
+        package_uninstalled = icons.uncheck.thick,
       },
     },
   })
