@@ -77,7 +77,6 @@ bspc config gapless_monocle true
 # Rules {{{
 
 bspc rule -a *:VimWiki desktop='^10' locked=true follow=true
-bspc rule -a qutebrowser desktop='^1' follow=true
 bspc rule -a Pavucontrol state=floating
 bspc rule -a feh state=floating
 bspc rule -a Alacritty --one-shot desktop='^4' follow=true
