@@ -98,6 +98,12 @@ return require('packer').startup(function(use)
     config = config('gitsigns'),
   }
 
+  use { -- neogit
+    'TimUntersberger/neogit',
+    requires = 'nvim-lua/plenary.nvim',
+    config = config('neogit'),
+  }
+
   use { -- diffview
     'sindrets/diffview.nvim',
     requires = 'nvim-lua/plenary.nvim',
@@ -246,7 +252,6 @@ return require('packer').startup(function(use)
     { 'tpope/vim-scriptease', cmd = 'Scriptnames' },
     { 'tpope/vim-unimpaired', config = config('unimpaired') },
     'tpope/vim-abolish',
-    { 'tpope/vim-fugitive', config = config('fugitive') },
     'tpope/vim-repeat',
     'tpope/vim-dispatch',
     'radenling/vim-dispatch-neovim',
