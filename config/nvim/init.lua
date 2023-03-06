@@ -1,3 +1,6 @@
+local impatient_ok, impatient = pcall(require, 'impatient')
+if impatient_ok then impatient.enable_profile() end
+
 local g = vim.g
 local opt = vim.opt
 local cmd = vim.cmd
