@@ -98,6 +98,12 @@ return require('packer').startup(function(use)
     config = config('gitsigns'),
   }
 
+  use { -- diffview
+    'sindrets/diffview.nvim',
+    requires = 'nvim-lua/plenary.nvim',
+    config = config('diffview'),
+  }
+
   use { 'rhysd/git-messenger.vim', config = config('git-messenger') }
 
   use { -- Neorg

@@ -84,11 +84,13 @@
 [push]
     default = simple
 [merge]
-    tool = fugitive
+    tool = diffview
 [rebase]
     autoStash = true
 [mergetool "fugitive"]
     cmd = nvim -c \"Gdiff!\" \"$MERGED\"
+[mergetool "diffview"]
+    cmd = nvim -c \"DiffviewOpen\" \"$MERGED\"
 [grep]
     lineNumber = true
     fallbackToNoIndex = true
