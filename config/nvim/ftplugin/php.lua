@@ -27,5 +27,9 @@ bmap(',<', t('<?php<CR><CR>'), 'i')
 -- The default indent file for php will add it automatically
 vim.g.PHP_autoformatcomment = false
 
+-- Enable folds for PHP and set it to start at level 1 in order to have all methods folded
+vim.opt.foldenable = true
+vim.opt.foldlevelstart = 1
+
 -- Open an interactive PHP session in an emulated terminal
 vim.cmd([[command! -buffer Repl botright split term://php\ -a | normal! i]])
