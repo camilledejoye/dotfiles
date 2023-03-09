@@ -85,7 +85,7 @@ font-4 = "Noto Sans:size=10;1"
 ; font-2 = "Font Awesome 5 Free Solid:pixelsize=12;2"
 ; font-3 = "Font Awesome 5 Free Solid:pixelsize=8;1"
 ; font-4 = "Font Awesome 5 Free Regular:pixelsize=8;2"
-; font-5 = "Symbols Nerd Font:pixelsize=10;1"
+font-5 = "Symbols Nerd Font:pixelsize=10;1"
 ; font-6 = "Symbols Nerd Font:pixelsize=8;1"
 
 modules-left = bspwm
@@ -156,25 +156,34 @@ label-unmounted-foreground = ${colors.foreground-alt}
 [module/bspwm]
 type = internal/bspwm
 
-ws-icon-0 = web;
-; ws-icon-1 = calendar;
+; ; Icons with regular ttf-hack
+; ws-icon-0 = web;
+; ws-icon-1 = calendar;
+; ws-icon-2 = tasks;
+; ws-icon-3 = terminal;
+; ws-icon-4 = images;
+; ws-icon-5 = paw;
+; ; ws-icon-6 = video;
+; ws-icon-6 = video;
+; ; ws-icon-7 = explorer;
+; ws-icon-7 = explorer;
+; ws-icon-8 = slack;
+; ; ws-icon-9 = notes;
+; ws-icon-9 = notes;
+; ; ws-icon-9 = notes;
+; ws-icon-default = ""
+
+; Icons with Symbols Nerd Font
+ws-icon-0 = web;󰖟
 ws-icon-1 = calendar;
-; ws-icon-2 = tasks;
-ws-icon-2 = tasks;
+ws-icon-2 = tasks;
 ws-icon-3 = terminal;
 ws-icon-4 = images;
 ws-icon-5 = paw;
-; ws-icon-6 = video;
-ws-icon-6 = video;
-; ws-icon-7 = explorer;
+ws-icon-6 = video;󰕼
 ws-icon-7 = explorer;
-ws-icon-8 = slack;
-; ws-icon-8 = slack;
-; ws-icon-8 = slack;
-; ws-icon-9 = notes;
-; ws-icon-9 = notes;
-ws-icon-9 = notes;
-; ws-icon-9 = notes;
+ws-icon-8 = slack;󰒱
+ws-icon-9 = notes;
 ws-icon-default = ""
 
 label-focused = %icon%
@@ -195,6 +204,11 @@ label-empty = %icon%
 ; label-empty-foreground = ${colors.foreground-alt}
 label-empty-foreground = ${colors.gray}
 label-empty-padding = 1
+
+label-focused-font = 6
+label-occupied-font = 6
+label-urgent-font = 6
+label-empty-font = 6
 
 ; Separator in between workspaces
 ; label-separator = |
