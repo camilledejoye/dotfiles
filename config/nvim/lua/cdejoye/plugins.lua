@@ -301,11 +301,16 @@ return require('packer').startup(function(use)
   }
 
   use { -- vim-test
-    'vim-test/vim-test',
+    -- 'vim-test/vim-test',
+    'camilledejoye/vim-test', branch = 'phpunit-attributes',
+    -- '~/work/vim/plugins/vim-test',
     config = config('vim-test'),
   }
 
-  -- TODO: try to make it work with containers
+  -- -- Keep vim-test for a reliable environment, it works great with containers and provide
+  -- -- a nice fast feedback loop
+  -- -- Neotest is a nice idea but would require work to be able to operate properly and seamlessly
+  -- -- with containers
   -- use {
   --   "nvim-neotest/neotest",
   --   requires = {
@@ -313,40 +318,12 @@ return require('packer').startup(function(use)
   --     'nvim-treesitter/nvim-treesitter',
   --     'antoinemadec/FixCursorHold.nvim',
   --     'nvim-neotest/neotest-plenary',
-  --     'olimorris/neotest-phpunit',
+  --     -- 'olimorris/neotest-phpunit',
+  --     '~/work/vim/plugins/neotest-phpunit',
   --     -- 'nvim-neotest/neotest-vim-test',
   --     -- 'vim-test/vim-test', -- To fallback if no adapter exists
   --   },
-  --   config = function ()
-  --     require('neotest').setup({
-  --       adapters = {
-  --         -- require('neotest-vim-test'),
-  --         require('neotest-plenary'),
-  --         require('neotest-phpunit')({
-  --           phpunit_cmd = function()
-  --             -- To test only, seems again to be hard to run that in a container :(
-  --             return "vendor/bin/phpunit"
-  --             -- for _, cmd in pairs({"phpunit", "tools/phpunit", "vendor/bin/phpunit"}) do
-  --             --   if 1 == vim.fn.executable(cmd) then
-  --             --     return cmd
-  --             --   end
-  --             -- end
-  --             -- return "vendor/bin/phpunit"
-  --           end
-  --         }),
-  --       },
-  --     })
-  --     vim.keymap.set('n', '<Leader>tS', require('neotest').summary.toggle)
-  --     vim.keymap.set('n', '<Leader>tn', require('neotest').run.run)
-  --     vim.keymap.set('n', '<Leader>tdn', function()
-  --       require('neotest').run.run({ strategy = 'dap' })
-  --     end)
-  --     vim.keymap.set('n', '<Leader>ta', require('neotest').run.attach)
-  --     vim.keymap.set('n', '<Leader>ts', require('neotest').run.stop)
-  --     vim.keymap.set('n', '<Leader>tf', function()
-  --       require('neotest').run.run(vim.fn.expand('%'))
-  --     end)
-  --   end
+  --   config = config('neotest'),
   -- }
 
   use { -- lir.nvim
