@@ -350,7 +350,13 @@ return require('packer').startup(function(use)
   use {
     'rcarriga/nvim-notify',
     config = function()
-      -- vim.notify = require('notify').notify
+      local notify = require('notify')
+      notify.setup({
+        -- suggested by the plugin for 100% transparency after an update, to test eventually
+        background_colour = '#000000'
+      })
+
+      -- vim.notify = notify.notify
 
       if pcall(require, 'telescope') then
         require('telescope').load_extension('notify');
