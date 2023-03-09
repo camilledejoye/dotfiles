@@ -22,6 +22,8 @@ return require('packer').startup(function(use)
 
   use { 'lewis6991/impatient.nvim' }
 
+  use { 'RRethy/nvim-base16', config = config('colorscheme') }
+
   use { -- Miscelanous
     'camilledejoye/vim-cleanfold',
     { 'kana/vim-niceblock', config = config('niceblock') },
@@ -275,6 +277,25 @@ return require('packer').startup(function(use)
     -- 'FooSoft/vim-argwrap',
     'camilledejoye/vim-argwrap', branch = 'imp/php-always-tail-comma-for-method-declaration',
     config = config('vim-argwrap'),
+  }
+
+  use {
+    -- 'andythigpen/nvim-coverage',
+    'camilledejoye/nvim-coverage', branch = 'feat/php-cobertura',
+    -- '~/work/vim/plugins/nvim-coverage',
+    requires = 'nvim-lua/plenary.nvim',
+    rocks = { 'lua-xmlreader' },
+    config = config('coverage'),
+    cmd = {
+      'Coverage',
+      'CoverageHide',
+      'CoverageLoad',
+      'CoverageShow',
+      'CoverageClear',
+      'CoverageToggle',
+      'CoverageSummary',
+    },
+    keys = { '<leader>tc', '<leader>tC' },
   }
 
   use { -- vim-test
