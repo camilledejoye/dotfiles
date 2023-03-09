@@ -68,6 +68,17 @@ local diagnostics = { 'diagnostics', symbols = {
 
 local branch = { 'branch', icon = icons.git.branch }
 
+local loaded, search_results = pcall(function()
+  return{
+    require("noice").api.status.search.get,
+    cond = require("noice").api.status.search.has,
+    color = { fg = "ff9e64" },
+  }
+end)
+if not loaded then
+  search_results = ''
+end
+
 require('lualine').setup({
   options = {
     icons_enabled = true,
@@ -85,7 +96,7 @@ require('lualine').setup({
     },
     lualine_b = { truncate, branch },
     lualine_c = { fileicon, filename },
-    lualine_x = { diagnostics },
+    lualine_x = { search_results, diagnostics },
     lualine_y = {
       { percent, condition = condition.width.gt(50) },
       { maxline, condition = condition.width.gt(100) },
