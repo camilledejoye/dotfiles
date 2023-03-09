@@ -1,6 +1,10 @@
 -- https://github.com/glepnir/lspsaga.nvim
 local map = require('cdejoye.utils').map
 
+-- Mappings
+map('gH', [[<cmd>Lspsaga peek_definition<CR>]])
+map('<Leader><Leader>', [[<cmd>Lspsaga term_toggle<CR>]])
+
 -- Config
 require('lspsaga').setup({
   code_action_lightbulb = {
