@@ -37,6 +37,12 @@ local icons = {
       default = ''
     }
   },
+  chevron = {
+    left = '',
+    down = '',
+    up = '',
+    right = '',
+  },
 }
 
 return vim.tbl_extend('force', icons, {
