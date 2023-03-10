@@ -270,7 +270,7 @@ return require('packer').startup(function(use)
     run = ':TSUpdate',
     requires = {
       'JoosepAlviste/nvim-ts-context-commentstring',
-      'nvim-treesitter/nvim-treesitter-textobjects',
+      { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter' },
     },
     config = config('nvim-treesitter'),
   }
