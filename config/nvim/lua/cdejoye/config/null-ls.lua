@@ -119,59 +119,89 @@ local should_run_phpcs = should_run(function(params)
   )
 end)
 
+local sources = {
+  -- builtins.code_actions.gitsigns,
+
+  -- yay -S shellcheck
+  builtins.diagnostics.shellcheck,
+
+  -- yay -S lua51-luacheck
+  builtins.diagnostics.luacheck,
+  -- yay -S stylua-bin
+  builtins.formatting.stylua,
+
+  builtins.diagnostics.phpstan.with {
+    command = php_command_resolver('phpstan'),
+    ---@param params ExtendedNullLsParams
+    runtime_condition = should_run(function(params)
+      return php_command_resolver('phpstan')(params) and not(
+        params.bufname_match('src/Core/Infrastructure/Migrations/*')
+        or params.bufname_match('src/**/spec/*')
+        or params.bufname_match('src/**/DataFixtures/*')
+        or params.bufname_match('src/**/Behat/*')
+        or params.bufname_match('vendor/*')
+      )
+    end),
+    -- -- Just in case, this will match the messages by using only relative path with containers
+    -- -- For now I deal with that using `jq` in a bash script so that this config stay the same
+    -- on_output = function(params)
+    --     local function remove_prefix(haystack, prefix)
+    --       if 1 == haystack:find(prefix) then
+    --         haystack = haystack:sub(prefix:len() + 1)
+    --       end
+
+    --       return haystack
+    --     end
+    --     local parser = helpers.diagnostics.from_json({})
+    --     local path = remove_prefix(params.temp_path or params.bufname, params.root..'/')
+    --     local files = params.output and params.output.files or {}
+    --     params.messages = {}
+
+    --     for filename, data in pairs(files or {}) do
+    --       if remove_prefix(filename, '/var/www/html/') == path then
+    --         params.messages = data.messages
+    --         break
+    --       end
+    --     end
+
+    --     return parser({ output = params.messages })
+    -- end,
+  },
+
+  builtins.formatting.phpcbf.with {
+    command = php_command_resolver('phpcbf'),
+    runtime_condition = function(params)
+      return php_command_resolver('phpcbf')(params) and should_run_phpcs(params)
+    end,
+  },
+  builtins.diagnostics.phpcs.with {
+    command = php_command_resolver('phpcs'),
+    runtime_condition = function(params)
+      return php_command_resolver('phpcs')(params) and should_run_phpcs(params)
+    end,
+  },
+
+  builtins.formatting.phpcsfixer.with {
+    command = php_command_resolver('php-cs-fixer'),
+    runtime_condition = should_run_phpcsfixer,
+  },
+  phpcsfixer.with {
+    command = php_command_resolver('php-cs-fixer'),
+    runtime_condition = should_run_phpcsfixer,
+  },
+}
+
+for _, source in ipairs(require('cdejoye.config').null_ls.sources) do
+  table.insert(sources, source)
+end
+
 local M = {}
 
 function M.setup (on_attach, _)
   require('null-ls').setup {
     -- debug = true,
     diagnostics_format = '#{m} [#{s}]',
-    sources = {
-      -- builtins.code_actions.gitsigns,
-
-      -- yay -S shellcheck
-      builtins.diagnostics.shellcheck,
-
-      -- yay -S lua51-luacheck
-      builtins.diagnostics.luacheck,
-      -- yay -S stylua-bin
-      builtins.formatting.stylua,
-
-      builtins.diagnostics.phpstan.with {
-        command = php_command_resolver('phpstan'),
-        ---@param params ExtendedNullLsParams
-        runtime_condition = should_run(function(params)
-          return php_command_resolver('phpstan')(params) and not(
-            params.bufname_match('src/Core/Infrastructure/Migrations/*')
-            or params.bufname_match('src/**/spec/*')
-            or params.bufname_match('src/**/DataFixtures/*')
-            or params.bufname_match('src/**/Behat/*')
-            or params.bufname_match('vendor/*')
-          )
-        end),
-      },
-
-      builtins.formatting.phpcbf.with {
-        command = php_command_resolver('phpcbf'),
-        runtime_condition = function(params)
-          return php_command_resolver('phpcbf')(params) and should_run_phpcs(params)
-        end,
-      },
-      builtins.diagnostics.phpcs.with {
-        command = php_command_resolver('phpcs'),
-        runtime_condition = function(params)
-          return php_command_resolver('phpcs')(params) and should_run_phpcs(params)
-        end,
-      },
-
-      builtins.formatting.phpcsfixer.with {
-        command = php_command_resolver('php-cs-fixer'),
-        runtime_condition = should_run_phpcsfixer,
-      },
-      phpcsfixer.with {
-        command = php_command_resolver('php-cs-fixer'),
-        runtime_condition = should_run_phpcsfixer,
-      },
-    },
+    sources = sources,
     on_attach = on_attach,
   }
 

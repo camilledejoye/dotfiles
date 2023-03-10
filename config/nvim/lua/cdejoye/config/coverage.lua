@@ -1,22 +1,13 @@
 local coverage = require('coverage')
+local config = require('cdejoye.config').coverage
 
 -- Setup
-local function find_coverage_file()
-  for _, file in ipairs({'coverage/cobertura.xml', 'var/coverage/phpspec/cobertura.xml'}) do
-    if nil ~= vim.loop.fs_stat(file) then
-      return file
-    end
-  end
-
-  return 'cobertura.xml'
-end
-
 coverage.setup({
   commands = true, -- create commands
   auto_reload = true,
   lang = {
     php = {
-      coverage_file = find_coverage_file(),
+      coverage_file = config.php.coverage_file,
       path_mappings = {
         -- Keeps empty to use relative paths
         ['/var/www/html/'] = '',

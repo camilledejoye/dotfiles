@@ -69,6 +69,7 @@ opt.formatoptions = opt.formatoptions
   + 'q' -- Format comments with gq
   + 'n' -- Auto indent in numbered lists
   - '2' -- Don't have special paragraph formatting, does play well with 'n'
+opt.exrc = true -- Load .nvim.lua file in current directory (ask if it can be trusted first)
 
 require('cdejoye.plugins')
 
