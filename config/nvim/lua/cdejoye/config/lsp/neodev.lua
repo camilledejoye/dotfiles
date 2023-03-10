@@ -10,6 +10,7 @@ function M.setup()
       -- library = {
       --   plugins = { 'neotest', 'nvim-dap-ui', 'nvim-lspconfig', 'plenary.nvim' },
       -- },
+      library = true,
       override = function(root_dir, library) -- To have it enabled when working on plugins
         if root_dir:match('^'..vim.fs.normalize('~/work/vim/plugins')) then
           library.plugins = true
