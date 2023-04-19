@@ -9,11 +9,11 @@ require('neorg').setup {
   load = {
     ['core.defaults'] = {}, -- Load all the default modules
 
-    ['core.norg.journal'] = { -- Easily create files for a journal
+    ['core.journal'] = { -- Easily create files for a journal
       -- https://github.com/nvim-neorg/neorg/wiki/Journal#Configuration
     },
 
-    ['core.norg.qol.toc'] = { -- Generates a Table of Content from the Neorg file
+    ['core.qol.toc'] = { -- Generates a Table of Content from the Neorg file
       -- https://github.com/nvim-neorg/neorg/wiki/Qol-Toc
     },
 
@@ -32,7 +32,7 @@ require('neorg').setup {
 
 
 
-    ['core.norg.completion'] = { config = { engine = 'nvim-cmp' } },
+    ['core.completion'] = { config = { engine = 'nvim-cmp' } },
 
     ['core.keybinds'] = { -- Configure core.keybinds
       config = {
@@ -41,7 +41,7 @@ require('neorg').setup {
       },
     },
 
-    ['core.norg.concealer'] = { -- Allows for use of icons
+    ['core.concealer'] = { -- Allows for use of icons
       config = {
         icons = {
           todo = {
@@ -84,7 +84,7 @@ require('neorg').setup {
       },
     },
 
-    ['core.norg.dirman'] = { -- Manage your directories with Neorg
+    ['core.dirman'] = { -- Manage your directories with Neorg
       config = {
         workspaces = workspaces,
         autodetect = true,
