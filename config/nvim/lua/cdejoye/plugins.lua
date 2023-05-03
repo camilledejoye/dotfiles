@@ -150,7 +150,10 @@ return require('packer').startup(function(use)
 
   use { -- LSP
     'folke/neodev.nvim', -- Help configuring sumneko lua language server
-    'williamboman/mason.nvim', -- 3rd party installer
+    { -- 3rd party installer
+      'williamboman/mason.nvim',
+      run = ':MasonUpdate',
+    },
     'williamboman/mason-lspconfig.nvim',
     'jayp0521/mason-nvim-dap.nvim',
     'jayp0521/mason-null-ls.nvim',

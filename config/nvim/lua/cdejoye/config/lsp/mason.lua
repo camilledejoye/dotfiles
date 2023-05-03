@@ -21,29 +21,26 @@ function M.setup()
   require('mason-nvim-dap').setup({
     ensure_installed = { 'php' },
     automatic_setup = true,
-  })
-  require('mason-nvim-dap').setup_handlers({
-    function(source_name)
-      -- all sources with no handler get passed here
+    handlers = {
+      function(config)
+        -- all sources with no handler get passed here
 
-      -- Keep original functionality of `automatic_setup = true`
-      require('mason-nvim-dap.automatic_setup')(source_name)
-    end,
-    php = function()
-      -- Configuration found in:
-      -- https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/adapters.lua
-      require('dap').adapters.php = require('mason-nvim-dap.mappings.adapters').php
-
-      local default_config = require('mason-nvim-dap.mappings.configurations').php
-      require('dap').configurations.php = vim.tbl_deep_extend('force', default_config, {
-        {
-          port = 9003,
-          pathMappings = {
-            ['/var/www/html'] = '${workspaceFolder}',
+        -- Keep original functionality
+        require('mason-nvim-dap').default_setup(config)
+      end,
+      php = function(config)
+        config.configurations = vim.tbl_deep_extend('force', config.configurations, {
+          {
+            port = 9003,
+            pathMappings = {
+              ['/var/www/html'] = '${workspaceFolder}',
+            },
           },
-        },
-      })
-    end,
+        })
+
+        require('mason-nvim-dap').default_setup(config) -- don't forget this!
+      end,
+    },
   })
 end
 
