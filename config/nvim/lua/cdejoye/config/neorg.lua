@@ -1,8 +1,17 @@
 local workspaces = {
   default = '~/notes',
   wiki = '~/vimwiki',
-  worldia ='~/work/worldia/platform/api/notes'
+  worldia ='~/work/worldia/platform/api/notes',
+  tasks = '~/work/worldia/platform/api/notes/tasks',
 }
+
+local map = require('cdejoye.utils').map
+
+map('<Leader>nw', '<cmd>Telescope neorg switch_workspace<CR>')
+map('<Leader>ni', '<cmd>Neorg index<CR>')
+map('<Leader>nt', '<cmd>Neorg workspace tasks<CR>')
+map('<Leader>nr', '<cmd>Neorg return<CR>')
+map('<Leader>sn', '<cmd>Telescope neorg find_norg_files<CR>')
 
 require('neorg').setup {
   -- Tell Neorg what modules to load
@@ -17,12 +26,11 @@ require('neorg').setup {
       -- https://github.com/nvim-neorg/neorg/wiki/Qol-Toc
     },
 
-    -- Disable because I'm not using it right now and I had errors when trying to load the module
-    -- ['core.gtd.base'] = { -- Manages your tasks with Neorg using the Getting Things Done methodology
-    --   config = { -- https://github.com/nvim-neorg/neorg/wiki/Getting-Things-Done
-    --     workspace = 'default',
-    --   },
-    -- },
+    ['core.qol.todo_items'] = {
+      config = {
+        order = {{'undone', ' '}, {'pending', '-'}, {'done', 'x'}},
+      },
+    },
 
     -- ['core.presenter'] = { -- Neorg module to create gorgeous presentation slides
     --   config = { -- https://github.com/nvim-neorg/neorg/wiki/Core-Presenter
@@ -30,14 +38,16 @@ require('neorg').setup {
     --   },
     -- },
 
+    ['core.export'] = {}, -- Export into a different format
 
+    ['core.summary'] = {}, -- Generates summary for the entire workspace
 
     ['core.completion'] = { config = { engine = 'nvim-cmp' } },
 
     ['core.keybinds'] = { -- Configure core.keybinds
       config = {
         default_keybinds = true, -- Generate the default keybinds
-        neorg_leader = '<Leader>o', -- This is the default if unspecified
+        neorg_leader = '<Leader>o', -- Default is <LocalLeader>
       },
     },
 
@@ -89,6 +99,7 @@ require('neorg').setup {
         workspaces = workspaces,
         autodetect = true,
         autochdir = true,
+        default_workspace = 'worldia',
       },
     },
 
