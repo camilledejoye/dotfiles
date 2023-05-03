@@ -8,6 +8,6 @@ vim.g.nremap = {
   [']uu'] = '<skip>',
   ['[CC'] = '<skip>',
   [']CC'] = '<skip>',
-  ['[n'] = '<skip>',
-  [']n'] = '<skip>',
+  -- ['[n'] = '<skip>',
+  -- [']n'] = '<skip>',
 }
