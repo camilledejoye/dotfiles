@@ -1,7 +1,9 @@
 local dap = require('dap') -- Must be before overriding the signs
 local dapui = require('dapui')
 
-require('telescope').load_extension('dap')
+if pcall(require, 'telescope') then
+  require('telescope').load_extension('dap');
+end
 
 dapui.setup {
   icons = { expanded = '', collapsed = '' },

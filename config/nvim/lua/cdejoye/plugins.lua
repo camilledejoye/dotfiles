@@ -1,141 +1,152 @@
 local function config(name)
-  local cmd = [[require('cdejoye.config.%s')]]
+  local cmd = [[cdejoye.config.%s]]
 
-  return cmd:format(name)
-end
-
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
+  return function()
+    require(cmd:format(name))
   end
-  return false
 end
 
-local packer_bootstrap = ensure_packer()
+local ensure_lazy_is_installed = function()
+  local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+  if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    vim.fn.system({
+      'git',
+      'clone',
+      '--filter=blob:none',
+      'https://github.com/folke/lazy.nvim.git',
+      '--branch=stable', -- latest stable release
+      lazypath,
+    })
+  end
+  vim.opt.rtp:prepend(lazypath)
+end
 
-return require('packer').startup(function(use)
-  use { 'wbthomason/packer.nvim' }
+ensure_lazy_is_installed()
 
-  use { 'lewis6991/impatient.nvim' }
+require('lazy').setup({
+  {
+    'RRethy/nvim-base16',
+    config = config('colorscheme'),
+    priority = 999, -- A high number is recommended for colorscheme
+  },
 
-  use { 'RRethy/nvim-base16', config = config('colorscheme') }
+  -- Miscelanous
+  'camilledejoye/vim-cleanfold',
+  { 'kana/vim-niceblock', config = config('niceblock') },
+  'terryma/vim-multiple-cursors',
 
-  use { -- Miscelanous
-    'camilledejoye/vim-cleanfold',
-    { 'kana/vim-niceblock', config = config('niceblock') },
-    'terryma/vim-multiple-cursors',
-  }
+  -- -- Disabled because I want to use Treesitter now, but I kept them here just in case
+  -- -- Language related (syntax, completion,e tc.)
+  -- 'elzr/vim-json',
+  -- 'othree/csscomplete.vim',
+  -- 'camilledejoye/vim-sxhkdrc',
+  -- 'cespare/vim-toml',
+  -- 'tbastos/vim-lua',
 
-  -- Disabled because I want to use Treesitter now, but I kept them here just in case
-  -- use { -- Language related (syntax, completion,e tc.)
-  --   'elzr/vim-json',
-  --   'othree/csscomplete.vim',
-  --   'camilledejoye/vim-sxhkdrc',
-  --   'cespare/vim-toml',
-  --   'tbastos/vim-lua',
-  -- }
-
-  use { -- markdown-preview
+  { -- markdown-preview
     'iamcco/markdown-preview.nvim',
-    run = 'cd app && yarn install',
-    cmd = 'MarkdownPreview',
-    ft = 'markdown',
-  }
+    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+    build = 'cd app && yarn install',
+    ft = { 'markdown' },
+  },
 
-  use 'wellle/targets.vim'  -- Adds a bunch of text objects, especially argument text object
+  -- 'wellle/targets.vim'  -- Adds a bunch of text objects, especially argument text object
 
-  use { -- Fix CursorHold performance issue on Neovim:
-    -- https://github.com/antoinemadec/FixCursorHold.nvim
-    -- See: https://github.com/neovim/neovim/issues/12587
-    "antoinemadec/FixCursorHold.nvim",
-    setup = [[vim.g.cursorhold_updatetime = 100]]
-  }
+  -- Add documentation around Lua
+  'nanotee/luv-vimdocs',
+  'milisims/nvim-luaref',
 
-  use { -- Add documentation around Lua
-    'nanotee/luv-vimdocs',
-    'milisims/nvim-luaref',
-  }
+  'kyazdani42/nvim-web-devicons',
 
-  use { 'kyazdani42/nvim-web-devicons' }
+  { 'monaqa/dial.nvim', config = config('dial') }, -- Improved increment/decrement
+  'tommcdo/vim-lion', -- Align text
 
-  use { 'monaqa/dial.nvim', config = config('dial') } -- Improved increment/decrement
-  use { 'tommcdo/vim-lion' } -- Align text
-
-  use {
+  {
     'windwp/nvim-autopairs',
     config = config('autopairs'),
-  }
+  },
 
-  use { -- Colorizer
+  { -- Colorizer
     'norcalli/nvim-colorizer.lua',
-    setup = [[require('cdejoye.utils').map('yoC', '<cmd>ColorizerToggle<CR>')]],
+    init = function()
+      require('cdejoye.utils').map('yoC', '<cmd>ColorizerToggle<CR>')
+    end,
     cmd = 'ColorizerToggle',
-  }
+  },
 
-  use { -- Debugger
+  { -- Telescope
+    'nvim-telescope/telescope.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'kyazdani42/nvim-web-devicons',
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+      'nvim-telescope/telescope-fzf-writer.nvim',
+      'nvim-telescope/telescope-symbols.nvim',
+    },
+    config = config('telescope'),
+  },
+
+  { -- Debugger
     -- https://github.com/mfussenegger/nvim-dap
     -- PHP adapter installation: https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#PHP
-    -- TODO use post install hook to run a script using plenary.nvim to install it automatically
     'mfussenegger/nvim-dap',
-    requires = {
-      { 'rcarriga/nvim-dap-ui', requires = 'nvim-neotest/nvim-nio' },
+    dependencies = {
+      { 'rcarriga/nvim-dap-ui', dependencies = 'nvim-neotest/nvim-nio' },
       'theHamsta/nvim-dap-virtual-text',
       { 'nvim-telescope/telescope-dap.nvim', requires = 'nvim-telescope/telescope.nvim' },
     },
     config = config('dap'),
-  }
+  },
 
-  use { 'gpanders/editorconfig.nvim' }
+  { 'gpanders/editorconfig.nvim' },
 
-  use { -- GitSigns
+  { -- GitSigns
     'lewis6991/gitsigns.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
     config = config('gitsigns'),
-  }
+  },
 
-  use { -- neogit
+  { -- neogit
     'TimUntersberger/neogit',
     -- 'camilledejoye/neogit', branch = 'folds-improvements',
     -- '~/work/vim/plugins/neogit',
-    requires = 'nvim-lua/plenary.nvim',
+    dependencies = 'nvim-lua/plenary.nvim',
     config = config('neogit'),
-  }
+  },
 
-  use { -- diffview
+  { -- diffview
     'sindrets/diffview.nvim',
-    requires = 'nvim-lua/plenary.nvim',
+    dependencies = 'nvim-lua/plenary.nvim',
     config = config('diffview'),
-  }
+  },
 
-  use { 'rhysd/git-messenger.vim', config = config('git-messenger') }
+  { 'rhysd/git-messenger.vim', config = config('git-messenger') },
 
-  use { -- Neorg
+  { "vhyrro/luarocks.nvim", priority = 1000, config = true },
+
+  { -- Neorg
     'nvim-neorg/neorg',
-    run = ":Neorg sync-parsers",
-    -- No more unstable branch in new repo ?
-    -- branch = 'unstable',
-    rocks = { 'lua-utils.nvim', 'nvim-nio', 'nui.nvim', 'plenary.nvim' },
-    tag = '*', -- Pin Neorg to the latest stable release
-    requires = { 'nvim-lua/plenary.nvim', 'vhyrro/neorg-telescope' },
-    after = 'nvim-treesitter',
+    dependencies = {
+      'vhyrro/luarocks.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-neorg/neorg-telescope',
+    },
+    lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
+    version = '*', -- Pin Neorg to the latest stable release
     config = config('neorg'),
-  }
+  },
 
-  use {
+  {
     'L3MON4D3/LuaSnip',
-    -- requires = { 'rafamadriz/friendly-snippets' },
+    -- dependencies = { 'rafamadriz/friendly-snippets' },
     config = config('luasnip'),
-  }
+  },
 
-  use { 'onsails/lspkind-nvim', config = config('lspkind') }
+  { 'onsails/lspkind-nvim', config = config('lspkind') },
 
-  use { -- Completion manager
+  { -- Completion manager
     'hrsh7th/nvim-cmp',
-    requires = {
+    dependencies = {
       'hrsh7th/cmp-cmdline',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
@@ -148,37 +159,35 @@ return require('packer').startup(function(use)
       'f3fora/cmp-spell',
     },
     config = config('cmp'),
-  }
+    priority = 100, -- default priority is 50 and this must be loaded before nvim-lspconfig to add cmp capabilities
+  },
 
-  use { -- LSP
-    'folke/neodev.nvim', -- Help configuring sumneko lua language server
-    { -- 3rd party installer
-      'williamboman/mason.nvim',
-      run = ':MasonUpdate',
-    },
-    'williamboman/mason-lspconfig.nvim',
-    'jayp0521/mason-nvim-dap.nvim',
-    'jayp0521/mason-null-ls.nvim',
-    {
-      'neovim/nvim-lspconfig',
-      after = { 'nvim-cmp' }, -- To be able to add cmp capabilities it must be loaded first
-      config = config('lspconfig'),
-    },
-    'ray-x/lsp_signature.nvim',
-    { 'glepnir/lspsaga.nvim', config = config('lspsaga') },
-    { 'jose-elias-alvarez/null-ls.nvim', config = config('null-ls') },
-    { 'camilledejoye/nvim-lsp-selection-range' },
-    { 'b0o/schemastore.nvim' }, -- used by jsonls server to retrieve json schemas
-  }
+  -- LSP
+  'folke/neodev.nvim', -- Help configuring sumneko lua language server
+  { -- 3rd party installer
+    'williamboman/mason.nvim',
+  },
+  'williamboman/mason-lspconfig.nvim',
+  'jayp0521/mason-nvim-dap.nvim',
+  'jayp0521/mason-null-ls.nvim',
+  {
+    'neovim/nvim-lspconfig',
+    config = config('lspconfig'),
+  },
+  'ray-x/lsp_signature.nvim',
+  { 'glepnir/lspsaga.nvim', config = config('lspsaga') },
+  'jose-elias-alvarez/null-ls.nvim',
+  'camilledejoye/nvim-lsp-selection-range',
+  'b0o/schemastore.nvim', -- used by jsonls server to retrieve json schemas
 
-  use { -- Phpactor
+  { -- Phpactor
     'phpactor/phpactor',
-    run = 'composer install -o',
-    requires = { 'camilledejoye/phpactor-mappings' },
+    build = 'composer install -o',
+    dependencies = { 'camilledejoye/phpactor-mappings' },
     config = config('phpactor'),
-  }
+  },
 
-  use {
+  {
     'camilledejoye/vim-php-refactoring-toolbox',
     branch = 'improvements',
     config = function ()
@@ -186,76 +195,64 @@ return require('packer').startup(function(use)
       vim.g.vim_php_refactoring_use_default_mapping = 0
       map('<Leader>pi', [[<cmd>call PhpInline()<CR>]])
     end,
-  }
+  },
 
-  -- use { -- Snippets
+  -- { -- Snippets
   --   -- 'SirVer/ultisnips', -- The engine
   --   'camilledejoye/ultisnips', branch = 'develop', -- Until the handling of floating windows is fixed
-  --   requires = {
+  --   dependencies = {
   --     'honza/vim-snippets', -- The snippets definitions
   --     { -- PHP snippets
   --       'sniphpets/sniphpets',
-  --       requires = {
+  --       dependencies = {
   --         'sniphpets/sniphpets-common',
   --         'sniphpets/sniphpets-symfony',
   --         'sniphpets/sniphpets-phpunit',
   --         'sniphpets/sniphpets-doctrine',
   --         'sniphpets/sniphpets-postfix-codes',
-  --       },
+  --       },,
   --       config = function()
   --         -- Disable because mappings starting with ; causes issues with lsp-signature
   --         -- The timeout for the mapping resolution make the popup window appears again
   --         vim.g.sniphpets_common_disable_shortcuts = 1
   --       end,
-  --     },
-  --   },
+  --     },,
+  --   },,
   --   config = function()
   --     vim.g.UltiSnipsExpandTrigger		= "<Tab>"
   --     vim.g.UltiSnipsJumpForwardTrigger	= "<C-j>"
   --     vim.g.UltiSnipsJumpBackwardTrigger	= "<C-k>"
   --     vim.g.UltiSnipsRemoveSelectModeMappings = 0
   --   end,
-  -- }
+  -- },
 
-  use { -- Telescope
-    'nvim-telescope/telescope.nvim',
-    requires = {
-      'nvim-lua/plenary.nvim',
-      'kyazdani42/nvim-web-devicons',
-      { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
-      'nvim-telescope/telescope-fzf-writer.nvim',
-      'nvim-telescope/telescope-symbols.nvim',
-    },
-    config = config('telescope'),
-  }
+  { 'stevearc/dressing.nvim', config = config('dressing') },
 
-  use { 'stevearc/dressing.nvim', config = config('dressing') }
-
-  -- use { -- noice
+  -- { -- noice
   --   "folke/noice.nvim",
-  --   requires = { "MunifTanjim/nui.nvim" },
+  --   dependencies = { "MunifTanjim/nui.nvim" },
   --   config = config('noice'),
   --   -- I had issues when having invalid Lua somewhere
   --   -- Neovim was closing without showing any message and it seems to be because of noice
-  --   -- This seems to have helped, experience will tell :)
+  --   -- This seems to have helped, experience will tell
   --   event = 'VimEnter',
-  -- }
+  -- },
 
-  use { -- lualine
+  { -- lualine
     'hoob3rt/lualine.nvim',
     after = 'nvim-base16',
-    requires = {
-      { 'kyazdani42/nvim-web-devicons', opt = true},
+    dependencies = {
+      { 'kyazdani42/nvim-web-devicons', lazy = true},
     },
     config = config('lualine'),
-  }
+  },
 
   -- TODO try again later
   -- There is no equivalent to `gcu` by default, we should do it ourserlves using a textobject
   -- from another plugin, for instance a treesitter extension
-  -- use { 'numToStr/Comment.nvim', config = config('comment') }
+  -- { 'numToStr/Comment.nvim', config = config('comment') }
 
-  use { -- tpope plugins
+  { -- tpope plugins
     { 'tpope/vim-surround', setup = function() vim.g.surround_no_insert_mappings = true end },
     'tpope/vim-commentary',
     { 'tpope/vim-scriptease', cmd = 'Scriptnames' },
@@ -267,35 +264,35 @@ return require('packer').startup(function(use)
     'radenling/vim-dispatch-neovim',
     { 'tpope/vim-projectionist', config = config('projectionist') },
     'tpope/vim-eunuch',
-  }
+  },
 
-  use { -- Treesitter
+  { -- Treesitter
     -- TODO to auto close tags check: https://github.com/windwp/nvim-ts-autotag
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
-    requires = {
+    build = ':TSUpdate',
+    dependencies = {
       'JoosepAlviste/nvim-ts-context-commentstring',
       { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter' },
     },
     config = config('nvim-treesitter'),
-  }
+  },
 
-  use {
+  {
     'nvim-treesitter/playground',
-    requires = { 'nvim-treesitter/nvim-treesitter' },
-  }
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+  },
 
-  use { -- vim-argwrap
+  { -- vim-argwrap
     -- 'FooSoft/vim-argwrap',
     'camilledejoye/vim-argwrap', branch = 'imp/php-always-tail-comma-for-method-declaration',
     config = config('vim-argwrap'),
-  }
+  },
 
-  use {
-    -- 'andythigpen/nvim-coverage',
+  {
+    'andythigpen/nvim-coverage',
     -- 'camilledejoye/nvim-coverage', branch = 'feat/php-cobertura',
-    '~/work/vim/plugins/nvim-coverage',
-    requires = 'nvim-lua/plenary.nvim',
+    dir = '~/work/vim/plugins/nvim-coverage',
+    dependencies = 'nvim-lua/plenary.nvim',
     rocks = { 'lua-xmlreader' },
     config = config('coverage'),
     cmd = {
@@ -308,22 +305,22 @@ return require('packer').startup(function(use)
       'CoverageSummary',
     },
     keys = { '<leader>tc', '<leader>tC' },
-  }
+  },
 
-  use { -- vim-test
+  { -- vim-test
     -- 'vim-test/vim-test',
     'camilledejoye/vim-test', branch = 'phpunit-attributes',
     -- '~/work/vim/plugins/vim-test',
     config = config('vim-test'),
-  }
+  },
 
   -- -- Keep vim-test for a reliable environment, it works great with containers and provide
   -- -- a nice fast feedback loop
   -- -- Neotest is a nice idea but would require work to be able to operate properly and seamlessly
   -- -- with containers
-  -- use {
+  -- {
   --   "nvim-neotest/neotest",
-  --   requires = {
+  --   dependencies = {
   --     'nvim-lua/plenary.nvim',
   --     'nvim-treesitter/nvim-treesitter',
   --     'antoinemadec/FixCursorHold.nvim',
@@ -332,27 +329,27 @@ return require('packer').startup(function(use)
   --     '~/work/vim/plugins/neotest-phpunit',
   --     -- 'nvim-neotest/neotest-vim-test',
   --     -- 'vim-test/vim-test', -- To fallback if no adapter exists
-  --   },
+  --   },,
   --   config = config('neotest'),
-  -- }
+  -- },
 
-  use { -- lir.nvim
+  { -- lir.nvim
     'tamago324/lir.nvim',
-    requires = {
+    dependencies = {
       'nvim-lua/plenary.nvim',
       'kyazdani42/nvim-web-devicons',
       'tamago324/lir-bookmark.nvim',
     },
     config = config('lir'),
-  }
+  },
 
-  use {
+  {
     'ahmedkhalf/project.nvim',
-    requires = { 'nvim-telescope/telescope.nvim' },
+    dependencies = { 'nvim-telescope/telescope.nvim' },
     config = config('project'),
-  }
+  },
 
-  use {
+  {
     'rcarriga/nvim-notify',
     config = function()
       local notify = require('notify')
@@ -367,13 +364,13 @@ return require('packer').startup(function(use)
         require('telescope').load_extension('notify');
       end
     end,
-  }
+  },
 
-  -- use { -- notifier.nvim
+  -- { -- notifier.nvim
   --   '~/work/vim/plugins/notifier.nvim',
-  --   requires = {
+  --   dependencies = {
   --     'nvim-lua/plenary.nvim',
-  --   },
+  --   },,
   --   config = function()
   --     require('notifier').setup {
   --       adapter = require('notifier.adapters.nvim-notify'),
@@ -382,15 +379,9 @@ return require('packer').startup(function(use)
   --       extensions = {
   --         lsp = {
   --           enabled = true,
-  --         },
-  --       },
-  --     }
+  --         },,
+  --       },,
+  --     },
   --   end,
-  -- }
-
-  -- Automatically set up your configuration after cloning packer.nvim
-  -- Put this at the end after all plugins
-  if packer_bootstrap then
-    require('packer').sync()
-  end
-end)
+  -- },
+})

@@ -95,7 +95,6 @@ telescope.setup {
   },
 }
 telescope.load_extension('fzf')
-telescope.load_extension('dap')
 
 -- Mappings
 map('<Leader>sf', [[<cmd>lua require('cdejoye.config.telescope').find_files()<CR>]])
@@ -140,7 +139,9 @@ end
 function M.find_files_in_plugins(options)
   return builtin.find_files(vim.tbl_extend('force', {
     prompt_title = 'Plugins',
-    cwd = vim.fn.stdpath('data') .. '/site/pack/packer',
+    --- disable because for `data` the return value is `string`
+    ---@diagnostic disable-next-line: param-type-mismatch
+    cwd = vim.fs.joinpath(vim.fn.stdpath('data'), 'lazy'),
   }, options or {}))
 end
 

@@ -3,7 +3,8 @@ local M = {}
 local icons = require('cdejoye.icons')
 
 function M.setup()
-  require('mason').setup({
+  local mason = require('mason')
+  mason.setup({
     ui = {
       icons = {
         package_installed = icons.check.default,
@@ -42,6 +43,9 @@ function M.setup()
       end,
     },
   })
+
+  -- Automatically update when the plugin is loaded
+  vim.api.nvim_command('MasonUpdate')
 end
 
 return M

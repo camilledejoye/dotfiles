@@ -101,7 +101,7 @@ function M.setup(on_attach, capabilities)
   end
 
   -- Setup null-ls
-  require('cdejoye.config.null-ls').setup(on_attach, capabilities)
+  require('cdejoye.config.lsp.null-ls').setup(on_attach, capabilities)
 end
 
 return M
