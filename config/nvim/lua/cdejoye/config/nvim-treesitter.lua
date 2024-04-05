@@ -92,11 +92,13 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
-
-  -- Update commentrstring option inside a file based on the cursor location
-  -- For example when commenting some SQL inside a PHP file, CSS inside HTML, etc.
-  context_commentstring = { enable = true },
 }
+
+-- Update commentrstring option inside a file based on the cursor location
+-- For example when commenting some SQL inside a PHP file, CSS inside HTML, etc.
+require('ts_context_commentstring').setup({
+  enabled = true
+})
 
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
