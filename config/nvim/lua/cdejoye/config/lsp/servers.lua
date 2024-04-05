@@ -69,6 +69,7 @@ function M.configuration()
     bashls = {},
     dockerls = {},
     vimls = {},
+    cssls = {},
   }
 
   -- To quickly switch between php servers
