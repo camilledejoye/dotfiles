@@ -3,9 +3,7 @@ local M = {}
 -- Configure the buffer when attaching to them
 function M.on_attach(client, bufnr)
   local function bmap(...) require('cdejoye.utils').bmap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+  vim.api.nvim_set_option_value('omnifunc', 'v:lua.vim.lsp.omnifunc', { buf = bufnr })
 
   bmap('<C-]>', [[<cmd>lua require('cdejoye.lsp').buf.definition()<CR>]])
   bmap('<C-w><C-]>', [[<cmd>lua require('cdejoye.lsp').buf.definition('vsplit')<CR>]])
