@@ -1,6 +1,6 @@
 require('neogit').setup({
-  disable_commit_confirmation = true,
   integrations = {
+    telescope = true,
     diffview = true,
   },
   -- override/add mappings
@@ -10,10 +10,10 @@ require('neogit').setup({
       ['za'] = 'Toggle',
       ['zM'] = 'Depth1',
       ['zR'] = 'Depth4',
-      ['1'] = '',
-      ['2'] = '',
-      ['3'] = '',
-      ['4'] = '',
+      ['1'] = false,
+      ['2'] = false,
+      ['3'] = false,
+      ['4'] = false,
     },
   },
 })

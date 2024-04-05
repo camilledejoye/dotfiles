@@ -98,8 +98,8 @@ return require('packer').startup(function(use)
   }
 
   use { -- neogit
-    -- 'TimUntersberger/neogit',
-    'camilledejoye/neogit', branch = 'folds-improvements',
+    'TimUntersberger/neogit',
+    -- 'camilledejoye/neogit', branch = 'folds-improvements',
     -- '~/work/vim/plugins/neogit',
     requires = 'nvim-lua/plenary.nvim',
     config = config('neogit'),
