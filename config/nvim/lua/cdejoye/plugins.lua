@@ -229,15 +229,15 @@ return require('packer').startup(function(use)
 
   use { 'stevearc/dressing.nvim', config = config('dressing') }
 
-  use { -- noice
-    "folke/noice.nvim",
-    requires = { "MunifTanjim/nui.nvim" },
-    config = config('noice'),
-    -- I had issues when having invalid Lua somewhere
-    -- Neovim was closing without showing any message and it seems to be because of noice
-    -- This seems to have helped, experience will tell :)
-    event = 'VimEnter',
-  }
+  -- use { -- noice
+  --   "folke/noice.nvim",
+  --   requires = { "MunifTanjim/nui.nvim" },
+  --   config = config('noice'),
+  --   -- I had issues when having invalid Lua somewhere
+  --   -- Neovim was closing without showing any message and it seems to be because of noice
+  --   -- This seems to have helped, experience will tell :)
+  --   event = 'VimEnter',
+  -- }
 
   use { -- lualine
     'hoob3rt/lualine.nvim',
