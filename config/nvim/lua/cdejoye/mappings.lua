@@ -1,8 +1,6 @@
 local map = vim.api.nvim_set_keymap
 local cmd = vim.cmd
 
-vim.opt.pastetoggle = '<F12>'
-
 -- Search {{{
   -- Search for selected text, forwards or backwards.
   -- http://vim.wikia.com/wiki/Search_for_visually_selected_text
