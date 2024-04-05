@@ -118,6 +118,8 @@ return require('packer').startup(function(use)
     run = ":Neorg sync-parsers",
     -- No more unstable branch in new repo ?
     -- branch = 'unstable',
+    rocks = { 'lua-utils.nvim', 'nvim-nio', 'nui.nvim', 'plenary.nvim' },
+    tag = '*', -- Pin Neorg to the latest stable release
     requires = { 'nvim-lua/plenary.nvim', 'vhyrro/neorg-telescope' },
     after = 'nvim-treesitter',
     config = config('neorg'),
@@ -291,8 +293,8 @@ return require('packer').startup(function(use)
 
   use {
     -- 'andythigpen/nvim-coverage',
-    'camilledejoye/nvim-coverage', branch = 'feat/php-cobertura',
-    -- '~/work/vim/plugins/nvim-coverage',
+    -- 'camilledejoye/nvim-coverage', branch = 'feat/php-cobertura',
+    '~/work/vim/plugins/nvim-coverage',
     requires = 'nvim-lua/plenary.nvim',
     rocks = { 'lua-xmlreader' },
     config = config('coverage'),
@@ -366,6 +368,25 @@ return require('packer').startup(function(use)
       end
     end,
   }
+
+  -- use { -- notifier.nvim
+  --   '~/work/vim/plugins/notifier.nvim',
+  --   requires = {
+  --     'nvim-lua/plenary.nvim',
+  --   },
+  --   config = function()
+  --     require('notifier').setup {
+  --       adapter = require('notifier.adapters.nvim-notify'),
+  --       -- adapter = require('notifier.adapters.gdbus'),
+  --       use_globally = true,
+  --       extensions = {
+  --         lsp = {
+  --           enabled = true,
+  --         },
+  --       },
+  --     }
+  --   end,
+  -- }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
