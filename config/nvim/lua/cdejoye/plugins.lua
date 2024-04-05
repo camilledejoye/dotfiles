@@ -82,9 +82,9 @@ return require('packer').startup(function(use)
     -- TODO use post install hook to run a script using plenary.nvim to install it automatically
     'mfussenegger/nvim-dap',
     requires = {
-      'rcarriga/nvim-dap-ui',
+      { 'rcarriga/nvim-dap-ui', requires = 'nvim-neotest/nvim-nio' },
       'theHamsta/nvim-dap-virtual-text',
-      { 'nvim-telescope/telescope-dap.nvim', require = 'nvim-telescope/telescope.nvim' },
+      { 'nvim-telescope/telescope-dap.nvim', requires = 'nvim-telescope/telescope.nvim' },
     },
     config = config('dap'),
   }
