@@ -56,7 +56,7 @@ function M.configuration()
       },
     },
     lemminx = {}, -- XML
-    tsserver = {},
+    ts_ls = {},
     lua_ls = {
       settings = {
         Lua = {
