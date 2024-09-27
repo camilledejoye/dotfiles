@@ -27,9 +27,11 @@ function M.on_attach(client, bufnr)
   bmap('<leader>ca', [[<cmd>lua vim.lsp.buf.code_action()<CR>]])
   bmap('<leader>ca', [[<cmd>lua vim.lsp.buf.code_action()<CR>]], 'v')
 
-  -- vim.cmd([[ autocmd! CursorHold  <buffer> lua vim.lsp.buf.document_highlight() ]])
-  -- vim.cmd([[ autocmd! CursorHoldI <buffer> lua vim.lsp.buf.document_highlight() ]])
-  -- vim.cmd([[ autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references() ]])
+  if client.server_capabilities.documentHighlightProvider or false then
+    vim.cmd([[ autocmd! CursorHold  <buffer> lua vim.lsp.buf.document_highlight() ]])
+    vim.cmd([[ autocmd! CursorHoldI <buffer> lua vim.lsp.buf.document_highlight() ]])
+    vim.cmd([[ autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references() ]])
+  end
 
   bmap('[d', [[<cmd>Lspsaga diagnostic_jump_prev<CR>]])
   bmap(']d', [[<cmd>Lspsaga diagnostic_jump_next<CR>]])
