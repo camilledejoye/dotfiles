@@ -191,7 +191,11 @@ require('lazy').setup({
   { -- Phpactor
     'phpactor/phpactor',
     build = 'composer install -o',
-    dependencies = { 'camilledejoye/phpactor-mappings' },
+    dependencies = {
+      'camilledejoye/phpactor-mappings',
+      'junegunn/fzf.vim',
+      { 'junegunn/fzf', build = 'fzf#install' },
+    },
     config = config('phpactor'),
   },
 
