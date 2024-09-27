@@ -49,7 +49,6 @@ dapui.setup {
   },
 }
 
--- Not sure it's working...
 require('nvim-dap-virtual-text').setup({})
 
 -- Theme

@@ -38,8 +38,17 @@ local worldia = {
     ['src/Services/Transfers/spec/*Spec.php'] = {
         ['alternate'] = { 'src/Services/Transfers/{}.php' },
     },
+    ['src/Services/Boats/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Boats/{}.php' },
+    },
+    ['src/Services/Trains/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/Services/Trains/{}.php' },
+    },
     ['src/Tasks/spec/*Spec.php'] = {
         ['alternate'] = { 'src/Tasks/{}.php' },
+    },
+    ['src/WebApp/spec/*Spec.php'] = {
+        ['alternate'] = { 'src/WebApp/{}.php' },
     },
 
     ['src/Common/*.php'] = {
@@ -75,6 +84,12 @@ local worldia = {
     ['src/Services/Transfers/*.php'] = {
         ['alternate'] = { 'src/Services/Transfers/spec/{}Spec.php' },
     },
+    ['src/Services/Boats/*.php'] = {
+        ['alternate'] = { 'src/Services/Boats/spec/{}Spec.php' },
+    },
+    ['src/Services/Trains/*.php'] = {
+        ['alternate'] = { 'src/Services/Trains/spec/{}Spec.php' },
+    },
     ['src/Common/spec/*.php'] = {
         ['alternate'] = { 'src/Common/{}Spec.php' },
     },
@@ -83,6 +98,9 @@ local worldia = {
     },
     ['src/Tasks/*.php'] = {
         ['alternate'] = { 'src/Tasks/spec/{}Spec.php' },
+    },
+    ['src/WebApp/*.php'] = {
+        ['alternate'] = { 'src/WebApp/spec/{}Spec.php' },
     },
 }
 
@@ -288,6 +306,16 @@ vim.g.projectionist_heuristics = {
         },
         ['var/log/*.log'] = {
             ['type'] = 'log',
+        },
+    },
+    ['pom.xml'] = {
+        ['src/main/java/*.java'] = {
+            ['type'] = 'source',
+            ['alternate'] = 'src/test/java/{}Test.java',
+        },
+        ['src/test/java/*Test.java'] = {
+            ['type'] = 'test',
+            ['alternate'] = 'src/main/java/{}.java',
         },
     },
 }
