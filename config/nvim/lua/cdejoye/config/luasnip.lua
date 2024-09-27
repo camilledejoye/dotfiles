@@ -2,7 +2,6 @@ local ls = require('luasnip')
 local types = require('luasnip.util.types')
 local s = ls.snippet
 local sn = ls.snippet_node
-local indent = ls.indent_snippet_node
 local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
@@ -211,6 +210,12 @@ local function sn_classname(_, _)
 end
 
 ls.cleanup() -- Needed to reload the snippets when sourcing the file
+
+-- Also reload lazy loaded snippets
+vim.tbl_map(
+function(type) require("luasnip.loaders.from_" .. type).lazy_load() end,
+{ "vscode", "snipmate", "lua" }
+)
 
 ls.add_snippets('all', {
   s('date', { f(function()

@@ -138,7 +138,15 @@ require('lazy').setup({
 
   {
     'L3MON4D3/LuaSnip',
-    -- dependencies = { 'rafamadriz/friendly-snippets' },
+    dependencies = {
+      'rafamadriz/friendly-snippets',
+      {
+        'benfowler/telescope-luasnip.nvim',
+        config = function ()
+          require('telescope').load_extension('luasnip')
+        end,
+      },
+    },
     config = config('luasnip'),
   },
 
