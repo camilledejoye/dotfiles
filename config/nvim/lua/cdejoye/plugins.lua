@@ -50,7 +50,7 @@ require('lazy').setup({
     ft = { 'markdown' },
   },
 
-  -- 'wellle/targets.vim'  -- Adds a bunch of text objects, especially argument text object
+  'wellle/targets.vim',  -- Adds a bunch of text objects, especially argument text object
 
   -- Add documentation around Lua
   'nanotee/luv-vimdocs',
