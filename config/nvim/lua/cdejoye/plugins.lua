@@ -356,12 +356,6 @@ require('lazy').setup({
   },
 
   {
-    'ahmedkhalf/project.nvim',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    config = config('project'),
-  },
-
-  {
     'rcarriga/nvim-notify',
     config = function()
       local notify = require('notify')
