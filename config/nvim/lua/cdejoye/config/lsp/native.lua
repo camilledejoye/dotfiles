@@ -13,9 +13,6 @@ function M.setup()
   -- -- Set debug log level
   -- vim.lsp.set_log_level('debug')
 
-  -- Disable diagnostics virtual text
-  vim.diagnostic.config({ virtual_text = false })
-
   -- Define diagnostics signs
   define_sign('LspDiagnosticsSignError', signs.error)
   define_sign('LspDiagnosticsSignWarning', signs.warn)
