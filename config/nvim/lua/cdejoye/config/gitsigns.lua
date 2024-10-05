@@ -3,6 +3,7 @@ require('gitsigns').setup {
     add = { text = '+' },
     change = { text = '~' },
   },
+  signs_staged_enable = false,
 
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
