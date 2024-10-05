@@ -6,6 +6,14 @@ local function config(name)
   end
 end
 
+local function formatter(name)
+  return function()
+    local exists, opts = pcall(require, 'cdejoye.conform.formatters.'..name)
+
+    return exists and opts or {}
+  end
+end
+
 local ensure_lazy_is_installed = function()
   local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
   if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -177,14 +185,63 @@ require('lazy').setup({
   },
   'williamboman/mason-lspconfig.nvim',
   'jayp0521/mason-nvim-dap.nvim',
-  'jayp0521/mason-null-ls.nvim',
+  -- 'jayp0521/mason-null-ls.nvim',
   {
     'neovim/nvim-lspconfig',
     config = config('lspconfig'),
   },
   'ray-x/lsp_signature.nvim',
   { 'glepnir/lspsaga.nvim', config = config('lspsaga') },
-  'jose-elias-alvarez/null-ls.nvim',
+  -- Keep it close in case of issue to be able to quickly go back to a working state
+  -- 'jose-elias-alvarez/null-ls.nvim',
+  {
+    'stevearc/conform.nvim',
+    cmd = { "ConformInfo" },
+    keys = {
+      {
+        '<Leader>ff',
+        function() require('conform').format({ async = true }) end,
+        mode = "",
+        desc = 'Format buffer',
+      },
+    },
+    init = function()
+      -- If you want the formatexpr, here is the place to set it
+      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+    end,
+    -- This will provide type hinting with LuaLS
+    ---@module "conform"
+    ---@type conform.setupOpts
+    opts = {
+      -- Set default options
+      default_format_opts = {
+        lsp_format = "fallback",
+      },
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        php = { 'php_cs_fixer' },
+        sql = { 'sql-formatter' },
+      },
+      formatters = {
+        php_cs_fixer = formatter('php_cs_fixer'),
+      },
+    },
+  },
+  { 'zapling/mason-conform.nvim', opts = {
+    -- Usually installed per project to have specific versions
+    ignore_install = { 'phpcbf', 'phpcs', 'phpstan', 'php_cs_fixer' },
+  } },
+  {
+    'mfussenegger/nvim-lint',
+    config = config('nvim-lint'),
+  },
+  {
+    'rshkarin/mason-nvim-lint',
+    opts = {
+      -- not a linter for mason,
+      ignore_install = { 'php_cs_fixer' },
+    },
+  },
   'camilledejoye/nvim-lsp-selection-range',
   'b0o/schemastore.nvim', -- used by jsonls server to retrieve json schemas
 

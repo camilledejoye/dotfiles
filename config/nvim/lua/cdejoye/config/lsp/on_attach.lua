@@ -42,23 +42,23 @@ function M.on_attach(client, bufnr)
   bmap('vv', [[<cmd>lua require('lsp-selection-range').trigger()<CR>]], 'n')
   bmap('vv', [[<cmd>lua require('lsp-selection-range').expand()<CR>]], 'v')
 
-  if 8 <= vim.version().minor then
-    bmap('<Leader>ff', function ()
-      vim.lsp.buf.format({
-        async = true,
-        filter = function (formatting_client)
-          -- Only allowed specific servers to format
-          return 'null-ls' == formatting_client.name
-          or 'jsonls' == formatting_client.name
-        end,
-      })
-    end)
-  else
-    bmap('<Leader>ff', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>')
-    if not ('null-ls' == client.name or 'jsonls' == client.name) then
-      client.server_capabilities.document_formatting = false
-    end
-  end
+  -- if 8 <= vim.version().minor then
+  --   bmap('<Leader>ff', function ()
+  --     vim.lsp.buf.format({
+  --       async = true,
+  --       filter = function (formatting_client)
+  --         -- Only allowed specific servers to format
+  --         return 'null-ls' == formatting_client.name
+  --         or 'jsonls' == formatting_client.name
+  --       end,
+  --     })
+  --   end)
+  -- else
+  --   bmap('<Leader>ff', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>')
+  --   if not ('null-ls' == client.name or 'jsonls' == client.name) then
+  --     client.server_capabilities.document_formatting = false
+  --   end
+  -- end
 
   require('cdejoye.config.lsp.signature').on_attach(client, bufnr)
 end

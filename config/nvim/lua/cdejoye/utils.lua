@@ -60,4 +60,25 @@ function M.hi(name, definition, default)
   )
 end
 
+---Search parent directories for a relative path to a command
+---@param name string The name of the executable to find
+---@param paths string[] List of directories to look into incase it's not in the PATH
+---@param cwd ?string If omitted, the value of `vim.uv.cwd()` will be used
+---@return string The found executable or `name` if it wasn't found anywhere
+function M.find_executable(name, paths, cwd)
+  if vim.fn.executable(name) then
+    return name
+  end
+
+  cwd = cwd or vim.uv.cwd()
+  for _, path in ipairs(paths) do
+    local normpath = vim.fs.normalize(vim.fs.joinpath(cwd, path, name))
+    if vim.fn.executable(normpath) == 1 then
+      return normpath
+    end
+  end
+
+  return name
+end
+
 return M
