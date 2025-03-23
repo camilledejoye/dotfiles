@@ -445,4 +445,8 @@ require('lazy').setup({
   --     },
   --   end,
   -- },
+}, {
+  dev = {
+    path = '~/work/nvim-plugins',
+  },
 })
