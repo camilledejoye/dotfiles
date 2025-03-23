@@ -359,8 +359,6 @@ require('lazy').setup({
 
   {
     'andythigpen/nvim-coverage',
-    -- 'camilledejoye/nvim-coverage', branch = 'feat/php-cobertura',
-    dir = '~/work/vim/plugins/nvim-coverage',
     dependencies = 'nvim-lua/plenary.nvim',
     rocks = { 'lua-xmlreader' },
     config = config('coverage'),
