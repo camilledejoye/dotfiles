@@ -187,7 +187,7 @@ local function sn_phptag(_, snip)
 end
 
 local function sn_namespace(_, snip)
-  local lines = vim.api.nvim_buf_get_lines(0, 0, tonumber(snip.env.TM_LINE_INDEX), false)
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   for _, line in ipairs(lines) do
     if nil ~= line:match('^%s*namespace') then
       return sn(nil, t(''))
