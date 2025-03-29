@@ -1,4 +1,5 @@
 local M = {}
+local methods = vim.lsp.protocol.Methods
 
 -- Configure the buffer when attaching to them
 function M.on_attach(client, bufnr)
@@ -19,7 +20,6 @@ function M.on_attach(client, bufnr)
   bmap('gdr', [[<cmd> lua require('cdejoye.lsp').buf.references()<CR>]])
   bmap('<C-w>gdr', [[<cmd>lua require('cdejoye.lsp').buf.references('vsplit')<CR>]])
 
-  bmap('gh', [[<cmd>Lspsaga hover_doc<CR>]])
   -- bmap('<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>')
   -- bmap('<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>')
   -- bmap('<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>')
@@ -44,6 +44,10 @@ function M.on_attach(client, bufnr)
 
   bmap('gqq', function () vim.lsp.buf.format({ async = true }) end, 'nv')
   bmap('gq', function () vim.lsp.buf.format({ async = true }) end, 'o')
+
+  if client:supports_method(methods.textDocument_hover) then
+    bmap('K', function () vim.lsp.buf.hover({ border = 'single' }) end)
+  end
 
   -- if 8 <= vim.version().minor then
   --   bmap('<Leader>ff', function ()
