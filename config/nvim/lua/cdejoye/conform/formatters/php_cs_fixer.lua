@@ -9,6 +9,7 @@ return {
       'vendor/bin',
     })
   end,
+  args = { 'fix', '$RELATIVE_FILEPATH' },
   ---@param self conform.FormatterConfig
   ---@param ctx conform.Context
   condition = function(self, ctx)
@@ -20,9 +21,9 @@ return {
     end
 
     return not(
-      bufname_match('tests/*')
-      or bufname_match('vendor/*')
+      bufname_match('vendor/*')
       or bufname_match('var/*')
+      -- or bufname_match('tests/*')
     )
   end,
 }
