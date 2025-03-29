@@ -49,6 +49,12 @@ function M.on_attach(client, bufnr)
     bmap('K', function () vim.lsp.buf.hover({ border = 'single' }) end)
   end
 
+  if client:supports_method(methods.textDocument_foldingRange) then
+    local win = vim.api.nvim_get_current_win()
+    vim.api.nvim_set_option_value('foldmethod', 'expr', { win = win })
+    vim.api.nvim_set_option_value('foldexpr', 'v:lua.vim.lsp.foldexpr()', { win = win })
+  end
+
   -- if 8 <= vim.version().minor then
   --   bmap('<Leader>ff', function ()
   --     vim.lsp.buf.format({
