@@ -42,6 +42,9 @@ function M.on_attach(client, bufnr)
   bmap('vv', [[<cmd>lua require('lsp-selection-range').trigger()<CR>]], 'n')
   bmap('vv', [[<cmd>lua require('lsp-selection-range').expand()<CR>]], 'v')
 
+  bmap('gqq', function () vim.lsp.buf.format({ async = true }) end, 'nv')
+  bmap('gq', function () vim.lsp.buf.format({ async = true }) end, 'o')
+
   -- if 8 <= vim.version().minor then
   --   bmap('<Leader>ff', function ()
   --     vim.lsp.buf.format({

@@ -24,8 +24,6 @@ function M.configuration()
               '**/var/log/**',
             },
           },
-          -- Does not work: https://github.com/bmewburn/vscode-intelephense/issues/2003
-          format = { enable = false },
         },
       },
     },
