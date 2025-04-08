@@ -143,6 +143,28 @@ local M = {
 function M.parser(output, bufnr)
   local diagnostics = {}
 
+  local bufname = vim.fn.bufname(bufnr)
+  local globs = { 'vendor/*', 'var/*' }
+  local should_ignore = function(glob)
+    -- If the files where opened from the main project their bufname might start from the root of the project
+    for _, cwd in pairs(vim.lsp.buf.list_workspace_folders()) do
+      local workspace_glob = cwd .. '/' .. glob
+      local matches = vim.regex(vim.fn.glob2regpat(workspace_glob)):match_str(bufname)
+      if matches then
+        return true
+      end
+    end
+
+    -- Try without workspace folder, i.e. file open directly from an exlcuded folder will have a filename:
+    return vim.regex(vim.fn.glob2regpat(glob)):match_str(bufname)
+  end
+
+  for _, glob in pairs(globs) do
+    if should_ignore(glob) then
+      return {}
+    end
+  end
+
   if output == nil or vim.trim(output) == '' then
     return diagnostics
   end
