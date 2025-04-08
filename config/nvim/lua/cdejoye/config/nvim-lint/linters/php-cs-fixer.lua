@@ -123,7 +123,10 @@ local M = {
     '--format=json',
     '-v', -- to get the list of errors under `appliedFixers`
     '--diff',
-    '-', -- to process from stdin
+    '--dry-run',
+    '--using-cache=no',
+    '--show-progress=none',
+    '--no-interaction',
   },
   stdin = true,
   ignore_exitcode = true,
