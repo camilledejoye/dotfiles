@@ -117,7 +117,13 @@ local function parse_diff(diff_string)
 end
 
 local M = {
-  cmd = 'php-cs-fixer',
+  cmd = function()
+    return require('cdejoye.utils').find_executable('php-cs-fixer', {
+      'tools',
+      'tools/phpstan/vendor/bin',
+      'vendor/bin',
+    })
+  end,
   args = {
     'fix',
     '--format=json',
