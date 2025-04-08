@@ -127,6 +127,7 @@ local M = {
     '--using-cache=no',
     '--show-progress=none',
     '--no-interaction',
+    '-', -- to process from stdin
   },
   stdin = true,
   ignore_exitcode = true,
