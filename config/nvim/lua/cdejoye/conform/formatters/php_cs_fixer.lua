@@ -9,7 +9,13 @@ return {
       'vendor/bin',
     })
   end,
-  args = { 'fix', '$RELATIVE_FILEPATH' },
+  args = {
+    'fix',
+    '--using-cache=no',
+    '--show-progress=none',
+    '--no-interaction',
+    '$RELATIVE_FILEPATH',
+  },
   ---@param self conform.FormatterConfig
   ---@param ctx conform.Context
   condition = function(self, ctx)
