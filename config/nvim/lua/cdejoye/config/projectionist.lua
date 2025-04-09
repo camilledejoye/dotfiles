@@ -1,7 +1,8 @@
 local map = require('cdejoye.utils').map
 
-map('<Leader>a', ':A<CR>')
-map('<Leader>va', ':AV<CR>')
+map('<Leader>aa', ':A<CR>')
+map('<Leader>va', require('cdejoye.telescope.projectionist').open_alternates())
+map('<Leader>vA', require('cdejoye.telescope.projectionist').open_alternates({ only_existing = false }))
 
 -- Specific for Worldia
 local worldia = {

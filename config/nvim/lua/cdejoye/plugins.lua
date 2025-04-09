@@ -94,6 +94,35 @@ require('lazy').setup({
     config = config('telescope'),
   },
 
+  -- -- I keep it around for now, it's interesting. It was easy to setup and more powerful than projectionist
+  -- -- The mappings are actually stored in a `g:` vim variable
+  -- -- So there should be a way to init the list on a per project basis
+  -- { -- Alternative to projectionist
+  --   'otavioschwanck/telescope-alternate',
+  --   requires = 'nvim-telescope/telescope.nvim',
+  --   opts = {
+  --     open_only_one_with = 'vertical_split',
+  --     mappings = {
+  --       {
+  --         'src/Planner/([^/]*)/(.*).php',
+  --         {
+  --           { 'tests/Planner/[1]/Unit/[2]Test.php', 'Unit test' },
+  --           { 'tests/Planner/[1]/Integration/[2]Test.php', 'Integration test' },
+  --           { 'tests/Planner/[1]/Acceptance/[2]Test.php', 'Acceptance test' },
+  --         },
+  --       },
+  --       {
+  --         'tests/Planner/([^/]*)/[^/]*/(.*)Test.php', -- The middle one is in replacement of: Unit|Integration|Acceptance
+  --         { { 'src/Planner/[1]/[2].php', 'Source' } },
+  --       },
+  --     },
+  --   },
+  --   config = function (plugin, opts)
+  --     require(plugin.name).setup(opts)
+  --     require('telescope').load_extension(plugin.name)
+  --   end,
+  -- },
+
   { -- Debugger
     -- https://github.com/mfussenegger/nvim-dap
     -- PHP adapter installation: https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#PHP
