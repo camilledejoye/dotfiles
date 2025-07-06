@@ -42,6 +42,10 @@ require('lazy').setup({
   'camilledejoye/vim-cleanfold',
   { 'kana/vim-niceblock', config = config('niceblock') },
   'terryma/vim-multiple-cursors',
+  {
+    'chrisgrieser/nvim-puppeteer',
+    lazy = false, -- plugin lazy-loads itself. Can also load on filetypes.
+  },
 
   -- -- Disabled because I want to use Treesitter now, but I kept them here just in case
   -- -- Language related (syntax, completion,e tc.)
