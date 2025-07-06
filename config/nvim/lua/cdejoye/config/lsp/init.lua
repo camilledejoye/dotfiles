@@ -1,5 +1,4 @@
 return {
-  neodev = require('cdejoye.config.lsp.neodev'),
   mason = require('cdejoye.config.lsp.mason'),
   native = require('cdejoye.config.lsp.native'),
   servers = require('cdejoye.config.lsp.servers'),

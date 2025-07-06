@@ -6,7 +6,6 @@ vim.lsp.config('*', {
 })
 
 lsp.native.setup()
-lsp.neodev.setup()
 lsp.mason.setup()
 lsp.servers.setup()
 lsp.diagnostic.setup()

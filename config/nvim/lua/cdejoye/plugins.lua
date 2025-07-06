@@ -209,7 +209,17 @@ require('lazy').setup({
   },
 
   -- LSP
-  'folke/neodev.nvim', -- Help configuring sumneko lua language server
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {
+      library = {
+        -- See the configuration section for more details
+        -- Load luvit types when the `vim.uv` word is found
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
   { -- 3rd party installer
     'williamboman/mason.nvim',
   },
