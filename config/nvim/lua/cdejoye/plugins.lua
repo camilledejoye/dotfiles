@@ -8,7 +8,7 @@ end
 
 local function formatter(name)
   return function()
-    local exists, opts = pcall(require, 'cdejoye.conform.formatters.'..name)
+    local exists, opts = pcall(require, 'cdejoye.conform.formatters.' .. name)
 
     return exists and opts or {}
   end
@@ -54,11 +54,13 @@ require('lazy').setup({
   { -- markdown-preview
     'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
-    build = function() vim.fn["mkdp#util#install"]() end,
+    build = function()
+      vim.fn['mkdp#util#install']()
+    end,
     ft = { 'markdown' },
   },
 
-  'wellle/targets.vim',  -- Adds a bunch of text objects, especially argument text object
+  'wellle/targets.vim', -- Adds a bunch of text objects, especially argument text object
 
   -- Add documentation around Lua
   'nanotee/luv-vimdocs',
@@ -159,7 +161,7 @@ require('lazy').setup({
 
   { 'rhysd/git-messenger.vim', config = config('git-messenger') },
 
-  { "vhyrro/luarocks.nvim", priority = 1000, config = true },
+  { 'vhyrro/luarocks.nvim', priority = 1000, config = true },
 
   { -- Neorg
     'nvim-neorg/neorg',
@@ -180,7 +182,7 @@ require('lazy').setup({
       'rafamadriz/friendly-snippets',
       {
         'benfowler/telescope-luasnip.nvim',
-        config = function ()
+        config = function()
           require('telescope').load_extension('luasnip')
         end,
       },
@@ -210,13 +212,13 @@ require('lazy').setup({
 
   -- LSP
   {
-    "folke/lazydev.nvim",
-    ft = "lua",
+    'folke/lazydev.nvim',
+    ft = 'lua',
     opts = {
       library = {
         -- See the configuration section for more details
         -- Load luvit types when the `vim.uv` word is found
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
   },
@@ -236,12 +238,14 @@ require('lazy').setup({
   -- 'jose-elias-alvarez/null-ls.nvim',
   {
     'stevearc/conform.nvim',
-    cmd = { "ConformInfo" },
+    cmd = { 'ConformInfo' },
     keys = {
       {
         '<Leader>ff',
-        function() require('conform').format({ async = true }) end,
-        mode = "",
+        function()
+          require('conform').format({ async = true })
+        end,
+        mode = '',
         desc = 'Format buffer',
       },
     },
@@ -255,7 +259,7 @@ require('lazy').setup({
     opts = {
       -- Set default options
       default_format_opts = {
-        lsp_format = "fallback",
+        lsp_format = 'fallback',
       },
       formatters_by_ft = {
         lua = { 'stylua' },
@@ -268,10 +272,13 @@ require('lazy').setup({
       },
     },
   },
-  { 'zapling/mason-conform.nvim', opts = {
-    -- Usually installed per project to have specific versions
-    ignore_install = { 'phpcbf', 'phpcs', 'phpstan', 'php_cs_fixer' },
-  } },
+  {
+    'zapling/mason-conform.nvim',
+    opts = {
+      -- Usually installed per project to have specific versions
+      ignore_install = { 'phpcbf', 'phpcs', 'phpstan', 'php_cs_fixer' },
+    },
+  },
   {
     'mfussenegger/nvim-lint',
     -- dev = true,
@@ -346,7 +353,7 @@ require('lazy').setup({
   {
     'camilledejoye/vim-php-refactoring-toolbox',
     branch = 'improvements',
-    config = function ()
+    config = function()
       local map = require('cdejoye.utils').map
       vim.g.vim_php_refactoring_use_default_mapping = 0
       map('<Leader>pi', [[<cmd>call PhpInline()<CR>]])
@@ -354,14 +361,14 @@ require('lazy').setup({
   },
 
   {
-    "ThePrimeagen/refactoring.nvim",
+    'ThePrimeagen/refactoring.nvim',
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
     },
     lazy = false,
     config = function()
-      require("refactoring").setup()
+      require('refactoring').setup()
     end,
   },
 
@@ -410,7 +417,7 @@ require('lazy').setup({
     'hoob3rt/lualine.nvim',
     after = 'nvim-base16',
     dependencies = {
-      { 'kyazdani42/nvim-web-devicons', lazy = true},
+      { 'kyazdani42/nvim-web-devicons', lazy = true },
     },
     config = config('lualine'),
   },
@@ -421,7 +428,12 @@ require('lazy').setup({
   -- { 'numToStr/Comment.nvim', config = config('comment') }
 
   { -- tpope plugins
-    { 'tpope/vim-surround', setup = function() vim.g.surround_no_insert_mappings = true end },
+    {
+      'tpope/vim-surround',
+      setup = function()
+        vim.g.surround_no_insert_mappings = true
+      end,
+    },
     'tpope/vim-commentary',
     { 'tpope/vim-scriptease', cmd = 'Scriptnames' },
     { 'tpope/vim-unimpaired', config = config('unimpaired') },
@@ -452,7 +464,8 @@ require('lazy').setup({
 
   { -- vim-argwrap
     -- 'FooSoft/vim-argwrap',
-    'camilledejoye/vim-argwrap', branch = 'imp/php-always-tail-comma-for-method-declaration',
+    'camilledejoye/vim-argwrap',
+    branch = 'imp/php-always-tail-comma-for-method-declaration',
     config = config('vim-argwrap'),
   },
 
@@ -475,7 +488,8 @@ require('lazy').setup({
 
   { -- vim-test
     -- 'vim-test/vim-test',
-    'camilledejoye/vim-test', branch = 'phpunit-attributes',
+    'camilledejoye/vim-test',
+    branch = 'phpunit-attributes',
     -- '~/work/vim/plugins/vim-test',
     config = config('vim-test'),
   },
@@ -515,7 +529,7 @@ require('lazy').setup({
       local notify = require('notify')
       notify.setup({
         -- suggested by the plugin for 100% transparency after an update, to test eventually
-        background_colour = '#000000'
+        background_colour = '#000000',
       })
 
       -- vim.notify = notify.notify
