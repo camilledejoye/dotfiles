@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Scale smaller montitor to a virtual resolution being the same as my 4K one
+# Since X11 doesn't handle different DPI per monitor this allow to not have things shown too big
+xrandr --output DP-0 --auto --output HDMI-0 --auto --scale 2x2 --right-of DP-0
+
 # Run sxhkd only if not already running
 pgrep -x sxhkd >/dev/null 2>&1 || sxhkd "/home/cdejoye/.config/bspwm/sxhkdrc" &
 

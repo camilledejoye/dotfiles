@@ -1,7 +1,7 @@
 # Global {{{
 
 # Reload sxhkd config and restart bspwm
-alt + ctrl + r
+alt + ctrl + shift + r
     pkill -USR1 -x sxhkd; \
     bspc wm --restart
 
@@ -56,6 +56,10 @@ alt + {p,b,comma,period}
 # Set a window's flags
 alt + ctrl + {m,x,y,z}
     bspc node --flag {marked,locked,sticky,private}
+
+# Rotate two windows from their parents
+alt + shift + r
+    bspc node @parent -R 90
 
 # Resize a window
 alt + r : { \

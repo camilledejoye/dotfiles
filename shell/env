@@ -24,14 +24,14 @@ export COMPOSER_BIN="$COMPOSER_HOME/vendor/bin"
 # Defautl programs
 export EDITOR="nvim"
 export TERMINAL="alacritty"
-export BROWSER="qutebrowser"
+# export BROWSER="qutebrowser"
 
 # SSH agent
 # export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # export SSH_ASKPASS=/usr/lib/ssh/gnome-ssh-askpass2
 
 # Gnome keyring as SSH agent
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
 export SSH_ASKPASS=/usr/lib/seahorse/ssh-askpass
 
 # PATH

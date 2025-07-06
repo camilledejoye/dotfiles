@@ -1,4 +1,3 @@
-
 local processors = require('cdejoye.config.nvim-lint.processors')
 local php_cs_fixer = require('cdejoye.config.nvim-lint.linters.php-cs-fixer')
 

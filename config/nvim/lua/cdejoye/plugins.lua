@@ -54,7 +54,7 @@ require('lazy').setup({
   { -- markdown-preview
     'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
-    build = 'cd app && yarn install',
+    build = function() vim.fn["mkdp#util#install"]() end,
     ft = { 'markdown' },
   },
 
@@ -222,7 +222,7 @@ require('lazy').setup({
   },
   'ray-x/lsp_signature.nvim',
   { 'glepnir/lspsaga.nvim', config = config('lspsaga') },
-  -- Keep it close in case of issue to be able to quickly go back to a working state
+  -- -- Keep it close in case of issue to be able to quickly go back to a working state
   -- 'jose-elias-alvarez/null-ls.nvim',
   {
     'stevearc/conform.nvim',
@@ -250,7 +250,8 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         php = { 'php_cs_fixer' },
-        sql = { 'sql-formatter' },
+        sql = { 'sql_formatter' },
+        python = { 'isort', 'black' },
       },
       formatters = {
         php_cs_fixer = formatter('php_cs_fixer'),
@@ -263,17 +264,63 @@ require('lazy').setup({
   } },
   {
     'mfussenegger/nvim-lint',
+    -- dev = true,
     config = config('nvim-lint'),
   },
   {
     'rshkarin/mason-nvim-lint',
     opts = {
-      -- not a linter for mason,
-      ignore_install = { 'php_cs_fixer' },
+      -- Usually installed per project to have specific versions
+      ignore_install = { 'phpstan', 'php_cs_fixer', 'phpcs' },
     },
   },
   'camilledejoye/nvim-lsp-selection-range',
   'b0o/schemastore.nvim', -- used by jsonls server to retrieve json schemas
+  {
+    'mfussenegger/nvim-jdtls',
+    -- To try, disable for now in case it's laoded after the ftype/java config
+    -- from an example, I should be able to move the ftype config into my plugin config using ft = java here
+    -- ft = 'java',
+    -- config = config('jdtls')
+  },
+
+  { -- trouble
+    'folke/trouble.nvim',
+    opts = {},
+    cmd = 'Trouble',
+    keys = {
+      {
+        '<Leader>sD',
+        '<cmd>Trouble diagnostics toggle<cr>',
+        desc = 'Diagnostics (Trouble)',
+      },
+      {
+        '<Leader>sd',
+        '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
+        desc = 'Buffer Diagnostics (Trouble)',
+      },
+      {
+        '<Leader>sS',
+        '<cmd>Trouble symbols toggle focus=false<cr>',
+        desc = 'Symbols (Trouble)',
+      },
+      {
+        '<Leader>cl',
+        '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
+        desc = 'LSP Definitions / references / ... (Trouble)',
+      },
+      {
+        '<Leader>lw',
+        '<cmd>Trouble loclist toggle<cr>',
+        desc = 'Location List (Trouble)',
+      },
+      {
+        '<Leader>cw',
+        '<cmd>Trouble qflist toggle<cr>',
+        desc = 'Quickfix List (Trouble)',
+      },
+    },
+  },
 
   { -- Phpactor
     'phpactor/phpactor',
@@ -293,6 +340,18 @@ require('lazy').setup({
       local map = require('cdejoye.utils').map
       vim.g.vim_php_refactoring_use_default_mapping = 0
       map('<Leader>pi', [[<cmd>call PhpInline()<CR>]])
+    end,
+  },
+
+  {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    lazy = false,
+    config = function()
+      require("refactoring").setup()
     end,
   },
 
@@ -452,7 +511,7 @@ require('lazy').setup({
       -- vim.notify = notify.notify
 
       if pcall(require, 'telescope') then
-        require('telescope').load_extension('notify');
+        require('telescope').load_extension('notify')
       end
     end,
   },

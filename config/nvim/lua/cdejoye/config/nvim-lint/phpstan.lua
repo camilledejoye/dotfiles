@@ -3,13 +3,18 @@ local utils = require('cdejoye.utils')
 local processors = require('cdejoye.config.nvim-lint.processors')
 local phpstan = linters.phpstan
 
-phpstan.cmd = function()
-  return utils.find_executable('phpstan', {
-    'tools',
-    'tools/phpstan/vendor/bin',
-    'vendor/bin',
-  })
-end
+-- -- 2025-01-29: commented because it seems it doesn't work anymore when going through a custom script
+-- -- But using vendor/bin/phpstan works
+-- phpstan.cmd = function()
+--   return utils.find_executable('phpstan', {
+--     'tools',
+--     'tools/phpstan/vendor/bin',
+--     'vendor/bin',
+--   })
+-- end
+
+-- Disable memory limit, at least needed when using local binary for my current project
+table.insert(phpstan.args, '--memory-limit=-1')
 
 return require('lint.util').wrap(phpstan, function(diagnostic)
   return processors.apply_format(

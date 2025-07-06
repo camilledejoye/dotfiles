@@ -1,0 +1,59 @@
+@document.meta
+title: resolve-local-hostname
+description: 
+authors: cdejoye
+categories: 
+created: 2022-02-11
+version: 0.0.11
+@end
+
+* Description
+
+  The goal is to automatically resolve every `.local` hostnames using
+  {mDNS}[https://en.wikipedia.org/wiki/Multicast_DNS].
+
+* Using {Avahi}[https://wiki.archlinux.org/title/Avahi]
+
+** Installation
+
+   @code sh
+   sudo pacman -S avahi nss-mdns
+   @end
+
+** Configuration
+
+   Edit the file `/etc/nsswitch.conf` and change the `hosts` line to inclue `mdns_minimal
+   [NOTFOUND=return]` before `resolve` and `dns`:
+   @code
+   hosts: mymachines mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns
+   @end
+
+   To note, I had slowness issue when setting it up, so I ended up limiting it to IP V4:
+   @code
+   # Only handle .local TLD for IP v4 (otherwise it's slow for me)
+   hosts: mymachines mdns4_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns
+   @end
+
+   This was for the /default/ configuration, if you want to use a custom TLD in
+   addition to `.local` you must use the full `mdns` module instead of `mdns_minimal`:
+   @code
+   hosts: mymachines mdns resolve [!UNAVAIL=return] files myhostname dns
+   @end
+
+* Using {systemd-resolved}[https://wiki.archlinux.org/title/Systemd-resolved#mDNS]
+
+** Enable mDNS for `systemd-resolved`
+
+   It should be enabled by default, you can check that you have `MulticastDNS=yes` in
+   `/etc/systemd/resolved.conf`.
+
+** Enable mDNS for `systemd-networkd`
+
+   Update `MulticastDNS=` value in the `[Network]` section in `/etc/systemd/networkd.conf`.
+   You may also have to update in the `[Link]` section.
+
+** Enable mDNS for `networkManager`
+
+   You can enable it for all connections by creating a configuration in
+   `/etc/NetworkManager/conf.d/` and setting `connection.mdns=yes` in the `[connection]`
+   section.

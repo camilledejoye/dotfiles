@@ -24,7 +24,7 @@ g['test#php#phpunit#patterns'] = {
 if vim.fn.executable('phpunit') then
   g['test#php#phpunit#executable'] = 'phpunit'
 end
-g['test#php#phpunit#options'] = '--testdox' -- Use testdox format for PHPUnit
+-- g['test#php#phpunit#options'] = '--testdox' -- Use testdox format for PHPUnit
 
 -- If `phpspec` is in the PATH (custom script) then use this instead
 if vim.fn.executable('phpspec') then

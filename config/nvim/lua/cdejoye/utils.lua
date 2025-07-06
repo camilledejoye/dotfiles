@@ -14,9 +14,7 @@ local function convert_opts(opts)
 end
 
 function M.map(lhs, rhs, modes, opts, bufnr)
-  vim.validate({
-    rhs = { rhs, { 'string', 'function' } },
-  })
+  vim.validate('mapping rhs', rhs, { 'string', 'function' }, false, 'must be a string or a function')
   modes = modes or 'n'
   opts = convert_opts(opts or {})
   opts = vim.tbl_extend('keep', opts, {

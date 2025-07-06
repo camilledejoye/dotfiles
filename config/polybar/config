@@ -51,9 +51,9 @@ fa-solid-big = 3
 
 [bar/mainbar]
 bottom = true
-monitor = ${env:MONITOR:HDMI-1}
+monitor = ${env:MONITOR:DP-0}
 width = 100%
-height = 24
+height = 30
 ;offset-x = 1%
 ;offset-y = 1%
 radius = 0.0
@@ -87,6 +87,13 @@ font-4 = "Noto Sans:size=10;1"
 ; font-4 = "Font Awesome 5 Free Regular:pixelsize=8;2"
 font-5 = "Symbols Nerd Font:pixelsize=10;1"
 ; font-6 = "Symbols Nerd Font:pixelsize=8;1"
+
+; Set a DPI values used when rendering text
+; This only affects scalable fonts
+; Set this to 0 to let polybar calculate the dpi from the screen size.
+dpi = 130
+; dpi-x = 96
+; dpi-y = 96
 
 modules-left = bspwm
 modules-center = rofi-calendar

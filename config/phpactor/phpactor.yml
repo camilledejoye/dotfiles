@@ -6,3 +6,6 @@ logging.enabled: true
 logging.path: /tmp/phpactor.log
 logging.level: debug
 logging.formatter: pretty
+
+behat.enabled: true
+# phpspec.enabled: true

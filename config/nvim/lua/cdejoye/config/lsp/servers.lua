@@ -24,6 +24,16 @@ function M.configuration()
               '**/var/log/**',
             },
           },
+          codeLens = {
+            implementations = { enable = true },
+            overrides = { enable = true },
+            parent = { enable = true },
+            references = { enable = true },
+            usages = { enable = true },
+          },
+          compatibility = {
+            preferPsalmPhpstanPrefixedAnnotations = true,
+          },
         },
       },
     },
@@ -68,6 +78,19 @@ function M.configuration()
     dockerls = {},
     vimls = {},
     cssls = {},
+    -- jdtls = {}, -- Java
+    pylsp = {
+      settings = {
+        pylsp = {
+          plugins = {
+            pycodestyle = {
+              enabled = true,
+              maxLineLength = 120,
+            },
+          },
+        },
+      },
+    }, -- Python
   }
 
   -- To quickly switch between php servers
