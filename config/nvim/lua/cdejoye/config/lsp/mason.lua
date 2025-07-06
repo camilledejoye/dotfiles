@@ -14,11 +14,6 @@ function M.setup()
     },
   })
 
-  require('mason-lspconfig').setup({
-    ensure_installed = { 'phpactor' },
-    automatic_installation = true,
-  })
-
   require('mason-nvim-dap').setup({
     ensure_installed = { 'php' },
     automatic_setup = true,

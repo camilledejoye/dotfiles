@@ -1,128 +1,63 @@
 local M = {}
 
-function M.configuration()
-  -- Servers to enable with their specific configuration
-  local configuration = {
-    intelephense = {
-      init_options = { licenceKey = vim.fn.expand('$HOME/.local/share/intelephense/licence-key') },
-      settings = {
-        intelephense = {
-          files = {
-            exclude = {
-              '**/.git/**',
-              '**/.svn/**',
-              '**/.hg/**',
-              '**/CVS/**',
-              '**/.DS_Store/**',
-              '**/node_modules/**',
-              '**/bower_components/**',
-              '**/vendor/**/{Tests,tests}/**',
-              '**/.history/**',
-              '**/vendor/**/vendor/**',
-              -- Symfony project specific
-              '**/var/cache/**',
-              '**/var/log/**',
-            },
-          },
-          codeLens = {
-            implementations = { enable = true },
-            overrides = { enable = true },
-            parent = { enable = true },
-            references = { enable = true },
-            usages = { enable = true },
-          },
-          compatibility = {
-            preferPsalmPhpstanPrefixedAnnotations = true,
-          },
-        },
-      },
-    },
-    jsonls = {
-      settings = {
-        json = {
-          schemas = require('schemastore').json.schemas(),
-        },
-      },
-    },
-    yamlls = {
-      settings = {
-        yaml = {
-          format = {
-            singleQuote = true,
-            proseWrap = 'Always',
-            printWidth = 120, -- TODO detect it for YAML config ?
-          },
-          schemas = {
-            ['https://json.schemastore.org/taskfile.json'] = {
-              'Taskfile.dist.yaml',
-              '*Taskfile.yaml',
-              'tasks/*.yml',
-              'tasks/*.yaml',
-            },
-          },
-        },
-      },
-    },
-    lemminx = {}, -- XML
-    ts_ls = {},
-    lua_ls = {
-      settings = {
-        Lua = {
-          completion = {
-            callSnippet = 'Replace',
-          },
-        },
-      },
-    },
-    bashls = {},
-    dockerls = {},
-    vimls = {},
-    cssls = {},
-    -- jdtls = {}, -- Java
-    pylsp = {
-      settings = {
-        pylsp = {
-          plugins = {
-            pycodestyle = {
-              enabled = true,
-              maxLineLength = 120,
-            },
-          },
-        },
-      },
-    }, -- Python
-  }
+-- To quickly switch between php servers
+local should_use_phpactor = true
 
-  -- To quickly switch between php servers
-  local use_phpactor = false
-  if use_phpactor then
-    configuration.intelephense = nil
-    configuration.phpactor = {
-      init_options = { ['language_server_completion.trim_leading_dollar'] = true },
-    }
-  end
-
-  return configuration
+local servers = {}
+local function install(name, options)
+  servers[name] = false
+  vim.lsp.config(name, options or {})
 end
 
-function M.setup(on_attach, capabilities)
-  for server_name, server_options in pairs(M.configuration()) do
-    local options = {
-      on_attach = on_attach,
-      capabilities = capabilities,
-    }
+local function enable(name, options)
+  install(name, options)
+  servers[name] = true
+end
 
-    if 'function' == type(server_options) then
-      options = server_options(options)
-    elseif 'table' == type(server_options) then
-      options = vim.tbl_extend('force', options, server_options)
+local function register_servers()
+  install('phpactor')
+  install('intelephense')
+  enable(should_use_phpactor and 'phpactor' or 'intelephense')
+
+  enable('jsonls')
+  enable('yamlls')
+  enable('lemminx') -- XML
+  enable('ts_ls')
+  enable('lua_ls')
+  enable('bashls')
+  enable('dockerls')
+  enable('vimls')
+  enable('cssls')
+  -- enable('jdtls') -- Java
+  enable('pylsp')
+end
+
+local function install_servers()
+  local servers_to_install = {}
+  local servers_to_not_enable = {}
+  for name, is_enable in pairs(servers) do
+    table.insert(servers_to_install, name)
+    if not is_enable then
+      table.insert(servers_to_not_enable, name)
     end
-
-    require('lspconfig')[server_name].setup(options)
   end
 
-  -- -- Setup null-ls
-  -- require('cdejoye.config.lsp.null-ls').setup(on_attach, capabilities)
+  -- Keep mason-lspconfig to install and enable the servers
+  -- It comes with the ability to map server name between Mason and lspconfig (they can differ)
+  -- Additionally, it also handles hooks to enable a server after it's installed
+  -- Since Mason install aynchronously, if I try to manully enable a server with vim.lsp.enable() it won't
+  -- work until I restart nvim (on first install)
+  require('mason-lspconfig').setup({
+    ensure_installed = servers_to_install,
+    automatic_enable = {
+      exclude = servers_to_not_enable,
+    },
+  })
+end
+
+function M.setup()
+  register_servers()
+  install_servers()
 end
 
 return M
