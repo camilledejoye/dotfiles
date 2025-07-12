@@ -40,6 +40,8 @@ local colorschemes = {
   'base16-onedark',
   'base16-tomorrow-night',
   -- 'base16-tomorrow-night-eighties',
+  'onedark',
+  'catppuccin',
 }
 
 local notification_id

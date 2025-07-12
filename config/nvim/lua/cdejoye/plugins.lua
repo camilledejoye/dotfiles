@@ -35,7 +35,19 @@ require('lazy').setup({
   {
     'RRethy/nvim-base16',
     config = config('colorscheme'),
-    priority = 999, -- A high number is recommended for colorscheme
+    priority = 1000, -- A high number is recommended for colorscheme
+  },
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
+  {
+    'navarasu/onedark.nvim',
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      require('onedark').setup({
+        style = 'darker',
+      })
+      -- Enable theme
+      require('onedark').load()
+    end,
   },
 
   -- Miscelanous
