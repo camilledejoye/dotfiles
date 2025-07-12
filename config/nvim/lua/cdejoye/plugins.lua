@@ -438,11 +438,6 @@ require('lazy').setup({
     config = config('lualine'),
   },
 
-  -- TODO try again later
-  -- There is no equivalent to `gcu` by default, we should do it ourserlves using a textobject
-  -- from another plugin, for instance a treesitter extension
-  -- { 'numToStr/Comment.nvim', config = config('comment') }
-
   { -- tpope plugins
     {
       'tpope/vim-surround',
@@ -450,7 +445,6 @@ require('lazy').setup({
         vim.g.surround_no_insert_mappings = true
       end,
     },
-    'tpope/vim-commentary',
     { 'tpope/vim-scriptease', cmd = 'Scriptnames' },
     { 'tpope/vim-unimpaired', config = config('unimpaired') },
     'tpope/vim-abolish',
@@ -462,12 +456,18 @@ require('lazy').setup({
     'tpope/vim-eunuch',
   },
 
+  {
+    'folke/ts-comments.nvim',
+    opts = {},
+    event = 'VeryLazy',
+    enabled = vim.fn.has('nvim-0.10.0') == 1,
+  },
+
   { -- Treesitter
     -- TODO to auto close tags check: https://github.com/windwp/nvim-ts-autotag
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     dependencies = {
-      'JoosepAlviste/nvim-ts-context-commentstring',
       { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter' },
     },
     config = config('nvim-treesitter'),
