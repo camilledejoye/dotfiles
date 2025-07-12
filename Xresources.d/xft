@@ -4,5 +4,12 @@ Xft.hintstyle: hintslight
 Xft.hinting: 1
 Xft.antialias: 1
 Xft.rgba: rgb
+! To test the difference, restart Xorg
+! It changes "how much you can see in a window"
+! The more you "zoom" (increase DPI) the bigger things are, it feels like using a lower resolution
+! Default DPI
+! Xft.dpi: 96
+! 150% zoom
+Xft.dpi: 144
 
 ! vim: ft=xdefaults cms=!\ %s fdm=marker
