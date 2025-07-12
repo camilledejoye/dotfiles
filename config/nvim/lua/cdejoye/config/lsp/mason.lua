@@ -49,7 +49,7 @@ function M.setup()
 
   require('mason-nvim-dap').setup({
     ensure_installed = { 'php' },
-    automatic_setup = true,
+    automatic_installation = true,
     handlers = {
       function(config)
         -- all sources with no handler get passed here
@@ -63,6 +63,11 @@ function M.setup()
             port = 9003,
             pathMappings = {
               ['/var/www/html'] = '${workspaceFolder}',
+              -- I had to change this for some projects
+              -- I don't, yet, have a correct management or projects and especially specific project settings
+              -- So I keep this commented here as an example
+              -- ['/app'] = '${workspaceFolder}',
+              -- ['/app'] = '${workspaceFolder}/api',
             },
           },
         })
