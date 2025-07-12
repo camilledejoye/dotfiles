@@ -20,6 +20,8 @@ local function run_unit_tests()
   require('plenary.busted').run('lua/native-snippets/tests/spec/snippets/php/function_spec.lua')
   print('  🔧 PHP Method Snippet...')
   require('plenary.busted').run('lua/native-snippets/tests/spec/snippets/php/method_spec.lua')
+  print('  🏛️  PHP Class Snippet...')
+  require('plenary.busted').run('lua/native-snippets/tests/spec/snippets/php/class_spec.lua')
 
   print('\n✅ Unit tests complete!')
 end
