@@ -48,11 +48,11 @@ describe('CompletionProvider', function()
     it('should include all expected PHP snippets', function()
       local items = CompletionProvider.get_items_for_filetype('php')
       local labels = {}
-      
+
       for _, item in ipairs(items) do
         table.insert(labels, item.label)
       end
-      
+
       -- Check that expected snippets are present
       assert.is_true(vim.tbl_contains(labels, 'n_date'), 'should include n_date snippet')
       assert.is_true(vim.tbl_contains(labels, 'n_construct'), 'should include n_construct snippet')
