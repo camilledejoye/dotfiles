@@ -4,13 +4,12 @@ local M = {}
 local should_use_phpactor = true
 
 local servers = {}
-local function install(name, options)
+local function install(name)
   servers[name] = false
-  vim.lsp.config(name, options or {})
 end
 
-local function enable(name, options)
-  install(name, options)
+local function enable(name)
+  install(name)
   servers[name] = true
 end
 

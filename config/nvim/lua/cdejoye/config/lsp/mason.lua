@@ -2,6 +2,37 @@ local M = {}
 
 local icons = require('cdejoye.icons')
 
+local function install_pylsp_extensions()
+  local pylsp = require('mason-registry').get_package('python-lsp-server')
+  pylsp:on('install:success', function()
+    local function mason_package_path(package)
+      local path = vim.fn.resolve(vim.fn.stdpath('data') .. '/mason/packages/' .. package)
+      return path
+    end
+
+    local path = mason_package_path('python-lsp-server')
+    local command = path .. '/venv/bin/pip'
+    local args = {
+      'install',
+      '-U',
+      'pylsp-rope',
+      'python-lsp-black',
+      'python-lsp-isort',
+      'python-lsp-ruff',
+      'pyls-memestra',
+      'pylsp-mypy',
+    }
+
+    require('plenary.job')
+      :new({
+        command = command,
+        args = args,
+        cwd = path,
+      })
+      :start()
+  end)
+end
+
 function M.setup()
   local mason = require('mason')
   mason.setup({
@@ -13,6 +44,8 @@ function M.setup()
       },
     },
   })
+
+  install_pylsp_extensions()
 
   require('mason-nvim-dap').setup({
     ensure_installed = { 'php' },
