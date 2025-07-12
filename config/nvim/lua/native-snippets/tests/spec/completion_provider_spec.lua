@@ -56,6 +56,7 @@ describe('CompletionProvider', function()
       -- Check that expected snippets are present
       assert.is_true(vim.tbl_contains(labels, 'n_date'), 'should include n_date snippet')
       assert.is_true(vim.tbl_contains(labels, 'n_construct'), 'should include n_construct snippet')
+      assert.is_true(vim.tbl_contains(labels, 'n_function'), 'should include n_function snippet')
     end)
   end)
 end)
