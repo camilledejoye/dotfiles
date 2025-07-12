@@ -26,7 +26,7 @@ describe('NativeSnippets cmp source', function()
     end)
 
     it('should return correct debug name', function()
-      local debug_name = source.get_debug_name()
+      local debug_name = source:get_debug_name()
       assert.equals('native_snippets', debug_name)
     end)
   end)
@@ -41,7 +41,7 @@ describe('NativeSnippets cmp source', function()
         callback_result = result
       end
 
-      source.complete({}, callback)
+      source:complete({}, callback)
 
       assert.is_true(callback_called)
       assert.is_table(callback_result)
@@ -52,7 +52,7 @@ describe('NativeSnippets cmp source', function()
     it('should return properly formatted cmp completion items', function()
       local callback_result = nil
 
-      source.complete({}, function(result)
+      source:complete({}, function(result)
         callback_result = result
       end)
 
@@ -69,14 +69,14 @@ describe('NativeSnippets cmp source', function()
       -- Test with PHP filetype
       vim.bo.filetype = 'php'
       local php_result = nil
-      source.complete({}, function(result)
+      source:complete({}, function(result)
         php_result = result
       end)
 
       -- Test with unsupported filetype
       vim.bo.filetype = 'javascript'
       local js_result = nil
-      source.complete({}, function(result)
+      source:complete({}, function(result)
         js_result = result
       end)
 
