@@ -5,14 +5,14 @@ local completion_provider = require('native-snippets.completion_provider')
 
 --- Get debug name for cmp source
 --- @return string
-function source:get_debug_name()
+function source:get_debug_name(_)
   return 'native_snippets'
 end
 
 --- Complete function for cmp integration
---- @param request table The completion request from cmp
+--- @param _ table The completion request from cmp (unused)
 --- @param callback function Callback to return completion items
-function source:complete(request, callback)
+function source:complete(_, callback)
   local filetype = vim.bo.filetype
   local items = completion_provider.get_items_for_filetype(filetype)
 

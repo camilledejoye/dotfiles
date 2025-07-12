@@ -22,6 +22,7 @@ cmp.setup {
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
   }, {
+    { name = 'native_snippets' },  -- Our new native snippets source
     { name = 'path' },
     { name = 'buffer', option = {
       get_bufnrs = function()
@@ -99,6 +100,7 @@ cmp.setup {
         spell = '[Spell]',
         nvim_lsp = '[LSP]',
         luasnip = '[LuaSnip]',
+        native_snippets = '[Native]',
         ultisnips = '[UltiSnips]',
         nvim_lua = '[Lua]',
         latex_symbols = '[Latex]',
@@ -119,6 +121,9 @@ cmp.setup {
     end,
   },
 }
+
+-- Register our native snippets source
+cmp.register_source('native_snippets', require('native-snippets'))
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline('/', {
