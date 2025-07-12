@@ -10,6 +10,13 @@ local function run_unit_tests()
   print('\n🔗 Testing CMP Source...')
   require('plenary.busted').run('lua/native-snippets/tests/spec/cmp_source_spec.lua')
 
+  -- Run individual snippet tests
+  print('\n📝 Testing Individual Snippets...')
+  print('  📅 PHP Date Snippet...')
+  require('plenary.busted').run('lua/native-snippets/tests/spec/snippets/php/date_spec.lua')
+  print('  🏗️  PHP Constructor Snippet...')
+  require('plenary.busted').run('lua/native-snippets/tests/spec/snippets/php/construct_spec.lua')
+
   print('\n✅ Unit tests complete!')
 end
 
