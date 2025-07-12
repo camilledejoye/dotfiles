@@ -5,7 +5,8 @@
       "WebFetch(domain:neovim.io)",
       "Bash(nvim:*)",
       "Bash(git checkout:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": []
   }
