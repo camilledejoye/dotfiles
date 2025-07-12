@@ -1,6 +1,8 @@
 ---@diagnostic disable: undefined-global
 ---@diagnostic disable: need-check-nil
 local assert = require('luassert')
+local describe = require('plenary.busted').describe
+local it = require('plenary.busted').it
 
 -- Minimal vim API mocking
 if not _G.vim then
