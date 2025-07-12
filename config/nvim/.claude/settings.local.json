@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git reset:*)",
+      "WebFetch(domain:neovim.io)",
+      "Bash(nvim:*)",
+      "Bash(git checkout:*)",
+      "Bash(mkdir:*)"
+    ],
+    "deny": []
+  }
+}
