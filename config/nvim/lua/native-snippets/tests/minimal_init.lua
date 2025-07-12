@@ -1,0 +1,1 @@
+/home/cdejoye/.config/nvim/init.lua
