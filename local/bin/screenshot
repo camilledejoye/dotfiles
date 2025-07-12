@@ -1,0 +1,347 @@
+#!/usr/bin/env bash
+
+# Color definitions
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Debug flag
+debug_mode=0
+use_cursor_position=0
+
+print_error() {
+    echo -e "${RED}Error:${NC} $1" >&2
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send "Screenshot Error" "$1" --icon=error --urgency=critical
+    fi
+}
+
+print_debug() {
+    if [ "$debug_mode" -eq 1 ]; then
+        echo -e "${CYAN}DEBUG:${NC} $1" >&2
+    fi
+}
+
+print_usage() {
+    echo -e "${BLUE}Usage:${NC} $(basename "$0") [--debug] [--edit] [--use-cursor-position] <command>"
+    echo -e "       $(basename "$0") <command> [options]${NC}"
+    echo
+    echo -e "${YELLOW}Commands:${NC}"
+    echo -e "  ${GREEN}selection${NC}  Interactive area selection"
+    echo -e "  ${GREEN}window${NC}     Click on any window to capture it"
+    echo -e "  ${GREEN}monitor${NC}    Click anywhere on a monitor to capture the entire monitor"
+    echo -e "  ${GREEN}full${NC}       Capture all monitors/full desktop"
+    echo
+    echo -e "${YELLOW}Options:${NC}"
+    echo -e "  ${GREEN}--debug${NC}               Show debug information"
+    echo -e "  ${GREEN}--edit${NC}                Open flameshot editor for annotation (default: auto-save to clipboard)"
+    echo -e "  ${GREEN}--use-cursor-position${NC} Use current mouse position instead of clicking (for window/monitor)"
+    echo
+    echo -e "${YELLOW}Examples:${NC}"
+    echo -e "  $(basename "$0") selection"
+    echo -e "  $(basename "$0") --edit window"
+    echo -e "  $(basename "$0") --debug monitor --edit"
+    echo -e "  $(basename "$0") --use-cursor-position window"
+    echo -e "  $(basename "$0") monitor --use-cursor-position"
+}
+
+is_valid_command() {
+    case "$1" in
+        selection|window|monitor|full) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+ensure_required_tools_are_installed() {
+    for tool in flameshot xdotool xrandr; do
+        if ! command -v "$tool" >/dev/null 2>&1; then
+            print_error "Required tool '$tool' is not installed"
+            exit 1
+        fi
+    done
+}
+
+parse_arguments() {
+    edit_mode=0
+    command=""
+
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --debug)
+                debug_mode=1
+                shift
+                ;;
+            --edit)
+                edit_mode=1
+                shift
+                ;;
+            --use-cursor-position)
+                use_cursor_position=1
+                shift
+                ;;
+            --help|-h)
+                print_usage
+                exit 0
+                ;;
+            -*)
+                print_error "Unknown option: $1"
+                print_usage
+                exit 1
+                ;;
+            *)
+                if [ -z "$command" ]; then
+                    if is_valid_command "$1"; then
+                        command="$1"
+                        shift
+                    else
+                        print_error "Invalid command: $1"
+                        print_usage
+                        exit 1
+                    fi
+                else
+                    print_error "Too many arguments: $1"
+                    print_usage
+                    exit 1
+                fi
+                ;;
+        esac
+    done
+
+    if [ -z "$command" ]; then
+        print_error "No command specified"
+        print_usage
+        exit 1
+    fi
+}
+
+get_cursor_position() {
+    xdotool getmouselocation --shell 2>/dev/null | {
+        eval "$(cat)"
+        printf '%s %s' "$X" "$Y"
+    } || {
+        print_error "Failed to get cursor position"
+        return 1
+    }
+}
+
+wait_for_window_click() {
+    if ! window_id=$(xdotool selectwindow 2>/dev/null); then
+        print_error "Failed to get window selection"
+        return 1
+    fi
+    printf '%s' "$window_id"
+}
+
+get_window_at_cursor() {
+    local cursor_pos
+    cursor_pos=$(get_cursor_position) || return 1
+    # shellcheck disable=SC2086  # Intentional word splitting to parse "X Y" into positional parameters
+    set -- $cursor_pos
+    local cursor_x="$1" cursor_y="$2"
+    print_debug "Getting window at cursor position: $cursor_x, $cursor_y"
+    
+    xdotool mousemove "$cursor_x" "$cursor_y" getmouselocation --shell 2>/dev/null | {
+        eval "$(cat)"
+        printf '%s %s %s' "$WINDOW" "$X" "$Y"
+    } || {
+        print_error "Failed to get window at cursor position"
+        return 1
+    }
+}
+
+get_window_geometry_string() {
+    local window_id="$1"
+    if ! window_geom=$(xdotool getwindowgeometry --shell "$window_id" 2>/dev/null); then
+        print_error "Failed to get window geometry"
+        return 1
+    fi
+    eval "$window_geom"
+    printf '%sx%s+%s+%s' "$WIDTH" "$HEIGHT" "$X" "$Y"
+}
+
+get_clicked_window_geometry() {
+    if [ "$use_cursor_position" -eq 1 ]; then
+        local window_info
+        window_info=$(get_window_at_cursor) || return 1
+        # shellcheck disable=SC2086  # Intentional word splitting to parse "WINDOW X Y" into positional parameters
+        set -- $window_info
+        local window_id="$1"
+        print_debug "Got window at cursor: $window_id"
+        get_window_geometry_string "$window_id"
+    else
+        local window_id
+        window_id=$(wait_for_window_click) || return 1
+        get_window_geometry_string "$window_id"
+    fi
+}
+
+parse_monitor_geometry() {
+    local geom="$1"
+    print_debug "parse_monitor_geometry input: '$geom'"
+    case "$geom" in
+        */*x*/*+*+*)
+            print_debug "Geometry matches expected pattern"
+            local width_part height_part mx my
+            width_part=$(printf '%s' "$geom" | cut -d'x' -f1 | cut -d'/' -f1)
+            height_part=$(printf '%s' "$geom" | cut -d'x' -f2 | cut -d'/' -f1)
+            mx=$(printf '%s' "$geom" | cut -d'+' -f2)
+            my=$(printf '%s' "$geom" | cut -d'+' -f3)
+            print_debug "Parsed parts: width=$width_part, height=$height_part, x=$mx, y=$my"
+            printf '%s %s %s %s' "$width_part" "$height_part" "$mx" "$my"
+            return 0
+            ;;
+        *)
+            print_debug "Geometry does not match expected pattern */*x*/*+*+*"
+            return 1
+            ;;
+    esac
+}
+
+point_is_within_monitor() {
+    local click_x="$1" click_y="$2" mon_x="$3" mon_y="$4" mon_w="$5" mon_h="$6"
+    [ "$click_x" -ge "$mon_x" ] && [ "$click_x" -lt $((mon_x + mon_w)) ] && \
+    [ "$click_y" -ge "$mon_y" ] && [ "$click_y" -lt $((mon_y + mon_h)) ]
+}
+
+find_monitor_containing_point() {
+    local click_x="$1" click_y="$2"
+    print_debug "Looking for monitor containing point: $click_x, $click_y"
+    
+    while IFS= read -r line; do
+        print_debug "Processing line: $line"
+        local geom monitor_geom mw mh mx my
+        geom=$(printf '%s' "$line" | awk '{print $3}')
+        print_debug "Extracted geom: $geom"
+        if monitor_geom=$(parse_monitor_geometry "$geom"); then
+            print_debug "Parsed geometry: $monitor_geom"
+            # shellcheck disable=SC2086  # Intentional word splitting to parse "width height x y" into positional parameters
+            set -- $monitor_geom
+            mw="$1" mh="$2" mx="$3" my="$4"
+            print_debug "Monitor bounds: ${mw}x${mh} at +${mx}+${my}"
+            
+            if point_is_within_monitor "$click_x" "$click_y" "$mx" "$my" "$mw" "$mh"; then
+                print_debug "Point is within this monitor!"
+                printf '%sx%s+%s+%s' "$mw" "$mh" "$mx" "$my"
+                return 0
+            else
+                print_debug "Point not in this monitor"
+            fi
+        else
+            print_debug "Failed to parse geometry"
+        fi
+    done < <(xrandr --listmonitors 2>/dev/null | tail -n +2)
+    
+    print_debug "No monitor found containing the point"
+    return 1
+}
+
+get_clicked_monitor_geometry() {
+    if [ "$use_cursor_position" -eq 1 ]; then
+        local cursor_pos
+        cursor_pos=$(get_cursor_position) || return 1
+        # shellcheck disable=SC2086  # Intentional word splitting to parse "X Y" into positional parameters
+        set -- $cursor_pos
+        local cursor_x="$1" cursor_y="$2"
+        print_debug "Using cursor position: X=$cursor_x, Y=$cursor_y"
+        
+        local geometry
+        if ! geometry=$(find_monitor_containing_point "$cursor_x" "$cursor_y"); then
+            print_debug "find_monitor_containing_point failed"
+            print_error "Could not determine monitor geometry"
+            return 1
+        fi
+        printf '%s' "$geometry"
+    else
+        local window_id window_geom
+        window_id=$(wait_for_window_click) || return 1
+        print_debug "Got window_id: $window_id"
+        
+        if ! window_geom=$(xdotool getwindowgeometry --shell "$window_id" 2>/dev/null); then
+            print_error "Failed to get window geometry"
+            return 1
+        fi
+        eval "$window_geom"
+        print_debug "Click position: X=$X, Y=$Y"
+
+        local geometry
+        if ! geometry=$(find_monitor_containing_point "$X" "$Y"); then
+            print_debug "find_monitor_containing_point failed"
+            print_error "Could not determine monitor geometry"
+            return 1
+        fi
+        
+        printf '%s' "$geometry"
+    fi
+}
+
+get_selection_command() {
+    printf 'flameshot gui --clipboard'
+}
+
+get_window_command() {
+    if [ "$use_cursor_position" -eq 1 ]; then
+        local geometry
+        geometry=$(get_clicked_window_geometry) || return 1
+        printf 'flameshot gui --clipboard --region %s' "$geometry"
+    else
+        local geometry
+        if ! geometry=$(xdotool selectwindow getwindowgeometry --shell 2>/dev/null \
+            | awk -F= '/^WIDTH/{w=$2} /^HEIGHT/{h=$2} /^X/{x=$2} /^Y/{y=$2} END{print w "x" h "+" x "+" y}') || [ -z "$geometry" ]; then
+            print_error "Failed to get window geometry"
+            return 1
+        fi
+        
+        printf 'flameshot gui --clipboard --region %s' "$geometry"
+    fi
+}
+
+get_monitor_command() {
+    local geometry
+    geometry=$(get_clicked_monitor_geometry) || return 1
+    printf 'flameshot gui --clipboard --region %s' "$geometry"
+}
+
+get_full_command() {
+    printf 'flameshot full --clipboard'
+}
+
+build_screenshot_command() {
+    local base_cmd
+    
+    case "$command" in
+        selection) base_cmd=$(get_selection_command) ;;
+        window)    base_cmd=$(get_window_command) || return 1 ;;
+        monitor)   base_cmd=$(get_monitor_command) || return 1 ;;
+        full)      base_cmd=$(get_full_command) ;;
+    esac
+    
+    if should_auto_accept; then
+        printf '%s --accept-on-select' "$base_cmd"
+    else
+        printf '%s' "$base_cmd"
+    fi
+}
+
+should_auto_accept() {
+    [ "$edit_mode" -eq 0 ] && [ "$command" != "full" ]
+}
+
+take_screenshot() {
+    local cmd
+    cmd=$(build_screenshot_command) || return 1
+    print_debug "Executing command: $cmd"
+    eval "$cmd"
+    return $?
+}
+
+main() {
+    parse_arguments "$@"
+    ensure_required_tools_are_installed
+    take_screenshot
+}
+
+# Run main function with all arguments
+main "$@"

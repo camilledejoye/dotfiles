@@ -37,14 +37,37 @@ alt + o ; {b,e,w}
 # Lock the screen
 super + l
     loginctl lock-session
+# }}}
 
-# Take a screenshot of a selection
-ctrl + alt + s
-    scrot -e 'xclip -selection clipboard -t image/png -i $f && rm $f' -s
+# Screenshots {{{
 
-# Take a screenshot of all the screen
-Print
-    scrot -e 'xclip -selection clipboard -t image/png -i $f && rm $f'
+# Interactive area selection
+ctrl + alt + s ; s
+    screenshot selection
+
+# Interactive area selection with edition
+ctrl + alt + s ; S
+    screenshot --edit selection
+
+# Click to select a window
+ctrl + alt + s ; w
+    screenshot window
+
+# Click to select a window with edition
+ctrl + alt + s ; W
+    screenshot --edit window
+
+# Click to select a monitor
+ctrl + alt + s ; m
+    screenshot monitor
+
+# Click to select a monitor with edition
+ctrl + alt + s ; M
+    screenshot --edit monitor
+
+# Full screen (all monitors)
+ctrl + alt + s ; f
+   screenshot full 
 
 # }}}
 
