@@ -29,15 +29,17 @@ lua/native-snippets/
 └── tests/                     # Comprehensive test suite
     ├── minimal_init.lua       # Test environment setup
     └── spec/                  # Test specifications
-        ├── integration_spec.lua        # nvim-cmp integration tests
-        ├── completion_provider_spec.lua # Orchestrator tests
-        ├── cmp_source_spec.lua         # Source interface tests
-        └── snippets/php/               # Individual snippet tests
-            ├── date_spec.lua
-            ├── construct_spec.lua
-            ├── function_spec.lua
-            ├── method_spec.lua
-            └── class_spec.lua
+        ├── unit/              # Fast unit tests
+        │   ├── completion_provider_spec.lua # Orchestrator tests
+        │   ├── cmp_source_spec.lua         # Source interface tests
+        │   └── snippets/php/               # Individual snippet tests
+        │       ├── date_spec.lua
+        │       ├── construct_spec.lua
+        │       ├── function_spec.lua
+        │       ├── method_spec.lua
+        │       └── class_spec.lua
+        └── integration/       # Full integration tests
+            └── integration_spec.lua     # nvim-cmp integration tests
 ```
 
 ## Available Snippets
@@ -59,8 +61,14 @@ All snippets use proper snippet format for indentation and provide interactive p
 The project uses a comprehensive TDD approach with plenary.nvim for testing:
 
 ```bash
-# Run all tests
+# Run all tests (unit + integration)
 nvim --headless -c 'PlenaryBustedDirectory lua/native-snippets/tests/spec { init = "lua/native-snippets/tests/minimal_init.lua" }'
+
+# Run only fast unit tests (for development)
+nvim --headless -c 'PlenaryBustedDirectory lua/native-snippets/tests/spec/unit { init = "lua/native-snippets/tests/minimal_init.lua" }'
+
+# Run only integration tests (for CI/verification)
+nvim --headless -c 'PlenaryBustedDirectory lua/native-snippets/tests/spec/integration { init = "lua/native-snippets/tests/minimal_init.lua" }'
 ```
 
 ### TDD Methodology
