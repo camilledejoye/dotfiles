@@ -3,7 +3,7 @@ local M = {}
 
 --- Generate a class snippet
 --- @return table LSP completion item for PHP class
-function M.create()
+function M.class()
   return {
     label = 'n_class',
     insertText = 'class $1\n{\n\t$0\n}',

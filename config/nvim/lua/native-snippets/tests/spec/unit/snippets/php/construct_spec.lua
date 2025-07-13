@@ -21,7 +21,7 @@ describe('PHP constructor snippets', function()
   local construct_snippet = require('native-snippets.snippets.php.construct')
 
   it('should provide valid n_cu (public constructor) snippet', function()
-    local item = construct_snippet.create_public()
+    local item = construct_snippet.public()
     assert.snippet(
       'n_cu',
       [[
@@ -35,7 +35,7 @@ describe('PHP constructor snippets', function()
   end)
 
   it('should provide valid n_co (protected constructor) snippet', function()
-    local item = construct_snippet.create_protected()
+    local item = construct_snippet.protected()
     assert.snippet(
       'n_co',
       [[
@@ -49,7 +49,7 @@ describe('PHP constructor snippets', function()
   end)
 
   it('should provide valid n_ci (private constructor) snippet', function()
-    local item = construct_snippet.create_private()
+    local item = construct_snippet.private()
     assert.snippet(
       'n_ci',
       [[

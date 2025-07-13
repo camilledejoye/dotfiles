@@ -16,19 +16,19 @@ local php_class = require('native-snippets.snippets.php.class')
 function M.get_items_for_filetype(filetype)
   -- Global snippets available for all filetypes
   local items = {
-    global_date.create_date(),
-    global_date.create_datetime(),
+    global_date.date(),
+    global_date.datetime(),
   }
 
   -- Add language-specific snippets
   if filetype == 'php' then
     vim.list_extend(items, {
-      php_construct.create_public(),
-      php_construct.create_protected(),
-      php_construct.create_private(),
-      php_function.create(),
-      php_method.create(),
-      php_class.create(),
+      php_construct.public(),
+      php_construct.protected(),
+      php_construct.private(),
+      php_function.func(),
+      php_method.method(),
+      php_class.class(),
     })
   end
 

@@ -3,7 +3,7 @@ local M = {}
 
 --- Generate a date snippet with current date
 --- @return table LSP completion item for current date
-function M.create_date()
+function M.date()
   return {
     label = 'n_date',
     insertText = os.date('%Y-%m-%d'),
@@ -14,7 +14,7 @@ end
 
 --- Generate a datetime snippet with current date and time
 --- @return table LSP completion item for current datetime
-function M.create_datetime()
+function M.datetime()
   return {
     label = 'n_datetime',
     insertText = os.date('%Y-%m-%d %H:%M:%S'),

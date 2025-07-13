@@ -3,7 +3,7 @@ local M = {}
 
 --- Generate a function snippet
 --- @return table LSP completion item for PHP function
-function M.create()
+function M.func()
   return {
     label = 'n_function',
     insertText = 'function ${1:name}($2): ${3:void}\n{\n\t$0\n}',

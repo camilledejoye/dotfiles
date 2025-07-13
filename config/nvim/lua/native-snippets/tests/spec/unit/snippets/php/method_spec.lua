@@ -21,7 +21,7 @@ describe('PHP method snippet', function()
   local method_snippet = require('native-snippets.snippets.php.method')
 
   it('should provide valid n_method snippet', function()
-    local item = method_snippet.create()
+    local item = method_snippet.method()
     assert.snippet(
       'n_method',
       [[

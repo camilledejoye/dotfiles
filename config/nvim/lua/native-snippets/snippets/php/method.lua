@@ -3,7 +3,7 @@ local M = {}
 
 --- Generate a method snippet
 --- @return table LSP completion item for PHP method
-function M.create()
+function M.method()
   return {
     label = 'n_method',
     insertText = '${1:public} function ${2:name}($3): ${4:void}\n{\n\t$0\n}',
