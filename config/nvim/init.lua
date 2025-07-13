@@ -1,5 +1,7 @@
 local impatient_ok, impatient = pcall(require, 'impatient')
-if impatient_ok then impatient.enable_profile() end
+if impatient_ok then
+  impatient.enable_profile()
+end
 
 local g = vim.g
 local opt = vim.opt
@@ -11,10 +13,10 @@ require('cdejoye.disable-plugins')
 
 -- Add global dump() function for debug purpose
 function _G.dump(...)
-  local args = {...}
+  local args = { ... }
 
   for _, arg in ipairs(args) do
-      print(vim.inspect(arg))
+    print(vim.inspect(arg))
   end
 end
 
@@ -27,7 +29,7 @@ opt.runtimepath:append({ vim_dir .. '/templates' })
 opt.path:append({ '**' })
 opt.autochdir = false
 -- File in wildignore won't be previwed by telescope
-opt.wildignore:append({'*/.git/*', '*/node_modules/*', '*/var/*', '*/web/build/*'})
+opt.wildignore:append({ '*/.git/*', '*/node_modules/*', '*/var/*', '*/web/build/*' })
 opt.textwidth = 90
 opt.hidden = true
 opt.swapfile = false
@@ -79,6 +81,7 @@ require('cdejoye.mappings') -- Load custom mappings
 -- Jump to the last position we were when we closed the file the last time
 cmd([[
 augroup cdejoye_custom_commands
-  autocmd BufReadPost * if 'gitcommit' != &filetype && line("'\"") > 0 && line("'\"") <= line("$") | execute "keepjumps normal g`\"" | endif
+  autocmd BufReadPost * if 'gitcommit' != &filetype && line("'\"") > 0 && line("'\"") <= line("$") |
+    \ execute "keepjumps normal g`\"" | endif
 augroup END
 ]])
