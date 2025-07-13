@@ -29,6 +29,9 @@ function M.get_items_for_filetype(filetype)
       php_function.func(),
       php_method.method(),
       php_method.method_choice(), -- Experimental choice snippet
+      php_method.method_public(), -- n_mu - public method
+      php_method.method_protected(), -- n_mo - protected method
+      php_method.method_private(), -- n_mi - private method
       php_class.class(),
     })
   end

@@ -47,4 +47,46 @@ describe('PHP method snippet', function()
       item
     )
   end)
+
+  it('should provide valid n_mu snippet for public method', function()
+    local item = method_snippet.method_public()
+    assert.snippet(
+      'n_mu',
+      [[
+      public function ${1:name}($2): ${3:void}
+      {
+        $0
+      }
+    ]],
+      item
+    )
+  end)
+
+  it('should provide valid n_mo snippet for protected method', function()
+    local item = method_snippet.method_protected()
+    assert.snippet(
+      'n_mo',
+      [[
+      protected function ${1:name}($2): ${3:void}
+      {
+        $0
+      }
+    ]],
+      item
+    )
+  end)
+
+  it('should provide valid n_mi snippet for private method', function()
+    local item = method_snippet.method_private()
+    assert.snippet(
+      'n_mi',
+      [[
+      private function ${1:name}($2): ${3:void}
+      {
+        $0
+      }
+    ]],
+      item
+    )
+  end)
 end)
