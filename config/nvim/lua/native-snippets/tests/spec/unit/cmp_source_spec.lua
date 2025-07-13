@@ -80,7 +80,7 @@ describe('NativeSnippets cmp source', function()
         any_result = result
       end)
 
-      assert.equals(8, #php_result.items) -- 2 global + 6 PHP snippets
+      assert.equals(9, #php_result.items) -- 2 global + 7 PHP snippets (including experimental choice)
       assert.equals(2, #any_result.items) -- 2 global snippets (date, datetime)
       assert.equals('n_date', any_result.items[1].label)
       assert.equals('n_datetime', any_result.items[2].label)

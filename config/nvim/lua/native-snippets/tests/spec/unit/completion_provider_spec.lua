@@ -29,7 +29,7 @@ describe('CompletionProvider', function()
 
     it('should return global + PHP snippets for php filetype', function()
       local items = CompletionProvider.get_items_for_filetype('php')
-      assert.equals(8, #items) -- 2 global + 6 PHP snippets
+      assert.equals(9, #items) -- 2 global + 7 PHP snippets (including experimental choice)
     end)
   end)
 

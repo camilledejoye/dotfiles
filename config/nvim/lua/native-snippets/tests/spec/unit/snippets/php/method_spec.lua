@@ -33,4 +33,18 @@ describe('PHP method snippet', function()
       item
     )
   end)
+
+  it('should provide valid n_method_choice snippet with visibility choices', function()
+    local item = method_snippet.method_choice()
+    assert.snippet(
+      'n_method_choice',
+      [[
+      ${1|public,protected,private|} function ${2:name}($3): ${4:void}
+      {
+        $0
+      }
+    ]],
+      item
+    )
+  end)
 end)

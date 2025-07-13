@@ -80,4 +80,93 @@ map('i', '<C-CR>', '<C-O>O', { noremap = true, silent = true })
 map('i', '<S-CR>', '<C-O>o', { noremap = true, silent = true })
 -- }}}
 
+-- Native Snippets (Experimental) {{{
+-- WARNING: These mappings may conflict with LuaSnip's dynamic mappings
+-- LuaSnip creates <C-j>/<C-k> mappings when a snippet is expanded and removes
+-- them when leaving the snippet. Consider implementing similar dynamic behavior
+-- for native snippets to avoid permanent mapping conflicts.
+-- For now, accepting overlap for manual testing purposes.
+
+-- Expand native snippet for current word under cursor
+map('i', '<C-S-s>', '', {
+  noremap = true,
+  silent = true,
+  callback = function()
+    local completion_provider = require('native-snippets.completion_provider')
+    local items = completion_provider.get_items_for_filetype(vim.bo.filetype)
+
+    -- Get the word under cursor
+    local line = vim.api.nvim_get_current_line()
+    local col = vim.api.nvim_win_get_cursor(0)[2]
+    local before_cursor = line:sub(1, col)
+    local word = before_cursor:match('(%S+)$') or ''
+
+    -- Find matching snippet
+    for _, item in ipairs(items) do
+      if item.label == word then
+        -- Replace the word with the snippet
+        local start_col = col - #word
+        vim.api.nvim_buf_set_text(
+          0,
+          vim.api.nvim_win_get_cursor(0)[1] - 1,
+          start_col,
+          vim.api.nvim_win_get_cursor(0)[1] - 1,
+          col,
+          {}
+        )
+        vim.snippet.expand(item.insertText)
+        return
+      end
+    end
+
+    -- No snippet found, show available snippets
+    local labels = {}
+    for _, item in ipairs(items) do
+      table.insert(labels, item.label)
+    end
+    print('Available snippets: ' .. table.concat(labels, ', '))
+  end,
+})
+
+-- Jump to next snippet placeholder
+map('i', '<C-j>', '', {
+  noremap = true,
+  silent = true,
+  callback = function()
+    if vim.snippet.active({ direction = 1 }) then
+      vim.snippet.jump(1)
+    end
+  end,
+})
+map('s', '<C-j>', '', {
+  noremap = true,
+  silent = true,
+  callback = function()
+    if vim.snippet.active({ direction = 1 }) then
+      vim.snippet.jump(1)
+    end
+  end,
+})
+
+-- Jump to previous snippet placeholder
+map('i', '<C-k>', '', {
+  noremap = true,
+  silent = true,
+  callback = function()
+    if vim.snippet.active({ direction = -1 }) then
+      vim.snippet.jump(-1)
+    end
+  end,
+})
+map('s', '<C-k>', '', {
+  noremap = true,
+  silent = true,
+  callback = function()
+    if vim.snippet.active({ direction = -1 }) then
+      vim.snippet.jump(-1)
+    end
+  end,
+})
+-- }}}
+
 -- vim: ts=2 sw=2 et fdm=marker

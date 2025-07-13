@@ -28,6 +28,7 @@ function M.get_items_for_filetype(filetype)
       php_construct.private(),
       php_function.func(),
       php_method.method(),
+      php_method.method_choice(), -- Experimental choice snippet
       php_class.class(),
     })
   end

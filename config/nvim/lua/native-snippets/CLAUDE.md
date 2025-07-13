@@ -266,3 +266,36 @@ All changes must pass the complete test suite. The project maintains strict qual
 - No new lint/diagnostic issues
 - Proper code formatting
 - Comprehensive test coverage for new features
+
+## Future Enhancement Roadmap
+
+These are tracked improvements to consider implementing:
+
+### LSP Advanced Features
+- [ ] **Choice snippets for visibility**: Implement LSP `Choice` for function/method visibility selection  
+  - Reference: [LSP Choice specification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#choice)
+  - Use case: Interactive visibility selection (public/protected/private) instead of separate snippets
+  
+- [ ] **Variable transformation for class names**: Use LSP variable transforms for smart class naming  
+  - Reference: [LSP Variable Transforms](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#variable-transforms)
+  - Use case: Auto-capitalize class names, convert filenames to class names, etc.
+
+### Snippet Enhancement
+- [ ] **Documentation for snippets**: Add `CompletionItem.documentation` with usage examples
+  - Provide helpful descriptions and examples for each snippet
+  - Improve discoverability and user experience
+  
+- [ ] **Insert text mode support**: Investigate `CompletionItem.insertTextMode` usage
+  - Reference: [LSP InsertTextMode](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#insertTextMode)
+  - Potential replacement/addition to current `InsertTextFormat`
+  
+- [ ] **Text edit for existing content**: Explore `CompletionItem.textEdit` for smart replacements
+  - Reference: [LSP TextEdit](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textEdit)
+  - Use case: Postfix snippets, smart content modification based on context
+  - May not apply to standard snippets, investigate postfix snippet potential
+
+### Implementation Notes
+- All enhancements should follow existing TDD methodology
+- Maintain backward compatibility with current API
+- Add comprehensive test coverage for new LSP features
+- Document new capabilities in this file
