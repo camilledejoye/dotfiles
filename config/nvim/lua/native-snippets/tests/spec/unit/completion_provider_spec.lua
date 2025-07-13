@@ -21,7 +21,7 @@ describe('CompletionProvider', function()
 
   describe('get_items_for_filetype', function()
     it('should return global snippets for all filetypes', function()
-      local items = CompletionProvider.get_items_for_filetype('javascript')
+      local items = CompletionProvider.get_items_for_filetype('any_filetype_for_testing')
       assert.equals(1, #items) -- Should have date snippet
       assert.equals('n_date', items[1].label)
     end)

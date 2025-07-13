@@ -73,16 +73,16 @@ describe('NativeSnippets cmp source', function()
         php_result = result
       end)
 
-      -- Test with JavaScript filetype (should still get global snippets)
-      vim.bo.filetype = 'javascript'
-      local js_result = nil
+      -- Test with any filetype (should still get global snippets)
+      vim.bo.filetype = 'any_filetype_for_testing'
+      local any_result = nil
       source:complete({}, function(result)
-        js_result = result
+        any_result = result
       end)
 
       assert.equals(5, #php_result.items) -- 1 global + 4 PHP snippets
-      assert.equals(1, #js_result.items) -- 1 global snippet (date)
-      assert.equals('n_date', js_result.items[1].label)
+      assert.equals(1, #any_result.items) -- 1 global snippet (date)
+      assert.equals('n_date', any_result.items[1].label)
 
       -- Reset to PHP for other tests
       vim.bo.filetype = 'php'

@@ -55,8 +55,8 @@ describe('nvim-cmp integration', function()
   it('returns global snippets for non-PHP files', function()
     source = require('native-snippets')
 
-    -- Mock JavaScript filetype
-    _G.vim.bo.filetype = 'javascript'
+    -- Mock any filetype to test global snippets
+    _G.vim.bo.filetype = 'any_filetype_for_testing'
 
     local completed = false
     local items = {}
@@ -72,7 +72,7 @@ describe('nvim-cmp integration', function()
     end)
 
     assert.is_true(completed, 'completion callback should be called')
-    assert.equals(1, #items, 'should return global snippets for non-PHP files')
+    assert.equals(1, #items, 'should return global snippets for any filetype')
     assert.equals('n_date', items[1].label, 'should include global date snippet')
   end)
 
