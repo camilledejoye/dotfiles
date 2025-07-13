@@ -121,7 +121,35 @@ end
 -- Main Assertion Functions
 -- =============================================================================
 
---- Main snippet completion item assertion
+--- Combined snippet assertion (structure + content validation)
+--- Validates both LSP completion item structure and snippet text content
+--- @param state table luassert state object
+--- @param arguments table Assertion arguments [expected_label, expected_text, item]
+--- @return boolean success
+local function assert_snippet_complete(state, arguments)
+  local expected_label = arguments[1]
+  local expected_text = normalize_snippet_text(arguments[2])
+  local item = arguments[3]
+
+  -- First validate the structure
+  if not (assert_label_equals(state, expected_label, item)
+    and assert_insert_text_is_string(state, item)
+    and assert_completion_item_kind_snippet(state, item)
+    and assert_insert_text_format_snippet(state, item)) then
+    return false
+  end
+
+  -- Then validate the content
+  if item.insertText ~= expected_text then
+    local diff = require('native-snippets.tests.diff')
+    state.failure_message = diff.create_diff(expected_text, tostring(item.insertText))
+    return false
+  end
+
+  return true
+end
+
+--- Legacy snippet completion item assertion (structure only)
 --- Validates LSP completion item structure for snippets
 --- @param state table luassert state object
 --- @param arguments table Assertion arguments [expected_label, item]
@@ -164,15 +192,21 @@ end
 function M.register()
   local assert = require('luassert')
 
-  -- Register main assertions
-  assert:register('assertion', 'snippet', assert_snippet_completion_item, { 'assertion', 'snippet' })
+  -- Register the new combined assertion as the main 'snippet' assertion
+  assert:register('assertion', 'snippet', assert_snippet_complete, { 'assertion', 'snippet' })
+  
+  -- Register legacy assertions for backward compatibility
+  assert:register('assertion', 'snippet_structure', assert_snippet_completion_item, { 'assertion', 'snippet_structure' })
   assert:register('assertion', 'snippet_text', assert_snippet_text_content, { 'assertion', 'snippet_text' })
 
-  -- Setup dot notation for assert.snippet.text()
+  -- Setup dot notation for legacy assert.snippet.text() and structure-only
   local original_snippet = assert.snippet
   assert.snippet = setmetatable({
     text = function(expected_text, item)
       return assert.snippet_text(expected_text, item)
+    end,
+    structure = function(expected_label, item)
+      return assert.snippet_structure(expected_label, item)
     end
   }, {
     __call = function(_, ...)

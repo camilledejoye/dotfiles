@@ -20,14 +20,9 @@ require('native-snippets.tests.assertions').register()
 describe('PHP method snippet', function()
   local method_snippet = require('native-snippets.snippets.php.method')
 
-  it('should provide valid n_method completion item', function()
+  it('should provide valid n_method snippet', function()
     local item = method_snippet.create()
-    assert.snippet('n_method', item)
-  end)
-  it('should generate expected PHP method snippet text', function()
-    local item = method_snippet.create()
-
-    assert.snippet.text([[
+    assert.snippet('n_method', [[
       ${1:public} function ${2:name}($3): ${4:void}
       {
         $0
