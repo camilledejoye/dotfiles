@@ -20,14 +20,15 @@ describe('CompletionProvider', function()
   local CompletionProvider = require('native-snippets.completion_provider')
 
   describe('get_items_for_filetype', function()
-    it('should return empty table for unsupported filetypes', function()
-      local items = CompletionProvider.get_items_for_filetype('unknown')
-      assert.equals(0, #items)
+    it('should return global snippets for all filetypes', function()
+      local items = CompletionProvider.get_items_for_filetype('javascript')
+      assert.equals(1, #items) -- Should have date snippet
+      assert.equals('n_date', items[1].label)
     end)
 
-    it('should return completion items for php', function()
+    it('should return global + PHP snippets for php filetype', function()
       local items = CompletionProvider.get_items_for_filetype('php')
-      assert.is_true(#items > 0)
+      assert.equals(5, #items) -- 1 global + 4 PHP snippets
     end)
   end)
 

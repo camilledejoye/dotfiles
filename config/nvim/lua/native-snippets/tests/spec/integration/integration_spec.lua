@@ -52,7 +52,7 @@ describe('nvim-cmp integration', function()
     assert.is_not_nil(first_item.insertText)
   end)
 
-  it('returns empty for non-PHP files', function()
+  it('returns global snippets for non-PHP files', function()
     source = require('native-snippets')
 
     -- Mock JavaScript filetype
@@ -72,7 +72,8 @@ describe('nvim-cmp integration', function()
     end)
 
     assert.is_true(completed, 'completion callback should be called')
-    assert.equals(0, #items, 'should return no items for non-PHP files')
+    assert.equals(1, #items, 'should return global snippets for non-PHP files')
+    assert.equals('n_date', items[1].label, 'should include global date snippet')
   end)
 
   it('generates dynamic date content', function()
@@ -98,4 +99,3 @@ describe('nvim-cmp integration', function()
     assert.equals(current_date, date_item.insertText, 'snippet should contain current date: ' .. current_date)
   end)
 end)
-

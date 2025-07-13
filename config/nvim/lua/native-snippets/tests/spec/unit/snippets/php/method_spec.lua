@@ -57,4 +57,3 @@ describe('PHP method snippet', function()
     assert.is_true(string.find(item.insertText, '%$0') ~= nil, 'should have $0 placeholder for final cursor position')
   end)
 end)
-

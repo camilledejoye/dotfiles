@@ -15,8 +15,8 @@ if not _G.vim then
   }
 end
 
-describe('PHP date snippet', function()
-  local date_snippet = require('native-snippets.snippets.php.date')
+describe('Global date snippet', function()
+  local date_snippet = require('native-snippets.snippets.global.date')
 
   it('should provide n_date completion item', function()
     local item = date_snippet.create()
@@ -49,4 +49,3 @@ describe('PHP date snippet', function()
     assert.matches('%d%d%d%d%-%d%d%-%d%d', date1)
   end)
 end)
-
