@@ -15,17 +15,15 @@ if not _G.vim then
   }
 end
 
+require('native-snippets.tests.assertions').register()
+
 describe('PHP method snippet', function()
   local method_snippet = require('native-snippets.snippets.php.method')
 
-  it('should provide n_method completion item', function()
+  it('should provide valid n_method completion item', function()
     local item = method_snippet.create()
-
-    assert.equals('n_method', item.label)
-    assert.is_string(item.insertText)
-    assert.equals(vim.lsp.protocol.CompletionItemKind.Snippet, item.kind)
+    assert.snippet('n_method', item)
   end)
-
   it('should contain PHP method structure with visibility', function()
     local item = method_snippet.create()
 
@@ -35,26 +33,20 @@ describe('PHP method snippet', function()
     assert.is_true(string.find(item.insertText, '}') ~= nil, 'should have closing brace')
   end)
 
-  it('should use snippet format for proper indentation', function()
-    local item = method_snippet.create()
-
-    -- Should use snippet format for proper indentation handling
-    assert.equals(vim.lsp.protocol.InsertTextFormat.Snippet, item.insertTextFormat)
-    -- Should contain snippet placeholders
-    assert.is_true(
-      string.find(item.insertText, '%$%d') ~= nil,
-      'should contain snippet placeholders for cursor positioning'
-    )
-  end)
-
   it('should provide placeholders for visibility, method name, parameters, return type and body', function()
     local item = method_snippet.create()
 
     -- Should have placeholders for visibility, method name, parameters, return type, and body
     assert.is_true(string.find(item.insertText, '%${1:') ~= nil, 'should have ${1:} placeholder for visibility')
-    assert.is_true(string.find(item.insertText, '%${2:name}') ~= nil, 'should have ${2:name} placeholder for method name')
+    assert.is_true(
+      string.find(item.insertText, '%${2:name}') ~= nil,
+      'should have ${2:name} placeholder for method name'
+    )
     assert.is_true(string.find(item.insertText, '%$3') ~= nil, 'should have $3 placeholder for parameters')
-    assert.is_true(string.find(item.insertText, '%${4:void}') ~= nil, 'should have ${4:void} placeholder for return type')
+    assert.is_true(
+      string.find(item.insertText, '%${4:void}') ~= nil,
+      'should have ${4:void} placeholder for return type'
+    )
     assert.is_true(string.find(item.insertText, '%$0') ~= nil, 'should have $0 placeholder for final cursor position')
   end)
 
