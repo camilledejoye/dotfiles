@@ -22,11 +22,15 @@ describe('PHP method snippet', function()
 
   it('should provide valid n_method snippet', function()
     local item = method_snippet.create()
-    assert.snippet('n_method', [[
+    assert.snippet(
+      'n_method',
+      [[
       ${1:public} function ${2:name}($3): ${4:void}
       {
         $0
       }
-    ]], item)
+    ]],
+      item
+    )
   end)
 end)

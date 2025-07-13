@@ -138,16 +138,21 @@ This project follows a **"Tests as Specifications"** philosophy where tests serv
 #### 1. **Tests Should Be Crystal Clear Specifications**
 Tests must be immediately understandable without "heavy thinking" or analysis. When reading a test, it should be obvious what the system should produce.
 
-**Before (Implementation-focused):**
+#### 2. **One Clear Assertion Per Test (Golden Rule)**
+Each test should have **ONE comprehensive assertion** that validates the complete expected behavior. If you have multiple assertions, you're likely testing implementation details rather than user-facing specifications. (Note: There are valid exceptions, but this rule catches most specification vs implementation issues.)
+
+**Before (Fragmented Implementation Testing):**
 ```lua
 it('should contain PHP method structure', function()
   assert.is_true(string.find(item.insertText, 'function') ~= nil)
   assert.is_true(string.find(item.insertText, '{') ~= nil)
   assert.is_true(string.find(item.insertText, '}') ~= nil)
+  assert.equals('n_method', item.label)
+  assert.equals(vim.lsp.protocol.CompletionItemKind.Snippet, item.kind)
 end)
 ```
 
-**After (Specification-focused):**
+**After (Single Clear Specification):**
 ```lua
 it('should provide valid n_method snippet', function()
   local item = method_snippet.create()
@@ -160,13 +165,13 @@ it('should provide valid n_method snippet', function()
 end)
 ```
 
-#### 2. **Visual Expectations Over Technical Checks**
+#### 3. **Visual Expectations Over Technical Checks**
 Use multi-line strings to show exactly what the output should look like. The test should visually represent the expected result.
 
-#### 3. **Comprehensive Single Assertions**
-Prefer one assertion that validates everything (structure + content) over multiple fragmented assertions checking pieces.
+#### 4. **Comprehensive Single Assertions**
+Create domain-specific assertions that validate everything (structure + content) in one clear statement.
 
-#### 4. **Failure Feedback That Guides Debugging**
+#### 5. **Failure Feedback That Guides Debugging**
 When tests fail, the output should immediately show exactly what's wrong with git-style diff visualization.
 
 ### Custom Assertion System
@@ -215,10 +220,16 @@ The diff highlights:
 When transforming existing tests:
 
 1. **Identify the specification**: What should the system produce?
-2. **Create visual expectations**: Use multi-line strings showing exact structure
-3. **Build comprehensive assertions**: Validate everything in one clear assertion
-4. **Ensure meaningful failure feedback**: Git-style diffs for immediate debugging
-5. **Reduce cognitive load**: One clear test instead of multiple fragmented ones
+2. **Apply the one assertion rule**: If you have multiple assertions, combine them into one comprehensive assertion
+3. **Create visual expectations**: Use multi-line strings showing exact structure
+4. **Build comprehensive assertions**: Validate everything in one clear assertion
+5. **Ensure meaningful failure feedback**: Git-style diffs for immediate debugging
+6. **Verify the pattern**: Does your test look like other transformed tests?
+
+**Red Flag**: If your test has more than one assertion, ask yourself:
+- Am I testing implementation details instead of user-facing behavior?
+- Can I create a domain-specific assertion that validates everything at once?
+- Does this test immediately show what the user receives?
 
 ### Multi-line String Handling
 
