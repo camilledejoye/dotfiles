@@ -22,13 +22,14 @@ describe('CompletionProvider', function()
   describe('get_items_for_filetype', function()
     it('should return global snippets for all filetypes', function()
       local items = CompletionProvider.get_items_for_filetype('any_filetype_for_testing')
-      assert.equals(1, #items) -- Should have date snippet
+      assert.equals(2, #items) -- Should have date and datetime snippets
       assert.equals('n_date', items[1].label)
+      assert.equals('n_datetime', items[2].label)
     end)
 
     it('should return global + PHP snippets for php filetype', function()
       local items = CompletionProvider.get_items_for_filetype('php')
-      assert.equals(7, #items) -- 1 global + 6 PHP snippets
+      assert.equals(8, #items) -- 2 global + 6 PHP snippets
     end)
   end)
 

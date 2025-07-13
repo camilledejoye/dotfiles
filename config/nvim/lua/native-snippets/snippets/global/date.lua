@@ -1,12 +1,23 @@
---- PHP date snippet
+--- Global date and datetime snippets
 local M = {}
 
 --- Generate a date snippet with current date
 --- @return table LSP completion item for current date
-function M.create()
+function M.create_date()
   return {
     label = 'n_date',
     insertText = os.date('%Y-%m-%d'),
+    insertTextFormat = vim.lsp.protocol.InsertTextFormat.PlainText,
+    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
+  }
+end
+
+--- Generate a datetime snippet with current date and time
+--- @return table LSP completion item for current datetime
+function M.create_datetime()
+  return {
+    label = 'n_datetime',
+    insertText = os.date('%Y-%m-%d %H:%M:%S'),
     insertTextFormat = vim.lsp.protocol.InsertTextFormat.PlainText,
     kind = vim.lsp.protocol.CompletionItemKind.Snippet,
   }

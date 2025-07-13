@@ -16,7 +16,8 @@ local php_class = require('native-snippets.snippets.php.class')
 function M.get_items_for_filetype(filetype)
   -- Global snippets available for all filetypes
   local items = {
-    global_date.create(),
+    global_date.create_date(),
+    global_date.create_datetime(),
   }
 
   -- Add language-specific snippets

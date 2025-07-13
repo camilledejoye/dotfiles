@@ -80,9 +80,10 @@ describe('NativeSnippets cmp source', function()
         any_result = result
       end)
 
-      assert.equals(7, #php_result.items) -- 1 global + 6 PHP snippets
-      assert.equals(1, #any_result.items) -- 1 global snippet (date)
+      assert.equals(8, #php_result.items) -- 2 global + 6 PHP snippets
+      assert.equals(2, #any_result.items) -- 2 global snippets (date, datetime)
       assert.equals('n_date', any_result.items[1].label)
+      assert.equals('n_datetime', any_result.items[2].label)
 
       -- Reset to PHP for other tests
       vim.bo.filetype = 'php'

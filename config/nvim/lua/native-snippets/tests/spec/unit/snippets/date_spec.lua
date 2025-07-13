@@ -26,7 +26,8 @@ describe('Global date snippet', function()
 
   before_each(function()
     date_stub = stub(os, 'date')
-    date_stub.returns('2024-03-15')
+    date_stub.on_call_with('%Y-%m-%d').returns('2024-03-15')
+    date_stub.on_call_with('%Y-%m-%d %H:%M:%S').returns('2024-03-15 14:30:45')
   end)
 
   after_each(function()
@@ -36,7 +37,12 @@ describe('Global date snippet', function()
   end)
 
   it('should provide valid n_date snippet', function()
-    local item = date_snippet.create()
+    local item = date_snippet.create_date()
     assert.plaintext_snippet('n_date', '2024-03-15', item)
+  end)
+
+  it('should provide valid n_datetime snippet', function()
+    local item = date_snippet.create_datetime()
+    assert.plaintext_snippet('n_datetime', '2024-03-15 14:30:45', item)
   end)
 end)
