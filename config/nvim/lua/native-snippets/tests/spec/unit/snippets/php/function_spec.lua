@@ -46,12 +46,28 @@ describe('PHP function snippet', function()
     )
   end)
 
-  it('should provide placeholders for function name, parameters and body', function()
+  it('should provide placeholders for function name, parameters, return type and body', function()
     local item = function_snippet.create()
 
-    -- Should have placeholders for function name, parameters, and body
-    assert.is_true(string.find(item.insertText, '%$1') ~= nil, 'should have $1 placeholder for function name')
+    -- Should have placeholders for function name, parameters, return type, and body
+    assert.is_true(string.find(item.insertText, '%${1:name}') ~= nil, 'should have ${1:name} placeholder for function name')
     assert.is_true(string.find(item.insertText, '%$2') ~= nil, 'should have $2 placeholder for parameters')
+    assert.is_true(string.find(item.insertText, '%${3:void}') ~= nil, 'should have ${3:void} placeholder for return type')
     assert.is_true(string.find(item.insertText, '%$0') ~= nil, 'should have $0 placeholder for final cursor position')
+  end)
+
+  it('should include default values for name and return type', function()
+    local item = function_snippet.create()
+
+    -- Should contain default values
+    assert.is_true(string.find(item.insertText, 'name') ~= nil, 'should contain "name" as default function name')
+    assert.is_true(string.find(item.insertText, 'void') ~= nil, 'should contain "void" as default return type')
+  end)
+
+  it('should include return type syntax', function()
+    local item = function_snippet.create()
+
+    -- Should contain colon for return type syntax
+    assert.is_true(string.find(item.insertText, ':') ~= nil, 'should contain colon for return type syntax')
   end)
 end)

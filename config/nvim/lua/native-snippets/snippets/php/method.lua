@@ -6,7 +6,7 @@ local M = {}
 function M.create()
   return {
     label = 'n_method',
-    insertText = '${1:public} function $2($3)\n{\n\t$0\n}',
+    insertText = '${1:public} function ${2:name}($3): ${4:void}\n{\n\t$0\n}',
     insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
     kind = vim.lsp.protocol.CompletionItemKind.Snippet,
   }
