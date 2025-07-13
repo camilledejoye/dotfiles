@@ -129,6 +129,124 @@ cmp.register_source('native_snippets', require('native-snippets'))
 4. Add comprehensive documentation
 5. Test with both unit and integration test suites
 
+## Test Philosophy
+
+This project follows a **"Tests as Specifications"** philosophy where tests serve as living documentation and clear behavioral specifications rather than implementation verification.
+
+### Core Principles
+
+#### 1. **Tests Should Be Crystal Clear Specifications**
+Tests must be immediately understandable without "heavy thinking" or analysis. When reading a test, it should be obvious what the system should produce.
+
+**Before (Implementation-focused):**
+```lua
+it('should contain PHP method structure', function()
+  assert.is_true(string.find(item.insertText, 'function') ~= nil)
+  assert.is_true(string.find(item.insertText, '{') ~= nil)
+  assert.is_true(string.find(item.insertText, '}') ~= nil)
+end)
+```
+
+**After (Specification-focused):**
+```lua
+it('should provide valid n_method snippet', function()
+  local item = method_snippet.create()
+  assert.snippet('n_method', [[
+    ${1:public} function ${2:name}($3): ${4:void}
+    {
+      $0
+    }
+  ]], item)
+end)
+```
+
+#### 2. **Visual Expectations Over Technical Checks**
+Use multi-line strings to show exactly what the output should look like. The test should visually represent the expected result.
+
+#### 3. **Comprehensive Single Assertions**
+Prefer one assertion that validates everything (structure + content) over multiple fragmented assertions checking pieces.
+
+#### 4. **Failure Feedback That Guides Debugging**
+When tests fail, the output should immediately show exactly what's wrong with git-style diff visualization.
+
+### Custom Assertion System
+
+The project uses domain-specific assertions that follow luassert conventions:
+
+```lua
+-- Combined structure + content validation
+assert.snippet(expected_label, expected_text, item)
+
+-- Legacy assertions (for backward compatibility)
+assert.snippet.structure(expected_label, item)  -- LSP structure only
+assert.snippet.text(expected_text, item)        -- Content only
+```
+
+### Git-Style Diff Feedback
+
+When content validation fails, tests show precise character-level differences:
+
+```
+- ${1:public} function ${2:name}($3) ${4:void}    # Expected (red background)
++ ${1:public} function ${2:name}($3): ${4:void}   # Actual (green background)
+```
+
+The diff highlights:
+- **Red background**: What was expected
+- **Green background**: What was actually received  
+- **Bright highlighting**: Specific character differences
+- **Complete line coloring**: Full context with proper backgrounds
+
+### When to Apply This Approach
+
+**Use specification-focused tests for:**
+- ✅ **System behavior validation**: When testing what the system produces
+- ✅ **Complex output structures**: Snippets, templates, formatted text
+- ✅ **User-facing features**: Tests should be readable as documentation
+- ✅ **Regression prevention**: Need precise validation of exact output
+
+**Use traditional implementation tests for:**
+- ❌ **Simple boolean conditions**: `assert.is_true()` for basic checks
+- ❌ **Performance testing**: Implementation details matter for performance
+- ❌ **Internal algorithm verification**: When you need to test the HOW
+
+### Test Transformation Pattern
+
+When transforming existing tests:
+
+1. **Identify the specification**: What should the system produce?
+2. **Create visual expectations**: Use multi-line strings showing exact structure
+3. **Build comprehensive assertions**: Validate everything in one clear assertion
+4. **Ensure meaningful failure feedback**: Git-style diffs for immediate debugging
+5. **Reduce cognitive load**: One clear test instead of multiple fragmented ones
+
+### Multi-line String Handling
+
+The assertion system automatically normalizes multi-line test strings:
+- Removes common leading indentation for readability
+- Converts spaces to tabs for snippet format compatibility
+- Preserves empty lines and structure
+
+```lua
+-- This test string is automatically normalized
+assert.snippet.text([[
+  ${1:public} function ${2:name}($3): ${4:void}
+  {
+    $0
+  }
+]], item)
+```
+
+### Benefits of This Approach
+
+1. **Living Documentation**: Tests serve as examples of system behavior
+2. **Immediate Understanding**: No reverse-engineering required to understand expectations
+3. **Better Debugging**: Precise visual feedback on failures
+4. **Reduced Maintenance**: Fewer, more comprehensive tests
+5. **Clear Specifications**: Tests answer "what should this do?" not "how does this work?"
+
+This philosophy transforms tests from verification code into living specifications that guide both development and understanding.
+
 ## Testing Requirements
 
 All changes must pass the complete test suite. The project maintains strict quality standards:
