@@ -28,7 +28,7 @@ describe('CompletionProvider', function()
 
     it('should return global + PHP snippets for php filetype', function()
       local items = CompletionProvider.get_items_for_filetype('php')
-      assert.equals(5, #items) -- 1 global + 4 PHP snippets
+      assert.equals(7, #items) -- 1 global + 6 PHP snippets
     end)
   end)
 
@@ -56,7 +56,9 @@ describe('CompletionProvider', function()
 
       -- Check that expected snippets are present
       assert.is_true(vim.tbl_contains(labels, 'n_date'), 'should include n_date snippet')
-      assert.is_true(vim.tbl_contains(labels, 'n_construct'), 'should include n_construct snippet')
+      assert.is_true(vim.tbl_contains(labels, 'n_cu'), 'should include n_cu snippet (public constructor)')
+      assert.is_true(vim.tbl_contains(labels, 'n_co'), 'should include n_co snippet (protected constructor)')
+      assert.is_true(vim.tbl_contains(labels, 'n_ci'), 'should include n_ci snippet (private constructor)')
       assert.is_true(vim.tbl_contains(labels, 'n_function'), 'should include n_function snippet')
       assert.is_true(vim.tbl_contains(labels, 'n_method'), 'should include n_method snippet')
       assert.is_true(vim.tbl_contains(labels, 'n_class'), 'should include n_class snippet')

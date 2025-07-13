@@ -22,7 +22,9 @@ function M.get_items_for_filetype(filetype)
   -- Add language-specific snippets
   if filetype == 'php' then
     vim.list_extend(items, {
-      php_construct.create(),
+      php_construct.create_public(),
+      php_construct.create_protected(),
+      php_construct.create_private(),
       php_function.create(),
       php_method.create(),
       php_class.create(),
