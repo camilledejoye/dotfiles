@@ -42,19 +42,19 @@ end
 --- Generate a public method snippet (n_mu - method public)
 --- @return table LSP completion item for PHP public method
 function M.method_public()
-  return create_method_snippet('n_mu', 'public')
+  return create_method_snippet('n_mu', 'public', {})
 end
 
 --- Generate a protected method snippet (n_mo - method protected)
 --- @return table LSP completion item for PHP protected method
 function M.method_protected()
-  return create_method_snippet('n_mo', 'protected')
+  return create_method_snippet('n_mo', 'protected', {})
 end
 
 --- Generate a private method snippet (n_mi - method private)
 --- @return table LSP completion item for PHP private method
 function M.method_private()
-  return create_method_snippet('n_mi', 'private')
+  return create_method_snippet('n_mi', 'private', {})
 end
 
 --- Generate a public static method snippet (n_mus - method public static)
