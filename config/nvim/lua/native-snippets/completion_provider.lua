@@ -27,7 +27,6 @@ function M.get_items_for_filetype(filetype)
       php_construct.protected(),
       php_construct.private(),
       php_function.func(),
-      php_method.method(),
       php_method.method_choice(), -- Experimental choice snippet
       php_method.method_public(), -- n_mu - public method
       php_method.method_protected(), -- n_mo - protected method

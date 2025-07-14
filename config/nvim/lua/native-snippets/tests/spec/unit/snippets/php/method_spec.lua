@@ -20,20 +20,6 @@ require('native-snippets.tests.assertions').register()
 describe('PHP method snippet', function()
   local method_snippet = require('native-snippets.snippets.php.method')
 
-  it('should provide valid n_method snippet', function()
-    local item = method_snippet.method()
-    assert.snippet(
-      'n_method',
-      [[
-      ${1:public} function ${2:name}($3): ${4:void}
-      {
-        $0
-      }
-    ]],
-      item
-    )
-  end)
-
   it('should provide valid n_method_choice snippet with visibility choices', function()
     local item = method_snippet.method_choice()
     assert.snippet(
