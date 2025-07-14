@@ -34,6 +34,9 @@ function M.get_items_for_filetype(filetype)
       php_method.method_public_static(), -- n_mus - public static method
       php_method.method_protected_static(), -- n_mos - protected static method
       php_method.method_private_static(), -- n_mis - private static method
+      php_method.method_abstract_public(), -- n_mau - abstract public method
+      php_method.method_abstract_protected(), -- n_mao - abstract protected method
+      php_method.method_abstract_private(), -- n_mai - abstract private method
       php_class.class(),
     })
   end

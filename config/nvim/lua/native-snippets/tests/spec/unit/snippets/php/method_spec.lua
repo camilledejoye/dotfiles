@@ -117,4 +117,37 @@ describe('PHP method snippet', function()
       item
     )
   end)
+
+  it('should provide valid n_mau snippet for abstract public method', function()
+    local item = method_snippet.method_abstract_public()
+    assert.snippet(
+      'n_mau',
+      [[
+      abstract public function ${1:name}($2): ${3:void};
+    ]],
+      item
+    )
+  end)
+
+  it('should provide valid n_mao snippet for abstract protected method', function()
+    local item = method_snippet.method_abstract_protected()
+    assert.snippet(
+      'n_mao',
+      [[
+      abstract protected function ${1:name}($2): ${3:void};
+    ]],
+      item
+    )
+  end)
+
+  it('should provide valid n_mai snippet for abstract private method', function()
+    local item = method_snippet.method_abstract_private()
+    assert.snippet(
+      'n_mai',
+      [[
+      abstract private function ${1:name}($2): ${3:void};
+    ]],
+      item
+    )
+  end)
 end)
