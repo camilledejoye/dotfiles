@@ -89,4 +89,46 @@ describe('PHP method snippet', function()
       item
     )
   end)
+
+  it('should provide valid n_mus snippet for public static method', function()
+    local item = method_snippet.method_public_static()
+    assert.snippet(
+      'n_mus',
+      [[
+      public static function ${1:name}($2): ${3:void}
+      {
+        $0
+      }
+    ]],
+      item
+    )
+  end)
+
+  it('should provide valid n_mos snippet for protected static method', function()
+    local item = method_snippet.method_protected_static()
+    assert.snippet(
+      'n_mos',
+      [[
+      protected static function ${1:name}($2): ${3:void}
+      {
+        $0
+      }
+    ]],
+      item
+    )
+  end)
+
+  it('should provide valid n_mis snippet for private static method', function()
+    local item = method_snippet.method_private_static()
+    assert.snippet(
+      'n_mis',
+      [[
+      private static function ${1:name}($2): ${3:void}
+      {
+        $0
+      }
+    ]],
+      item
+    )
+  end)
 end)

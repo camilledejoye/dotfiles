@@ -56,4 +56,37 @@ function M.method_private()
   }
 end
 
+--- Generate a public static method snippet (n_mus - method public static)
+--- @return table LSP completion item for PHP public static method
+function M.method_public_static()
+  return {
+    label = 'n_mus',
+    insertText = 'public static function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
+    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
+    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
+  }
+end
+
+--- Generate a protected static method snippet (n_mos - method protected static)
+--- @return table LSP completion item for PHP protected static method
+function M.method_protected_static()
+  return {
+    label = 'n_mos',
+    insertText = 'protected static function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
+    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
+    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
+  }
+end
+
+--- Generate a private static method snippet (n_mis - method private static)
+--- @return table LSP completion item for PHP private static method
+function M.method_private_static()
+  return {
+    label = 'n_mis',
+    insertText = 'private static function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
+    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
+    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
+  }
+end
+
 return M

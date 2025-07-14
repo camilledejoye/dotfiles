@@ -72,8 +72,9 @@ describe('nvim-cmp integration', function()
     end)
 
     assert.is_true(completed, 'completion callback should be called')
-    assert.equals(1, #items, 'should return global snippets for any filetype')
+    assert.equals(2, #items, 'should return global snippets for any filetype')
     assert.equals('n_date', items[1].label, 'should include global date snippet')
+    assert.equals('n_datetime', items[2].label, 'should include global datetime snippet')
   end)
 
   it('generates dynamic date content', function()
