@@ -16,31 +16,21 @@ local Visibility = {
 local function create_method_snippet(label, visibility, opts)
   opts = opts or {}
 
-  local modifiers = {}
+  -- Build method declaration: abstract? visibility static?
+  local declaration_parts = {}
   if opts.abstract then
-    table.insert(modifiers, 'abstract')
+    table.insert(declaration_parts, 'abstract')
   end
+  table.insert(declaration_parts, visibility)
   if opts.static then
-    table.insert(modifiers, 'static')
+    table.insert(declaration_parts, 'static')
   end
 
   local body = (opts.interface or opts.abstract) and ';' or '\n{\n\t$0\n}'
 
-  -- Build method signature with proper PHP modifier order: abstract visibility static
-  local signature_parts = {}
-  if opts.abstract then
-    table.insert(signature_parts, 'abstract')
-  end
-  table.insert(signature_parts, visibility)
-  if opts.static then
-    table.insert(signature_parts, 'static')
-  end
-
-  local signature = table.concat(signature_parts, ' ')
-
   return {
     label = label,
-    insertText = string.format('%s function ${1:name}($2): ${3:void}%s', signature, body),
+    insertText = string.format('%s function ${1:name}($2): ${3:void}%s', table.concat(declaration_parts, ' '), body),
     insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
     kind = vim.lsp.protocol.CompletionItemKind.Snippet,
   }
