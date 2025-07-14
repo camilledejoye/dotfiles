@@ -1,6 +1,33 @@
 --- PHP method snippet
 local M = {}
 
+--- Helper function to generate method snippet completion item
+--- @param label string The snippet label (e.g., 'n_mu', 'n_mus')
+--- @param visibility string The method visibility ('public', 'protected', 'private')
+--- @param opts table Optional modifiers { static = boolean, abstract = boolean, interface = boolean }
+--- @return table LSP completion item
+local function create_method_snippet(label, visibility, opts)
+  opts = opts or {}
+
+  local modifiers = {}
+  if opts.abstract then
+    table.insert(modifiers, 'abstract')
+  end
+  if opts.static then
+    table.insert(modifiers, 'static')
+  end
+
+  local modifier_str = #modifiers > 0 and (table.concat(modifiers, ' ') .. ' ') or ''
+  local body = opts.interface and ';' or '\n{\n\t$0\n}'
+
+  return {
+    label = label,
+    insertText = string.format('%s %sfunction ${1:name}($2): ${3:void}%s', visibility, modifier_str, body),
+    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
+    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
+  }
+end
+
 --- Generate a method snippet
 --- @return table LSP completion item for PHP method
 function M.method()
@@ -26,67 +53,37 @@ end
 --- Generate a public method snippet (n_mu - method public)
 --- @return table LSP completion item for PHP public method
 function M.method_public()
-  return {
-    label = 'n_mu',
-    insertText = 'public function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
-    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
-    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
-  }
+  return create_method_snippet('n_mu', 'public')
 end
 
 --- Generate a protected method snippet (n_mo - method protected)
 --- @return table LSP completion item for PHP protected method
 function M.method_protected()
-  return {
-    label = 'n_mo',
-    insertText = 'protected function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
-    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
-    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
-  }
+  return create_method_snippet('n_mo', 'protected')
 end
 
 --- Generate a private method snippet (n_mi - method private)
 --- @return table LSP completion item for PHP private method
 function M.method_private()
-  return {
-    label = 'n_mi',
-    insertText = 'private function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
-    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
-    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
-  }
+  return create_method_snippet('n_mi', 'private')
 end
 
 --- Generate a public static method snippet (n_mus - method public static)
 --- @return table LSP completion item for PHP public static method
 function M.method_public_static()
-  return {
-    label = 'n_mus',
-    insertText = 'public static function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
-    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
-    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
-  }
+  return create_method_snippet('n_mus', 'public', { static = true })
 end
 
 --- Generate a protected static method snippet (n_mos - method protected static)
 --- @return table LSP completion item for PHP protected static method
 function M.method_protected_static()
-  return {
-    label = 'n_mos',
-    insertText = 'protected static function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
-    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
-    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
-  }
+  return create_method_snippet('n_mos', 'protected', { static = true })
 end
 
 --- Generate a private static method snippet (n_mis - method private static)
 --- @return table LSP completion item for PHP private static method
 function M.method_private_static()
-  return {
-    label = 'n_mis',
-    insertText = 'private static function ${1:name}($2): ${3:void}\n{\n\t$0\n}',
-    insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
-    kind = vim.lsp.protocol.CompletionItemKind.Snippet,
-  }
+  return create_method_snippet('n_mis', 'private', { static = true })
 end
 
 return M
