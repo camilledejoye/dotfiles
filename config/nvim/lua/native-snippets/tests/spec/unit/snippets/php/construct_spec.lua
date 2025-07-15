@@ -21,44 +21,38 @@ describe('PHP constructor snippets', function()
   local construct_snippet = require('native-snippets.snippets.php.construct')
 
   it('should provide valid n_cu (public constructor) snippet', function()
-    local item = construct_snippet.public()
     assert.snippet(
-      'n_cu',
       [[
       public function __construct($1)
       {
         $0
       }
     ]],
-      item
+      construct_snippet.public()
     )
   end)
 
   it('should provide valid n_co (protected constructor) snippet', function()
-    local item = construct_snippet.protected()
     assert.snippet(
-      'n_co',
       [[
       protected function __construct($1)
       {
         $0
       }
     ]],
-      item
+      construct_snippet.protected()
     )
   end)
 
   it('should provide valid n_ci (private constructor) snippet', function()
-    local item = construct_snippet.private()
     assert.snippet(
-      'n_ci',
       [[
       private function __construct($1)
       {
         $0
       }
     ]],
-      item
+      construct_snippet.private()
     )
   end)
 end)

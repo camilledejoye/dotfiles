@@ -19,135 +19,134 @@ require('native-snippets.tests.assertions').register()
 
 describe('PHP method snippet', function()
   local method_snippet = require('native-snippets.snippets.php.method')
+  local snippets = method_snippet.generate_all_snippets()
 
-  it('should provide valid n_method_choice snippet with visibility choices', function()
-    local item = method_snippet.method_choice()
-    assert.snippet(
-      'n_method_choice',
-      [[
-      ${1|public,protected,private|} function ${2:name}($3): ${4:void}
-      {
-        $0
-      }
-    ]],
-      item
-    )
+  -- Helper function to find a specific snippet by label from the generated snippets
+  local function find_snippet_by_label(label)
+    for _, snippet in ipairs(snippets) do
+      if snippet.label == label then
+        return snippet
+      end
+    end
+    error("Snippet with label '" .. label .. "' not found")
+  end
+
+  describe('choice methods', function()
+    it('should provide valid n_method_choice snippet with visibility choices', function()
+      assert.snippet(
+        [[
+        ${1|public,protected,private|} function ${2:name}($3): ${4:void}
+        {
+          $0
+        }
+        ]],
+        method_snippet.method_choice()
+      )
+    end)
   end)
 
-  it('should provide valid n_mu snippet for public method', function()
-    local item = method_snippet.method_public()
-    assert.snippet(
-      'n_mu',
-      [[
-      public function ${1:name}($2): ${3:void}
-      {
-        $0
-      }
-    ]],
-      item
-    )
+  describe('basic methods', function()
+    it('should provide valid n_mu snippet for public method', function()
+      assert.snippet(
+        [[
+        public function ${1:name}($2): ${3:void}
+        {
+          $0
+        }
+        ]],
+        find_snippet_by_label('n_mu')
+      )
+    end)
+
+    it('should provide valid n_mo snippet for protected method', function()
+      assert.snippet(
+        [[
+        protected function ${1:name}($2): ${3:void}
+        {
+          $0
+        }
+        ]],
+        find_snippet_by_label('n_mo')
+      )
+    end)
+
+    it('should provide valid n_mi snippet for private method', function()
+      assert.snippet(
+        [[
+        private function ${1:name}($2): ${3:void}
+        {
+          $0
+        }
+        ]],
+        find_snippet_by_label('n_mi')
+      )
+    end)
   end)
 
-  it('should provide valid n_mo snippet for protected method', function()
-    local item = method_snippet.method_protected()
-    assert.snippet(
-      'n_mo',
-      [[
-      protected function ${1:name}($2): ${3:void}
-      {
-        $0
-      }
-    ]],
-      item
-    )
+  describe('static methods', function()
+    it('should provide valid n_mus snippet for public static method', function()
+      assert.snippet(
+        [[
+        public static function ${1:name}($2): ${3:void}
+        {
+          $0
+        }
+        ]],
+        find_snippet_by_label('n_mus')
+      )
+    end)
+
+    it('should provide valid n_mos snippet for protected static method', function()
+      assert.snippet(
+        [[
+        protected static function ${1:name}($2): ${3:void}
+        {
+          $0
+        }
+        ]],
+        find_snippet_by_label('n_mos')
+      )
+    end)
+
+    it('should provide valid n_mis snippet for private static method', function()
+      assert.snippet(
+        [[
+        private static function ${1:name}($2): ${3:void}
+        {
+          $0
+        }
+        ]],
+        find_snippet_by_label('n_mis')
+      )
+    end)
   end)
 
-  it('should provide valid n_mi snippet for private method', function()
-    local item = method_snippet.method_private()
-    assert.snippet(
-      'n_mi',
-      [[
-      private function ${1:name}($2): ${3:void}
-      {
-        $0
-      }
-    ]],
-      item
-    )
-  end)
+  describe('abstract methods', function()
+    it('should provide valid n_mau snippet for abstract public method', function()
+      assert.snippet(
+        [[
+        abstract public function ${1:name}($2): ${3:void};
+        ]],
+        find_snippet_by_label('n_mau')
+      )
+    end)
 
-  it('should provide valid n_mus snippet for public static method', function()
-    local item = method_snippet.method_public_static()
-    assert.snippet(
-      'n_mus',
-      [[
-      public static function ${1:name}($2): ${3:void}
-      {
-        $0
-      }
-    ]],
-      item
-    )
-  end)
+    it('should provide valid n_mao snippet for abstract protected method', function()
+      assert.snippet(
+        [[
+        abstract protected function ${1:name}($2): ${3:void};
+        ]],
+        find_snippet_by_label('n_mao')
+      )
+    end)
 
-  it('should provide valid n_mos snippet for protected static method', function()
-    local item = method_snippet.method_protected_static()
-    assert.snippet(
-      'n_mos',
-      [[
-      protected static function ${1:name}($2): ${3:void}
-      {
-        $0
-      }
-    ]],
-      item
-    )
-  end)
-
-  it('should provide valid n_mis snippet for private static method', function()
-    local item = method_snippet.method_private_static()
-    assert.snippet(
-      'n_mis',
-      [[
-      private static function ${1:name}($2): ${3:void}
-      {
-        $0
-      }
-    ]],
-      item
-    )
-  end)
-
-  it('should provide valid n_mau snippet for abstract public method', function()
-    local item = method_snippet.method_abstract_public()
-    assert.snippet(
-      'n_mau',
-      [[
-      abstract public function ${1:name}($2): ${3:void};
-    ]],
-      item
-    )
-  end)
-
-  it('should provide valid n_mao snippet for abstract protected method', function()
-    local item = method_snippet.method_abstract_protected()
-    assert.snippet(
-      'n_mao',
-      [[
-      abstract protected function ${1:name}($2): ${3:void};
-    ]],
-      item
-    )
-  end)
-
-  it('should provide valid n_mai snippet for abstract private method', function()
-    local item = method_snippet.method_abstract_private()
-    assert.snippet(
-      'n_mai',
-      [[
-      abstract private function ${1:name}($2): ${3:void};
-    ]],
-      item
-    )
+    it('should provide valid n_mai snippet for abstract private method', function()
+      assert.snippet(
+        [[
+        abstract private function ${1:name}($2): ${3:void};
+        ]],
+        find_snippet_by_label('n_mai')
+      )
+    end)
   end)
 end)

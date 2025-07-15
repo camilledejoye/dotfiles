@@ -12,7 +12,11 @@ local Visibility = {
 --- @param label string The snippet label (e.g., 'n_mu', 'n_mus')
 --- @param visibility Visibility The method visibility enum value
 --- @param opts? table Optional modifiers { static = boolean, abstract = boolean, interface = boolean }
---- @return table LSP completion item
+--- @return lsp.CompletionItem LSP completion item
+--- @usage
+--- local snippet = create_method_snippet('n_mu', Visibility.PUBLIC)
+--- local static_snippet = create_method_snippet('n_mus', Visibility.PUBLIC, { static = true })
+--- local abstract_snippet = create_method_snippet('n_mau', Visibility.PUBLIC, { abstract = true })
 local function create_method_snippet(label, visibility, opts)
   opts = opts or {}
 
@@ -37,7 +41,7 @@ local function create_method_snippet(label, visibility, opts)
 end
 
 --- Generate a method snippet with visibility choice (experimental)
---- @return table LSP completion item for PHP method with choice placeholder
+--- @return lsp.CompletionItem LSP completion item for PHP method with choice placeholder
 function M.method_choice()
   return {
     label = 'n_method_choice',
@@ -47,58 +51,35 @@ function M.method_choice()
   }
 end
 
---- Generate a public method snippet (n_mu - method public)
---- @return table LSP completion item for PHP public method
-function M.method_public()
-  return create_method_snippet('n_mu', Visibility.PUBLIC)
-end
+-- Simple table of all method snippet configurations
+local method_snippets = {
+  { label = 'n_mu', visibility = Visibility.PUBLIC },
+  { label = 'n_mo', visibility = Visibility.PROTECTED },
+  { label = 'n_mi', visibility = Visibility.PRIVATE },
+  { label = 'n_mus', visibility = Visibility.PUBLIC, static = true },
+  { label = 'n_mos', visibility = Visibility.PROTECTED, static = true },
+  { label = 'n_mis', visibility = Visibility.PRIVATE, static = true },
+  { label = 'n_mau', visibility = Visibility.PUBLIC, abstract = true },
+  { label = 'n_mao', visibility = Visibility.PROTECTED, abstract = true },
+  { label = 'n_mai', visibility = Visibility.PRIVATE, abstract = true },
+}
 
---- Generate a protected method snippet (n_mo - method protected)
---- @return table LSP completion item for PHP protected method
-function M.method_protected()
-  return create_method_snippet('n_mo', Visibility.PROTECTED)
-end
-
---- Generate a private method snippet (n_mi - method private)
---- @return table LSP completion item for PHP private method
-function M.method_private()
-  return create_method_snippet('n_mi', Visibility.PRIVATE)
-end
-
---- Generate a public static method snippet (n_mus - method public static)
---- @return table LSP completion item for PHP public static method
-function M.method_public_static()
-  return create_method_snippet('n_mus', Visibility.PUBLIC, { static = true })
-end
-
---- Generate a protected static method snippet (n_mos - method protected static)
---- @return table LSP completion item for PHP protected static method
-function M.method_protected_static()
-  return create_method_snippet('n_mos', Visibility.PROTECTED, { static = true })
-end
-
---- Generate a private static method snippet (n_mis - method private static)
---- @return table LSP completion item for PHP private static method
-function M.method_private_static()
-  return create_method_snippet('n_mis', Visibility.PRIVATE, { static = true })
-end
-
---- Generate an abstract public method snippet (n_mau - method abstract public)
---- @return table LSP completion item for PHP abstract public method
-function M.method_abstract_public()
-  return create_method_snippet('n_mau', Visibility.PUBLIC, { abstract = true })
-end
-
---- Generate an abstract protected method snippet (n_mao - method abstract protected)
---- @return table LSP completion item for PHP abstract protected method
-function M.method_abstract_protected()
-  return create_method_snippet('n_mao', Visibility.PROTECTED, { abstract = true })
-end
-
---- Generate an abstract private method snippet (n_mai - method abstract private)
---- @return table LSP completion item for PHP abstract private method
-function M.method_abstract_private()
-  return create_method_snippet('n_mai', Visibility.PRIVATE, { abstract = true })
+--- Generate all method snippets from simple table configuration
+--- @return lsp.CompletionItem[] List of LSP completion items
+--- @usage
+--- local snippets = M.generate_all_snippets()
+--- -- Returns array of completion items for: n_mu, n_mo, n_mi, n_mus, n_mos, n_mis, n_mau, n_mao, n_mai
+function M.generate_all_snippets()
+  local snippets = {}
+  for _, config in ipairs(method_snippets) do
+    local snippet = create_method_snippet(config.label, config.visibility, {
+      static = config.static,
+      abstract = config.abstract,
+      interface = config.interface,
+    })
+    table.insert(snippets, snippet)
+  end
+  return snippets
 end
 
 return M

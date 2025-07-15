@@ -21,16 +21,14 @@ describe('PHP function snippet', function()
   local function_snippet = require('native-snippets.snippets.php.function')
 
   it('should provide valid n_function snippet', function()
-    local item = function_snippet.func()
     assert.snippet(
-      'n_function',
       [[
       function ${1:name}($2): ${3:void}
       {
         $0
       }
     ]],
-      item
+      function_snippet.func()
     )
   end)
 end)

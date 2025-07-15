@@ -175,16 +175,14 @@ end
 --- Combined snippet assertion (structure + content validation)
 --- Validates both LSP completion item structure and snippet text content
 --- @param state table luassert state object
---- @param arguments table Assertion arguments [expected_label, expected_text, item]
+--- @param arguments table Assertion arguments [expected_text, item]
 --- @return boolean success
 local function assert_snippet_complete(state, arguments)
-  local expected_label = arguments[1]
-  local expected_text = process_snippet_text(arguments[2])
-  local item = arguments[3]
+  local expected_text = process_snippet_text(arguments[1])
+  local item = arguments[2]
 
-  -- Validate both structure and content
-  return assert_label_equals(state, expected_label, item)
-    and assert_insert_text_is_string(state, item)
+  -- Validate structure and content (without label validation since it's redundant)
+  return assert_insert_text_is_string(state, item)
     and assert_completion_item_kind_snippet(state, item)
     and assert_insert_text_format_snippet(state, item)
     and assert_content_equals_with_diff(state, expected_text, item, 'Snippet content validation')

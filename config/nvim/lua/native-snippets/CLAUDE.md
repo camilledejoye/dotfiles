@@ -299,3 +299,68 @@ These are tracked improvements to consider implementing:
 - Maintain backward compatibility with current API
 - Add comprehensive test coverage for new LSP features
 - Document new capabilities in this file
+
+## Regex-Style Method Snippets Implementation Plan
+
+**STATUS: IN PROGRESS** - Implementing incremental regex-like method snippet mappings to reproduce convenient shorthand patterns.
+
+### Completed Steps ✅
+
+#### Step 1: Basic Visibility Variants (COMPLETED)
+- ✅ **n_mu** - public method (`n_m[u]` where u = universal/public)
+- ✅ **n_mo** - protected method (`n_m[o]` where o = open to children/protected)  
+- ✅ **n_mi** - private method (`n_m[i]` where i = internal/private)
+- ✅ All tests passing with comprehensive coverage
+- ✅ Integration with completion provider
+- ✅ Committed at: `14d8e5e`
+
+### Next Steps (Remaining Work)
+
+#### Step 2: Static Method Variants (CURRENT TASK)
+**📍 START HERE** - Add static variants of the visibility methods:
+- [ ] **n_mus** - public static method (`n_m[u]s`)
+- [ ] **n_mos** - protected static method (`n_m[o]s`) 
+- [ ] **n_mis** - private static method (`n_m[i]s`)
+
+Pattern: `n_m[uoi]s?` where optional `s` suffix adds `static` keyword.
+
+#### Step 3: Abstract Method Variants
+- [ ] **n_mau** - abstract public method (`n_ma[u]`)
+- [ ] **n_mao** - abstract protected method (`n_ma[o]`)
+- [ ] **n_mai** - abstract private method (`n_ma[i]`)
+
+Pattern: `n_ma[uoi]` where `a` prefix adds `abstract` keyword.
+
+#### Step 4: Validate Abstract Static Combinations
+- [ ] **n_masu** - abstract static public method 
+- [ ] **n_maso** - abstract static protected method
+- [ ] **n_masi** - abstract static private method
+
+Pattern: `n_mas[uoi]` combining both `abstract` and `static` keywords.
+
+#### Step 5: Interface Method Variants (No Body, Semicolon)
+- [ ] **n_m;u** - interface public method (`n_m[;][u]`)
+- [ ] **n_m;o** - interface protected method (`n_m[;][o]`)
+- [ ] **n_m;i** - interface private method (`n_m[;][i]`)
+
+Pattern: `n_m[a;][uoi]` where `;` indicates interface methods (no body, ends with semicolon).
+
+### Implementation Guidelines
+
+**For each step, follow TDD methodology:**
+1. **RED**: Write failing tests for new snippet variants
+2. **GREEN**: Implement minimal code to pass tests
+3. **REFACTOR**: Clean up implementation if needed
+4. **FORMAT**: Apply stylua formatting
+5. **LINT**: Check with luacheck
+6. **VERIFY**: Run full test suite
+7. **COMMIT**: Commit completed step before proceeding
+
+**Key considerations:**
+- Update `completion_provider.lua` to include new snippets
+- Update test count assertions in provider and cmp source tests
+- Maintain consistent naming patterns and documentation
+- Each variant should generate proper PHP syntax for its context
+- Interface methods should not have method bodies, only declarations ending with `;`
+
+**Current Status:** Step 1 completed successfully. Ready to begin Step 2 (static method variants) when development resumes.

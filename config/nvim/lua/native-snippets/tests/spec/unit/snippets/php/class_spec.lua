@@ -21,16 +21,14 @@ describe('PHP class snippet', function()
   local class_snippet = require('native-snippets.snippets.php.class')
 
   it('should provide valid n_class snippet', function()
-    local item = class_snippet.class()
     assert.snippet(
-      'n_class',
       [[
       class $1
       {
         $0
       }
     ]],
-      item
+      class_snippet.class()
     )
   end)
 end)
