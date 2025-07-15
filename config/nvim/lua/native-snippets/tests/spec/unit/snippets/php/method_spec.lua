@@ -139,13 +139,24 @@ describe('PHP method snippet', function()
         find_snippet_by_label('n_mao')
       )
     end)
+  end)
 
-    it('should provide valid n_mai snippet for abstract private method', function()
+  describe('abstract static methods', function()
+    it('should provide valid n_masu snippet for abstract static public method', function()
       assert.snippet(
         [[
-        abstract private function ${1:name}($2): ${3:void};
+        abstract public static function ${1:name}($2): ${3:void};
         ]],
-        find_snippet_by_label('n_mai')
+        find_snippet_by_label('n_masu')
+      )
+    end)
+
+    it('should provide valid n_maso snippet for abstract static protected method', function()
+      assert.snippet(
+        [[
+        abstract protected static function ${1:name}($2): ${3:void};
+        ]],
+        find_snippet_by_label('n_maso')
       )
     end)
   end)

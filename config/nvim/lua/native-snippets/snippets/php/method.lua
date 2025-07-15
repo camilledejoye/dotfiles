@@ -17,6 +17,7 @@ local Visibility = {
 --- local snippet = create_method_snippet('n_mu', Visibility.PUBLIC)
 --- local static_snippet = create_method_snippet('n_mus', Visibility.PUBLIC, { static = true })
 --- local abstract_snippet = create_method_snippet('n_mau', Visibility.PUBLIC, { abstract = true })
+--- local abstract_static_snippet = create_method_snippet('n_masu', Visibility.PUBLIC, { static = true, abstract = true })
 local function create_method_snippet(label, visibility, opts)
   opts = opts or {}
 
@@ -61,14 +62,15 @@ local method_snippets = {
   { label = 'n_mis', visibility = Visibility.PRIVATE, static = true },
   { label = 'n_mau', visibility = Visibility.PUBLIC, abstract = true },
   { label = 'n_mao', visibility = Visibility.PROTECTED, abstract = true },
-  { label = 'n_mai', visibility = Visibility.PRIVATE, abstract = true },
+  { label = 'n_masu', visibility = Visibility.PUBLIC, static = true, abstract = true },
+  { label = 'n_maso', visibility = Visibility.PROTECTED, static = true, abstract = true },
 }
 
 --- Generate all method snippets from simple table configuration
 --- @return lsp.CompletionItem[] List of LSP completion items
 --- @usage
 --- local snippets = M.generate_all_snippets()
---- -- Returns array of completion items for: n_mu, n_mo, n_mi, n_mus, n_mos, n_mis, n_mau, n_mao, n_mai
+--- -- Returns array of completion items for: n_mu, n_mo, n_mi, n_mus, n_mos, n_mis, n_mau, n_mao, n_masu, n_maso
 function M.generate_all_snippets()
   local snippets = {}
   for _, config in ipairs(method_snippets) do
