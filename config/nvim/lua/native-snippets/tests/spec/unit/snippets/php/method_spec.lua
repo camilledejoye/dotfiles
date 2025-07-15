@@ -160,4 +160,24 @@ describe('PHP method snippet', function()
       )
     end)
   end)
+
+  describe('interface methods', function()
+    it('should provide valid n_m;u snippet for interface public method', function()
+      assert.snippet(
+        [[
+        public function ${1:name}($2): ${3:void};
+        ]],
+        find_snippet_by_label('n_m;u')
+      )
+    end)
+
+    it('should provide valid n_m;us snippet for interface static public method', function()
+      assert.snippet(
+        [[
+        public static function ${1:name}($2): ${3:void};
+        ]],
+        find_snippet_by_label('n_m;us')
+      )
+    end)
+  end)
 end)

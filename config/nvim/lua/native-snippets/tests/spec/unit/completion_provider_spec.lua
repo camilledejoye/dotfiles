@@ -29,7 +29,7 @@ describe('CompletionProvider', function()
 
     it('should return global + PHP snippets for php filetype', function()
       local items = CompletionProvider.get_items_for_filetype('php')
-      assert.equals(18, #items) -- 2 global + 16 PHP snippets (choice + visibility + static + abstract variants)
+      assert.equals(20, #items) -- 2 global + 18 PHP snippets (choice + visibility + static + abstract + interface variants)
     end)
   end)
 
@@ -76,6 +76,11 @@ describe('CompletionProvider', function()
       assert.is_true(
         vim.tbl_contains(labels, 'n_maso'),
         'should include n_maso snippet (abstract static protected method)'
+      )
+      assert.is_true(vim.tbl_contains(labels, 'n_m;u'), 'should include n_m;u snippet (interface public method)')
+      assert.is_true(
+        vim.tbl_contains(labels, 'n_m;us'),
+        'should include n_m;us snippet (interface static public method)'
       )
       assert.is_true(vim.tbl_contains(labels, 'n_class'), 'should include n_class snippet')
     end)

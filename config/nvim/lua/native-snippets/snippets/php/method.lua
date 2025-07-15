@@ -18,8 +18,16 @@ local Visibility = {
 --- local static_snippet = create_method_snippet('n_mus', Visibility.PUBLIC, { static = true })
 --- local abstract_snippet = create_method_snippet('n_mau', Visibility.PUBLIC, { abstract = true })
 --- local abstract_static_snippet = create_method_snippet('n_masu', Visibility.PUBLIC, { static = true, abstract = true })
+--- local interface_snippet = create_method_snippet('n_m;u', Visibility.PUBLIC, { interface = true })
 local function create_method_snippet(label, visibility, opts)
   opts = opts or {}
+
+  -- Interface methods are always public in PHP
+  if opts.interface then
+    visibility = Visibility.PUBLIC
+    -- Interface methods cannot be abstract (redundant)
+    opts.abstract = false
+  end
 
   -- Build method declaration: abstract? visibility static?
   local declaration_parts = {}
@@ -64,13 +72,15 @@ local method_snippets = {
   { label = 'n_mao', visibility = Visibility.PROTECTED, abstract = true },
   { label = 'n_masu', visibility = Visibility.PUBLIC, static = true, abstract = true },
   { label = 'n_maso', visibility = Visibility.PROTECTED, static = true, abstract = true },
+  { label = 'n_m;u', visibility = Visibility.PUBLIC, interface = true },
+  { label = 'n_m;us', visibility = Visibility.PUBLIC, static = true, interface = true },
 }
 
 --- Generate all method snippets from simple table configuration
 --- @return lsp.CompletionItem[] List of LSP completion items
 --- @usage
 --- local snippets = M.generate_all_snippets()
---- -- Returns array of completion items for: n_mu, n_mo, n_mi, n_mus, n_mos, n_mis, n_mau, n_mao, n_masu, n_maso
+--- -- Returns array of completion items for: n_mu, n_mo, n_mi, n_mus, n_mos, n_mis, n_mau, n_mao, n_masu, n_maso, n_m;u, n_m;us
 function M.generate_all_snippets()
   local snippets = {}
   for _, config in ipairs(method_snippets) do
