@@ -4,7 +4,7 @@ set -euo pipefail
 
 config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
 declare -A files
-files["alacritty"]="$config_dir/alacritty/alacritty.yml"
+files["alacritty"]="$config_dir/alacritty/alacritty.toml"
 files["bat"]="$config_dir/bat/config"
 files["bspwm: config"]="$config_dir/bspwm/bspwmrc"
 files["bspwm: mappings"]="$config_dir/bspwm/sxhkdrc"
