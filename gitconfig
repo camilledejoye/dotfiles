@@ -109,3 +109,4 @@
 	helper = /usr/lib/git-core/git-credential-libsecret
 [init]
 	defaultBranch = main
+	templatedir = /home/cdejoye/.git-templates
