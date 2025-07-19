@@ -1,9 +1,6 @@
 local dap = require('dap') -- Must be before overriding the signs
 local dapui = require('dapui')
 
-if pcall(require, 'telescope') then
-  require('telescope').load_extension('dap');
-end
 
 dapui.setup {
   icons = { expanded = '', collapsed = '' },
@@ -94,23 +91,3 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
   dapui.close()
 end
-
--- Mappings
-local map = require('cdejoye.utils').map
-
-map('<Leader>dc', [[<cmd>lua require('dap').continue()<CR>]])
-map('<Leader>ds', [[
-  <cmd>lua require('dap').terminate()<CR>
-  <cmd>lua require('dapui').close()<CR>
-]])
-map('<Leader>dd', [[<cmd>lua require('dap').step_over()<CR>]])
-map('<Leader>di', [[<cmd>lua require('dap').step_into()<CR>]])
-map('<Leader>do', [[<cmd>lua require('dap').step_out()<CR>]])
-map('<Leader>db', [[<cmd>lua require('dap').toggle_breakpoint()<CR>]])
-map('<Leader>dB', function()
-  vim.ui.input({ prompt = 'Breakpoint condition: ' }, function(input)
-    require('dap').set_breakpoint(input)
-  end)
-end)
-map('<Leader>dr', [[<cmd>lua require('dap').repl.open()<CR>]])
-map('<Leader>de', [[<cmd>lua require('dapui').eval()<CR>]], 'nv')

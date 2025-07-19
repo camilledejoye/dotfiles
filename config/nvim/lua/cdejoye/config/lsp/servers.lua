@@ -27,7 +27,7 @@ local function register_servers()
   enable('dockerls')
   enable('vimls')
   enable('cssls')
-  -- enable('jdtls') -- Java
+  install('jdtls') -- Java
   enable('pylsp')
 end
 

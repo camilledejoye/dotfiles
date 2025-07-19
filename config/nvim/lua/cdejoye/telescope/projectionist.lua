@@ -113,28 +113,26 @@ local function show_in_picker(alternates, opts)
 end
 
 M.open_alternates = function (opts)
-  return function()
-    opts = opts or {}
-    local alternates = projectionist_alternates()
+  opts = opts or {}
+  local alternates = projectionist_alternates()
 
-    if false ~= opts.only_existing then
-      local readables = readables(alternates)
-      if 0 < #readables then
-        alternates = readables
-      end
+  if false ~= opts.only_existing then
+    local readables = readables(alternates)
+    if 0 < #readables then
+      alternates = readables
     end
+  end
 
-    local count = #alternates
-    if 0 == count then
-      open_with_projectionist_cmd() -- In case I messed up something
-    elseif 1 == count then
-      open(alternates[1])
+  local count = #alternates
+  if 0 == count then
+    open_with_projectionist_cmd() -- In case I messed up something
+  elseif 1 == count then
+    open(alternates[1])
+  else
+    if has_telescope then
+      show_in_picker(alternates, opts)
     else
-      if has_telescope then
-        show_in_picker(alternates, opts)
-      else
-        open_with_projectionist_cmd()
-      end
+      open_with_projectionist_cmd()
     end
   end
 end

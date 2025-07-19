@@ -9,8 +9,11 @@ require('noice').setup({
   lsp = {
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
     override = {
+      -- override the default lsp markdown formatter with Noice
       ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+      -- override the lsp markdown formatter with Noice
       ['vim.lsp.util.stylize_markdown'] = true,
+      -- override cmp documentation with Noice (needs the other options to work)
       ['cmp.entry.get_documentation'] = true,
     },
     signature = { enabled = false },
@@ -49,7 +52,7 @@ require('noice').setup({
 })
 
 if pcall(require, 'telescope') then
-  require('telescope').load_extension('noice');
+  require('telescope').load_extension('noice')
 end
 
 -- Scroll in documentation
@@ -77,9 +80,9 @@ end, { silent = true, expr = true })
 
 -- use Shift + Enter to show the result of a command printing somthing into a popup instead of the usual
 -- notify window
-vim.keymap.set("c", "<S-Enter>", function()
-  require("noice").redirect(vim.fn.getcmdline())
-end, { desc = "Redirect Cmdline" })
+vim.keymap.set('c', '<S-Enter>', function()
+  require('noice').redirect(vim.fn.getcmdline())
+end, { desc = 'Redirect Cmdline' })
 
 -- Theming
 local hi = require('cdejoye.utils').hi

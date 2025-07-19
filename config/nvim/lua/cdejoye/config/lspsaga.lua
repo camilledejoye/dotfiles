@@ -7,6 +7,13 @@ map('<Leader><Leader>', [[<cmd>Lspsaga term_toggle<CR>]])
 
 -- Config
 require('lspsaga').setup({
+  code_action = {
+    show_server_name = true,
+    extend_gitsigns = true,
+    keys = {
+      quit = { 'q', '<Esc>' },
+    },
+  },
   code_action_lightbulb = {
     sign = false,
   },
