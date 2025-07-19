@@ -1,7 +1,7 @@
 local M = {}
 
 -- To quickly switch between php servers
-local should_use_phpactor = true
+local should_use_phpactor = false
 
 local servers = {}
 local function install(name)
