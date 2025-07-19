@@ -4,9 +4,21 @@
 require('nvim-treesitter.configs').setup {
   ensure_installed = 'all', -- Install all modules, allows to include norg which is not part of maintained
 
+   -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+  auto_install = false,
+
+  -- List of parsers to ignore installing (or "all")
+  ignore_install = {},
+
+  modules = {},
+
   highlight = {
     enable = true,
-     -- Needed for correct indentation of method calls on multiple lines and phpdoc
+    -- Needed for correct indentation of method calls on multiple lines and phpdoc
     additional_vim_regex_highlighting = { 'php' },
   },
 

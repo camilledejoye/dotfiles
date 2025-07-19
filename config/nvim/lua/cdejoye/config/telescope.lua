@@ -1,12 +1,21 @@
 -- Telescope: https://github.com/nvim-telescope/telescope.nvim
 local telescope = require('telescope')
 local actions = require('telescope.actions')
-local map = require('cdejoye.utils').map
 local hi = require('cdejoye.utils').hi
 local cmd = vim.cmd
 
+local function load_extension_if_available(name)
+  local extension_is_installed, _ = pcall(require, 'telescope._extensions.'..name)
+  if extension_is_installed then
+    require('telescope').load_extension(name)
+  end
+end
+
+load_extension_if_available('luasnip')
+load_extension_if_available('notify')
+
 -- Setup
-telescope.setup {
+telescope.setup({
   defaults = {
     prompt_prefix = '❯ ',
     selection_caret = '❯ ',
@@ -15,27 +24,27 @@ telescope.setup {
 
     mappings = {
       i = {
-        ["<C-a>"] = actions.select_all,
-        ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
-        ["<C-e>"] = actions.results_scrolling_down,
-        ["<C-y>"] = actions.results_scrolling_up,
+        ['<C-a>'] = actions.select_all,
+        ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+        ['<C-e>'] = actions.results_scrolling_down,
+        ['<C-y>'] = actions.results_scrolling_up,
 
-        ["<C-x>"] = false,
-        ["<C-s>"] = actions.select_horizontal,
-        ["<C-p>"] = "move_selection_previous",
-        ["<C-n>"] = "move_selection_next",
+        ['<C-x>'] = false,
+        ['<C-s>'] = actions.select_horizontal,
+        ['<C-p>'] = 'move_selection_previous',
+        ['<C-n>'] = 'move_selection_next',
 
         -- this is nicer when used with smart-history plugin.
-        ["<C-k>"] = actions.cycle_history_next,
-        ["<C-j>"] = actions.cycle_history_prev,
+        ['<C-k>'] = actions.cycle_history_next,
+        ['<C-j>'] = actions.cycle_history_prev,
 
-        ["<C-space>"] = actions.complete_tag,
+        ['<C-space>'] = actions.complete_tag,
       },
       n = {
-        ["<C-a>"] = actions.select_all,
-        ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
-        ["<C-e>"] = actions.results_scrolling_down,
-        ["<C-y>"] = actions.results_scrolling_up,
+        ['<C-a>'] = actions.select_all,
+        ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+        ['<C-e>'] = actions.results_scrolling_down,
+        ['<C-y>'] = actions.results_scrolling_up,
       },
     },
   },
@@ -83,37 +92,16 @@ telescope.setup {
       override_file_sorter = true,
       case_mode = 'smart_case',
     },
-
-    -- TODO check it out, does not seems to work for staged_grep
-    -- https://github.com/nvim-telescope/telescope-fzf-writer.nvim
-    fzf_writer = {
-      -- Disable by default, can slow down the sorter
-      use_highlighter = false,
-      minimum_grep_characters = 4,
-      minimum_files_characters = 4,
-    },
   },
-}
+})
 telescope.load_extension('fzf')
-
--- Mappings
-map('<Leader>sf', [[<cmd>lua require('cdejoye.config.telescope').find_files()<CR>]])
-map('<Leader>sF', [[<cmd>lua require('telescope.builtin').find_files({ no_ignore = true, hidden = true })<CR>]])
-map('<Leader>sb', [[<cmd>lua require('telescope.builtin').buffers()<CR>]])
-map('<Leader>sgc', [[<cmd>lua require('telescope.builtin').git_commits()<CR>]])
-map('<Leader>sgC', [[<cmd>lua require('telescope.builtin').git_bcommits()<CR>]])
-map('<Leader>sgb', [[<cmd>lua require('telescope.builtin').git_branches()<CR>]])
-map('<Leader>sgs', [[<cmd>lua require('telescope.builtin').git_status()<CR>]])
-map('<Leader>sm', [[<cmd>lua require('telescope.builtin').lsp_document_symbols({ symbols = { 'method' } })<CR>]])
-map('<Leader>rg', [[<cmd>Rg<CR>]])
-map('<Leader>Rg', [[<cmd>Rg!<CR>]])
-map('<Leader>H', [[<cmd>H<CR>]])
-map('z=', [[<cmd>lua require('telescope.builtin').spell_suggest()<CR>]])
 
 -- Commands
 -- Example unpacking command arguments
 -- cmd([[command! -complete=dir -nargs=* Rg lua require('telescope.builtin').live_grep({ search_dirs = { unpack({<f-args>}) } })]])
-cmd([[command! -bang -complete=dir -nargs=* Rg lua require('cdejoye.config.telescope').grep_string({ <f-args> }, '!' == '<bang>')]])
+cmd(
+  [[command! -bang -complete=dir -nargs=* Rg lua require('cdejoye.config.telescope').grep_string({ <f-args> }, '!' == '<bang>')]]
+)
 cmd([[command! H lua require('telescope.builtin').help_tags()]])
 cmd([[command! Tplugins lua require('cdejoye.config.telescope').find_files_in_plugins()]])
 cmd([[command! Tconfig lua require('cdejoye.config.telescope').find_files_in_config()]])
@@ -158,10 +146,13 @@ end
 function M.grep_string(args, bang)
   args = args or {}
   -- Always include hidden files and follow symlinks
-  local vimgrep_arguments = vim.tbl_flatten { require('telescope.config').values.vimgrep_arguments, {
-    '--hidden',
-    '-L',
-  } }
+  local vimgrep_arguments = vim
+    .iter({ require('telescope.config').values.vimgrep_arguments, {
+      '--hidden',
+      '-L',
+    } })
+    :flatten()
+    :totable()
   local options = {
     search_dirs = {}, -- remove the ./ in front of the results if no search_dirs are provided
     use_regex = true, -- Will only be used if options.search is defined
@@ -179,7 +170,7 @@ function M.grep_string(args, bang)
 
   if bang then
     options = vim.tbl_extend('force', {
-      vimgrep_arguments = vim.tbl_flatten { vimgrep_arguments, { '--no-ignore' } }
+      vimgrep_arguments = vim.iter({ vimgrep_arguments, { '--no-ignore' } }):flatten():totable(),
     }, options)
   end
 
@@ -190,7 +181,7 @@ function M.live_grep(options)
   local vimgrep_arguments = require('telescope.config').values.vimgrep_arguments
 
   return builtin.live_grep(vim.tbl_extend('force', {
-    vimgrep_arguments = vim.tbl_flatten { vimgrep_arguments, { '--hidden', '--no-ignore', '-L' } }
+    vimgrep_arguments = vim.iter({ vimgrep_arguments, { '--hidden', '--no-ignore', '-L' } }):flatten():totable(),
   }, options or {}))
 end
 
