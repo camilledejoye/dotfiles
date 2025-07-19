@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Git hook to copy CLAUDE.local.md to new worktrees
+# This runs after checkout (including worktree creation)
+
+# Check if this is a worktree checkout (not just a branch switch)
+if [ "$3" = "1" ]; then
+    # Find the main worktree (where CLAUDE.local.md should exist)
+    main_worktree=$(git worktree list | head -1 | cut -d' ' -f1)
+    claude_file="$main_worktree/CLAUDE.local.md"
+    
+    # If CLAUDE.local.md exists in main worktree and doesn't exist here, copy it
+    if [ -f "$claude_file" ] && [ ! -f "CLAUDE.local.md" ]; then
+        cp "$claude_file" "CLAUDE.local.md"
+        echo "Copied CLAUDE.local.md to new worktree"
+    fi
+fi
