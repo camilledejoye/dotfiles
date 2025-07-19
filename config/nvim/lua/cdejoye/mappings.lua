@@ -49,13 +49,11 @@ local cmd = vim.cmd
 -- Terminal {{{
   -- Close integrated terminal with Escape
   map('t', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true })
+  -- To actually send <Esc> to the terminal
   map('t', '<C-Esc>', [[<Esc>]], { noremap = true, silent = true })
   map('t', '<S-Esc>', [[<Esc>]], { noremap = true, silent = true })
-  -- Works to make <CR> enter a new line in claudecode chat, the \ character is visible but claudecode says it
-  -- understand it as a line continuation and its not an issue
-  map('t', '<CR>', [[\<CR>]], { noremap = true, silent = true })
-  map('t', '<C-CR>', [[<CR>]], { noremap = true, silent = true })
-  map('t', '<S-CR>', [[<CR>]], { noremap = true, silent = true })
+  -- To enter a line continuation
+  map('t', '<S-CR>', [[\<CR>]], { noremap = true, silent = true })
 -- }}}
 
 -- Miscellaneous {{{
