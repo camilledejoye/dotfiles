@@ -10,6 +10,8 @@
     branch = auto
     interactive = auto
     diff = auto
+[pretty]
+    oneliner = '%C(auto)%h %cd %C(blue)%an%C(reset)%C(auto) %d %s'
 [alias]
     st = status -s -b
     sts = !git st
@@ -22,7 +24,7 @@
     ck = checkout
     pr = pull --rebase --autostash
 
-    lg = log --date=short --format=format:'%C(auto)%h %cd %C(blue)%an%C(reset)%C(auto) %d %s' --graph
+    lg = log --date=short --format=oneliner --graph
     la = !git lg --all
     l = !git lg @{upstream}..HEAD
 
