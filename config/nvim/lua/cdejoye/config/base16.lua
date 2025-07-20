@@ -1,33 +1,4 @@
--- https://github.com/glepnir/lspsaga.nvim
-local map = require('cdejoye.utils').map
-
--- Mappings
-map('gH', [[<cmd>Lspsaga peek_definition<CR>]])
-map('<Leader><Leader>', [[<cmd>Lspsaga term_toggle<CR>]])
-
--- Config
-require('lspsaga').setup({
-  code_action = {
-    show_server_name = true,
-    extend_gitsigns = true,
-    keys = {
-      quit = { 'q', '<Esc>' },
-    },
-  },
-  code_action_lightbulb = {
-    sign = false,
-  },
-  symbol_in_winbar = {
-    enable = true,
-    show_file = false,
-  },
-})
-
--- Theming
-local colorscheme = vim.g.colors_name
-local is_base16 = 'string' == type(colorscheme) and 'base16' == colorscheme:sub(1, 6)
-
-if is_base16 then
+local function customize_lspsaga()
   local hi = require('cdejoye.utils').hi
   local colors = require('base16-colorscheme').colors
 
@@ -82,3 +53,50 @@ if is_base16 then
 
   hi('LspSagaLightBulb', 'LspDiagnosticsDefaultHint')
 end
+
+-- Tweaks the colors to my taste with a base16 theme
+local function customize_base16()
+  local colors = require('base16-colorscheme').colors
+  local cursorline = colors.base01
+  local visual = colors.base02
+  local comment = colors.base03
+  local blue = colors.base0D
+
+  local hi = require('cdejoye.utils').hi
+
+  hi('FloatBorder', { guifg = blue })
+
+  hi('EndOfBuffer', { guifg = 'bg' }) -- Hide the ~ in the number column
+  hi('VertSplit', { guifg = visual }) -- Color of the border between vertival splits
+
+  hi('LineNr', { guifg = comment }) -- Color of the line numbers
+  hi('CursorLineNr', { guifg = blue, guibg = 'bg' }) -- Color of the current line number
+
+  hi('Pmenu', { guifg = comment, guibg = cursorline, gui = 'italic' }) -- Completion menu
+  hi('PmenuSel', { guifg = 'none', guibg = 'bg', gui = 'bold' }) -- Selected item
+  hi('PmenuSbar', 'Pmenu') -- Completion menu scrollbar
+  hi('PmenuThumb', { guibg = visual }) -- Completion menu scrollbar's button
+  -- Custom ones to use for floating window showing documentation during completion
+  hi('PmenuBorder', 'PmenuInvisibleBorder')
+  -- Hide the borders by using the same fg and bg but keep the padding having by using borders
+  hi('PmenuInvisibleBorder', { guifg = cursorline, guibg = cursorline })
+
+  hi('CmpItemAbbrMatch', { guifg = blue, gui = 'bold' })
+
+  hi('yamlTSField', 'TSKeyword')
+end
+
+local M = {}
+function M.setup()
+  local augroup = vim.api.nvim_create_augroup('cdejoye_base16_colorscheme', {})
+  vim.api.nvim_create_autocmd('Colorscheme', {
+    callback = function()
+      customize_base16()
+      customize_lspsaga()
+    end,
+    pattern = 'base16-*',
+    group = augroup,
+  })
+end
+
+return M
