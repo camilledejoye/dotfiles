@@ -86,13 +86,39 @@ local function customize_base16()
   hi('yamlTSField', 'TSKeyword')
 end
 
+local function customize_dapui()
+  vim.cmd([[
+    hi! def link DapUIBreakpointsCurrentLine ModeMsg
+    hi! def link DapUIBreakpointsPath TSFunction
+    hi! def link DapUIBreakpointsLine DapUIBreakpointsLine
+    hi! def link DapUIBreakpointsInfo TSString
+
+
+    hi! def link DapUIWatchesValue TSString
+    hi! def link DapUIWatchesError TSErrorMsg
+    hi! def link DapUIWatchesEmpty DapUIWatchesValue
+
+    hi! def link DapUIFloatBorder DapUIDecoration
+    hi! def link DapUILineNumber TSFunction
+    hi! def link DapUIDecoration TSFunction
+    hi! def link DapUIFrameName Normal
+    hi! def link DapUIVariable TSVariable
+    hi! def link DapUIThread TSString
+    hi! def link DapUIStoppedThread TSFunction
+    hi! def link DapUIType TSType
+    hi! def link DapUISource DapUIType
+    hi! def link DapUIScope TSFunction
+  ]])
+end
+
 local M = {}
 function M.setup()
-  local augroup = vim.api.nvim_create_augroup('cdejoye_base16_colorscheme', {})
+  local augroup = vim.api.nvim_create_augroup('cdejoye_base16_colorscheme', { clear = true })
   vim.api.nvim_create_autocmd('Colorscheme', {
     callback = function()
       customize_base16()
       customize_lspsaga()
+      customize_dapui()
     end,
     pattern = 'base16-*',
     group = augroup,
