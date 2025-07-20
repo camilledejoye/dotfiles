@@ -11,7 +11,8 @@ This is a Neovim configuration written in Lua using the Lazy plugin manager. The
 ### Core Structure
 - `init.lua` - Main entry point that loads plugins and basic configuration
 - `lua/cdejoye/` - Main configuration namespace containing all custom modules
-- `lua/cdejoye/plugins.lua` - Plugin definitions using Lazy.nvim
+- `lua/cdejoye/lazy.lua` - Plugin definitions using Lazy.nvim
+- `lua/cdejoye/plugins/` - Plugins spec loaded by Lazy.nvim
 - `lua/cdejoye/config/` - Individual plugin configurations
 - `lua/cdejoye/mappings.lua` - Custom key mappings
 - `ftplugin/` - Filetype-specific configurations
