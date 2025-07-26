@@ -127,44 +127,44 @@ map('i', '<C-S-s>', '', {
 })
 
 -- Jump to next snippet placeholder
-map('i', '<C-j>', '', {
-  noremap = true,
-  silent = true,
-  callback = function()
-    if vim.snippet.active({ direction = 1 }) then
-      vim.snippet.jump(1)
-    end
-  end,
-})
-map('s', '<C-j>', '', {
-  noremap = true,
-  silent = true,
-  callback = function()
-    if vim.snippet.active({ direction = 1 }) then
-      vim.snippet.jump(1)
-    end
-  end,
-})
-
--- Jump to previous snippet placeholder
-map('i', '<C-k>', '', {
-  noremap = true,
-  silent = true,
-  callback = function()
-    if vim.snippet.active({ direction = -1 }) then
-      vim.snippet.jump(-1)
-    end
-  end,
-})
-map('s', '<C-k>', '', {
-  noremap = true,
-  silent = true,
-  callback = function()
-    if vim.snippet.active({ direction = -1 }) then
-      vim.snippet.jump(-1)
-    end
-  end,
-})
+-- map('i', '<C-j>', '', {
+--   noremap = true,
+--   silent = true,
+--   callback = function()
+--     if vim.snippet.active({ direction = 1 }) then
+--       vim.snippet.jump(1)
+--     end
+--   end,
+-- })
+-- map('s', '<C-j>', '', {
+--   noremap = true,
+--   silent = true,
+--   callback = function()
+--     if vim.snippet.active({ direction = 1 }) then
+--       vim.snippet.jump(1)
+--     end
+--   end,
+-- })
+--
+-- -- Jump to previous snippet placeholder
+-- map('i', '<C-k>', '', {
+--   noremap = true,
+--   silent = true,
+--   callback = function()
+--     if vim.snippet.active({ direction = -1 }) then
+--       vim.snippet.jump(-1)
+--     end
+--   end,
+-- })
+-- map('s', '<C-k>', '', {
+--   noremap = true,
+--   silent = true,
+--   callback = function()
+--     if vim.snippet.active({ direction = -1 }) then
+--       vim.snippet.jump(-1)
+--     end
+--   end,
+-- })
 -- }}}
 
 -- vim: ts=2 sw=2 et fdm=marker
