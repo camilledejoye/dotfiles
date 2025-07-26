@@ -3,6 +3,7 @@
     email = camilledejoye@gmail.com
 [core]
     editor = nvim
+    pager = bat
     whitespace = -trailing-space,-indent-with-non-tab,-tab-in-indent
     excludesfile = ~/.gitignore
 [color]
@@ -92,17 +93,28 @@
     theirs = "!f() { git checkout --theirs $@ && git add $@; }; f"
 [push]
     default = simple
+[diff]
+  tool = diffview
+[difftool "diffview"]
+  cmd = nvim -c \"DiffviewOpen\"
 [merge]
+    ; tool = nvimdiff
+    ; tool = fugitive
     tool = diffview
-[rebase]
-    autoStash = true
-; [mergetool "fugitive"]
-;     cmd = nvim -c \"Gdiff!\" \"$MERGED\"
+[mergetool]
+    prompt = false
+    keepBackup = false
+[mergetool "fugitive"]
+    cmd = nvim -c \"Gdiff!\" \"$MERGED\"
 [mergetool "diffview"]
-    cmd = nvim -c \"DiffviewOpen\" \"$MERGED\"
+    cmd = nvim -n -c \"DiffviewOpen\" \"$MERGED\"
+[mergetool "nvimdiff"]
+    layout = "LOCAL,BASE,REMOTE / MERGED"
 [grep]
     lineNumber = true
     fallbackToNoIndex = true
+[rebase]
+    autoStash = true
 [remote]
     pushDefault = origin
 [credential]
@@ -110,3 +122,5 @@
 [init]
 	defaultBranch = main
 	templatedir = /home/cdejoye/.git-templates
+[rerere]
+	enabled = true
