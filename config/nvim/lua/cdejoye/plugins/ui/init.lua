@@ -22,6 +22,17 @@ return {
     init = function()
       vim.notify = require('notify').notify
     end,
+    opts = {
+      -- I had this notification otherwise:
+      -- Please provide an RGB hex value or highlight group with a background value for 'background_colour' option.
+      -- This is the colour that will be used for 100% transparency.
+      -- ```lua
+      -- require("notify").setup({
+      --   background_colour = "#000000",
+      -- })
+      -- ```
+      background_colour = "#000000",
+    },
   },
 
   -- { -- notifier.nvim
