@@ -12,7 +12,7 @@
     interactive = auto
     diff = auto
 [pretty]
-    oneliner = '%C(auto)%h %cd %C(blue)%an%C(reset)%C(auto) %d %s'
+    oneliner = %C(auto)%h %cd %C(blue)%an%C(reset)%C(auto) %d %s
 [alias]
     st = status -s -b
     sts = !git st
