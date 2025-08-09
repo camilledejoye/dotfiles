@@ -27,7 +27,7 @@ return {
     end,
   },
   'tpope/vim-abolish',
-  { 'tpope/vim-fugitive', keys = { { '<Leader>gb', ':Git blame<CR>' } } },
+  'tpope/vim-commentary',
   'tpope/vim-repeat',
   'tpope/vim-dispatch',
   'radenling/vim-dispatch-neovim',
