@@ -35,7 +35,7 @@ return {
       --   background_colour = "#000000",
       -- })
       -- ```
-      background_colour = "#000000",
+      background_colour = '#000000',
     },
     keys = {
       {
@@ -43,7 +43,7 @@ return {
         function()
           require('notify').dismiss({ silent = true, pending = true })
         end,
-      }
+      },
     },
   },
 
@@ -65,4 +65,26 @@ return {
   --     },
   --   end,
   -- },
+
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    ---@module "ibl"
+    ---@type ibl.config
+    opts = {
+      indent = {
+        char = '▎',
+        -- char = '┊',
+      },
+      scope = {
+        show_start = false,
+        show_end = false,
+        include = {
+          node_type = {
+            php = { 'compound_statement' }, -- for all blocks: if, for, etc.
+          },
+        },
+      },
+    },
+  },
 }
