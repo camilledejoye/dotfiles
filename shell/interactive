@@ -62,7 +62,27 @@ alias dcr='dc run'
 alias dcu='dc up -d'
 alias dk='docker'
 alias dm='docker-machine'
-alias dmleave='eval $(docker-machine env -u)'
+
+unalias dcrm
+dcrm() {
+  if [ -z "$1" ]; then
+    echo "Usage: dcrm <service_name>"
+    return 1
+  fi
+
+  service="$1"
+  docker compose stop "$service" && docker compose rm --force "$service"
+}
+
+dcrr() {
+  if [ -z "$1" ]; then
+    echo "Usage: dcrr <service_name>"
+    return 1
+  fi
+
+  service="$1"
+  docker compose stop "$service" && docker compose rm --force "$service" && docker compose up -d "$service"
+}
 
 # }}}
 
