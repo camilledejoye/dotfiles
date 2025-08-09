@@ -133,43 +133,24 @@ local M = {
     '--using-cache=no',
     '--show-progress=none',
     '--no-interaction',
-    '-', -- to process from stdin
+    '--path-mode=intersection', -- prevent having results for files which are not returned by the defined finder
   },
-  stdin = true,
+  -- this is convenient to not deal with container path mapping
+  -- but that prevent leveraging `--path-mode=intersection` which avoid having feedbacks on files that should
+  -- be ignored
+  stdin = false,
   ignore_exitcode = true,
   stream = 'stdout', -- to only get the JSON and none of the human readable output
 }
 
-function M.parser(output, bufnr)
+function M.parser(output, bufnr, _)
   local diagnostics = {}
-
-  local bufname = vim.fn.bufname(bufnr)
-  local globs = { 'vendor/*', 'var/*' }
-  local should_ignore = function(glob)
-    -- If the files where opened from the main project their bufname might start from the root of the project
-    for _, cwd in pairs(vim.lsp.buf.list_workspace_folders()) do
-      local workspace_glob = cwd .. '/' .. glob
-      local matches = vim.regex(vim.fn.glob2regpat(workspace_glob)):match_str(bufname)
-      if matches then
-        return true
-      end
-    end
-
-    -- Try without workspace folder, i.e. file open directly from an exlcuded folder will have a filename:
-    return vim.regex(vim.fn.glob2regpat(glob)):match_str(bufname)
-  end
-
-  for _, glob in pairs(globs) do
-    if should_ignore(glob) then
-      return {}
-    end
-  end
 
   if output == nil or vim.trim(output) == '' then
     return diagnostics
   end
 
-  -- Only one file is returned when processing stdin
+  -- Only one file is returned when linting a buffer
   local _, file = next(vim.json.decode(output).files)
   if not file then -- no errors
     return diagnostics

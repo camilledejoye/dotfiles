@@ -27,7 +27,6 @@ return {
         function()
           require('conform').format({ async = true })
         end,
-        mode = '',
         desc = 'Format buffer',
       },
     },
@@ -39,6 +38,7 @@ return {
     ---@module "conform"
     ---@type conform.setupOpts
     opts = {
+      -- log_level = vim.log.levels.DEBUG,
       -- Set default options
       default_format_opts = {
         lsp_format = 'fallback',

@@ -1,34 +1,39 @@
 local linters = require('lint').linters
 local utils = require('cdejoye.utils')
 local processors = require('cdejoye.config.nvim-lint.processors')
-local phpstan = linters.phpstan
+local phpstan = linters.phpstan --[[@as lint.Linter]]
 
--- -- 2025-01-29: commented because it seems it doesn't work anymore when going through a custom script
--- -- But using vendor/bin/phpstan works
--- phpstan.cmd = function()
---   return utils.find_executable('phpstan', {
---     'tools',
---     'tools/phpstan/vendor/bin',
---     'vendor/bin',
---   })
--- end
+-- Select the first executable, in order, found in the PATH:
+-- * phpstan
+-- * tools/phpstan
+-- * tolls/phpstan/vendor/bin/phpstan
+-- * vendor/bin/phpstan
+phpstan.cmd = utils.find_executable('phpstan', {
+  'tools',
+  'tools/phpstan/vendor/bin',
+  'vendor/bin',
+})
 
--- Disable memory limit, at least needed when using local binary for my current project
+-- Always run for the full project, cache make it as fast as on one file (outside of first run)
+-- Without this we don't actually parse traits because when providing a file to analyze phpstan doesn't load
+-- the traits used in it: https://phpstan.org/blog/how-phpstan-analyses-traits
+phpstan.append_fname = false
+
 table.insert(phpstan.args, '--memory-limit=-1')
 
-return require('lint.util').wrap(phpstan, function(diagnostic)
-  return processors.apply_format(
-    processors.ensure_underline(diagnostic)
-  )
+-- phpstan default parser doesn't correctly define the diagnostic
+-- this prevent neovim from underlining it correctly
+local new_linter = require('lint.util').wrap(phpstan, function(diagnostic)
+  return processors.apply_format(processors.ensure_underline(diagnostic))
 end)
 
---Kept as an example of usage in case I need my wrapper again
------@param diagnostic vim.Diagnostic
------@param bufnr integer
---return require('cdejoye.config.nvim-lint.util').wrap(phpstan, function(diagnostic, bufnr)
---  return processors.apply_format(
---    processors.ensure_underline(
---      processors.set_bufnr_on_diagnostic(diagnostic, bufnr)
---    )
---  )
---end)
+-- Return a function to delay the resolution of cwd
+-- This way we run phpstan in the folder containing the config file for the current buffer
+return function()
+  new_linter.cwd = vim.fs.root(0, {
+    {'phpstan.neon'}, -- Look for local config file first
+    {'phpstan.neon.dist', 'phpstan.dist.neon'}, -- Look for project config file otherwise
+  })
+  return new_linter
+end
+

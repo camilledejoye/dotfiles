@@ -2,6 +2,10 @@ local utils = require('cdejoye.utils')
 
 ---@type conform.FileFormatterConfig
 return {
+  meta = {
+    url = "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer",
+    description = "The PHP Coding Standards Fixer.",
+  },
   command = function()
     return utils.find_executable('php-cs-fixer', {
       'tools',
@@ -14,22 +18,18 @@ return {
     '--using-cache=no',
     '--show-progress=none',
     '--no-interaction',
+    '--path-mode=intersection', -- prevents formatting files excluded from php-cs-fixer config
     '$RELATIVE_FILEPATH',
   },
-  ---@param self conform.FormatterConfig
-  ---@param ctx conform.Context
-  condition = function(self, ctx)
-    local root_dir = self:cwd(ctx)
-    local bufname_match = function(glob)
-      glob = root_dir..'/'..glob
-
-      return vim.regex(vim.fn.glob2regpat(glob)):match_str(ctx.filename)
-    end
-
-    return not(
-      bufname_match('vendor/*')
-      or bufname_match('var/*')
-      -- or bufname_match('tests/*')
-    )
-  end,
+  -- Must not use filename starting with a dot (default is ".conform.$RANDOM.$FILENAME")
+  -- Otherwise php-cs-fixer, with --path-mode=interaction, will ignore it
+  tmpfile_format = 'Conform-$RANDOM-$FILENAME',
+  -- The default is to look for composer.json
+  -- The reason I need to look for `.git` first, is the mono-repo
+  -- We have the same style rules for all projects in it
+  -- So the config file is at the git root not project root.
+  -- Mono-repo which choose to keep different settings would benefit from the other default
+  cwd = function(_, ctx)
+    return vim.fs.root(ctx.dirname, { { '.git' }, { 'composer.json' } })
+  end
 }
