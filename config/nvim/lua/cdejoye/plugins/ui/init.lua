@@ -33,6 +33,14 @@ return {
       -- ```
       background_colour = "#000000",
     },
+    keys = {
+      {
+        '<S-Escape>',
+        function()
+          require('notify').dismiss({ silent = true, pending = true })
+        end,
+      }
+    },
   },
 
   -- { -- notifier.nvim
