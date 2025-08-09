@@ -43,9 +43,8 @@ return { -- GitSigns
       end)
       bmap('n', '<leader>Rh', gs.reset_buffer)
       bmap('n', '<leader>ph', gs.preview_hunk)
-      bmap('n', '<leader>bh', function()
-        gs.blame_line({ full = true })
-      end)
+      bmap('n', '<leader>gb', gs.blame_line)
+      bmap('n', '<leader>gB', gs.blame)
       bmap('n', '<leader>Sh', gs.stage_buffer)
       bmap('n', '<leader>Uh', gs.reset_buffer_index)
 
@@ -61,5 +60,9 @@ return { -- GitSigns
       -- Text object
       bmap('ox', 'ih', gs.select_hunk)
     end,
+
+    preview_config = {
+      border = 'rounded',
+    }
   },
 }

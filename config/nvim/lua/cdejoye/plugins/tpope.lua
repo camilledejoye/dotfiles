@@ -28,6 +28,8 @@ return {
   },
   'tpope/vim-abolish',
   'tpope/vim-commentary',
+  -- Try to remove it to see what I might used by habits but don't remember it came from this plugin
+  -- { 'tpope/vim-fugitive', lazy = false, keys = { { '<Leader>gb', ':Git blame<CR>' } } },
   'tpope/vim-repeat',
   'tpope/vim-dispatch',
   'radenling/vim-dispatch-neovim',
