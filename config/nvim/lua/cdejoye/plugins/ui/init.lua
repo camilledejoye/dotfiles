@@ -2,6 +2,10 @@
 --- @type LazySpec[]
 return {
   require('cdejoye.plugins.ui.tree-sitter'),
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+  },
   require('cdejoye.plugins.ui.lualine'),
   'camilledejoye/vim-cleanfold',
 

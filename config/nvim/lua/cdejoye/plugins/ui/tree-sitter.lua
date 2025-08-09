@@ -6,23 +6,72 @@ return {
   branch = 'master', -- Make sure to specify the master branch, as the default branch will switch to main in the future
   lazy = false, -- does not support lazy-loading
   build = ':TSUpdate',
-  dependencies = {
-    { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter' },
-  },
   init = function()
     vim.opt.foldmethod = 'expr'
     vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
     vim.opt.foldenable = false
   end,
+  config = function(_, opts)
+    require('nvim-treesitter.configs').setup(opts)
+  end,
   opts = {
-    ensure_installed = 'all', -- Install all modules, allows to include norg which is not part of maintained
+    ensure_installed = {
+      'bash',
+      'caddy',
+      -- 'comment', -- Apparently it's slow
+      'css',
+      'diff',
+      'dockerfile',
+      'editorconfig',
+      'git_config',
+      'git_rebase',
+      'gitattributes',
+      'gitcommit',
+      'gitignore',
+      'helm',
+      'hjson',
+      'html',
+      'http',
+      'ini',
+      'java',
+      'javadoc',
+      'javascript',
+      'jq',
+      'jsdoc',
+      'json',
+      'json5',
+      'jsonc',
+      'lua',
+      'luadoc',
+      'make',
+      'markdown',
+      'markdown_inline',
+      'mermaid',
+      'php',
+      'phpdoc',
+      'python',
+      'regex',
+      'scss',
+      'sql',
+      'sxhkdrc',
+      'terraform',
+      'toml',
+      'tsx',
+      'twig',
+      'typescript',
+      'vim',
+      'vimdoc',
+      'xml',
+      'xresources',
+      'yaml',
+    },
 
     -- Install parsers synchronously (only applied to `ensure_installed`)
     sync_install = false,
 
     -- Automatically install missing parsers when entering buffer
     -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-    auto_install = false,
+    auto_install = true,
 
     -- List of parsers to ignore installing (or "all")
     ignore_install = {},
