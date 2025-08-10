@@ -226,9 +226,6 @@ ls.add_snippets('all', {
   end) }),
 })
 
--- Disable for now, I will keep using UltiSnips to limit the amount of work
--- And only use luasnip for LSP snippets since I can't manage to make UltiSnips works
--- properly in this situation
 ls.add_snippets('php', {
   -- Class
   s({ trig = '([af]?)class', regTrig = true }, fmt('{phptag}{namespace}{type}class {name}\n{{\n\t{body}\n}}', {

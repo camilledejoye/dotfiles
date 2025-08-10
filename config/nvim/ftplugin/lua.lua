@@ -1,9 +1,6 @@
 local bo = vim.bo
 local map = require("cdejoye.utils").map
 
-bo.tabstop = 2
-bo.softtabstop = bo.tabstop
-bo.shiftwidth = bo.tabstop
 bo.comments = ":---,:--"
 
 vim.cmd([[

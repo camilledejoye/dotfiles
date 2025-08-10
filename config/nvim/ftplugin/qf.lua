@@ -1,8 +1,6 @@
 local api, fn = vim.api, vim.fn
 
-local M = {}
-
-function M.remove_item(index)
+local function remove_item(index)
   local cursor_line, cursor_column = unpack(api.nvim_win_get_cursor(0))
   local items = fn.getqflist()
   index = index or cursor_line
@@ -17,4 +15,8 @@ function M.remove_item(index)
   api.nvim_win_set_cursor(0, { cursor_line, cursor_column })
 end
 
-return M
+vim.keymap.set('n', 'dd', remove_item, {
+  noremap = true,
+  silent = true,
+  buffer = true,
+})

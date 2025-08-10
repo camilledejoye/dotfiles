@@ -116,7 +116,6 @@ return {
             spell = '[Spell]',
             nvim_lsp = '[LSP]',
             luasnip = '[LuaSnip]',
-            ultisnips = '[UltiSnips]',
             nvim_lua = '[Lua]',
             latex_symbols = '[Latex]',
             neorg = '[Neorg]',

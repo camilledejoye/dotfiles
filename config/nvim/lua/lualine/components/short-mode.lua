@@ -1,9 +1,10 @@
-local ShortMode = require('lualine.component'):extend()
+local M = require('lualine.component'):extend()
+require('lualine.components.branch')
 
 -- List of mode -> :h mode()
 -- Use only the first letter as recommended by the documentation
 -- Use byte code because for some modes it's what we got, for instance with visual block
-ShortMode.mode2byte = {
+M.mode2byte = {
   normal       = 110,
   prompt       = 114,
   command      = 99,
@@ -19,8 +20,8 @@ ShortMode.mode2byte = {
   select_block = 94,
 }
 
-ShortMode.init = function(self, options)
-  ShortMode.super.init(self, options)
+function M:init(options)
+  M.super:init(options)
 
   self.options.mode_text = vim.tbl_extend('keep', self.options.mode_text or {}, {
     [self.mode2byte.normal]       = 'N',
@@ -39,10 +40,10 @@ ShortMode.init = function(self, options)
   })
 end
 
-ShortMode.update_status = function (self)
+function M:update_status()
   local mode = vim.api.nvim_get_mode().mode
 
   return self.options.mode_text[mode:byte()] or mode
 end
 
-return ShortMode
+return M

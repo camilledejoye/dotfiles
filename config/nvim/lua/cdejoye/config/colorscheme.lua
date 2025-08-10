@@ -23,7 +23,7 @@ local function load_colorscheme(colorscheme)
 end
 
 local index = 0
-vim.keymap.set('n', '<C-Left>', function()
+vim.keymap.set('n', '<C-S-Left>', function()
   index = index <= 1 and #colorschemes or index - 1
   load_colorscheme(colorschemes[index])
 end, {
@@ -32,7 +32,7 @@ end, {
     desc = 'Select the previous colorscheme',
   })
 
-vim.keymap.set('n', '<C-Right>', function()
+vim.keymap.set('n', '<C-S-Right>', function()
   index = #colorschemes == index and 1 or index + 1
   load_colorscheme(colorschemes[index])
 end, {
@@ -43,10 +43,4 @@ end, {
 
 require('cdejoye.config.base16').setup()
 
-local vim_dir = vim.fn.fnamemodify(vim.env.MYVIMRC, ':h')
-local colorschemeFile = vim_dir .. '/colorscheme.vim'
-if vim.fn.filereadable(colorschemeFile) then
-  vim.cmd('source ' .. colorschemeFile)
-else
-  vim.cmd('colorscheme base16-tomorrow-night')
-end
+vim.cmd('colorscheme onedark')

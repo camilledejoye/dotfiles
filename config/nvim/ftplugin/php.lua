@@ -1,4 +1,4 @@
-local b, bo, wo = vim.b, vim.bo, vim.wo
+local bo, wo = vim.bo, vim.wo
 local bmap = function(...) require('cdejoye.utils').bmap(0, ...) end
 
 local function t(str)

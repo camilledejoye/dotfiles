@@ -1,9 +1,0 @@
-snippet "(\S.*)\!if" "negative if postfix code" br
-if (!`!p snip.rv = match.group(1)`) {
-	${0}
-}
-endsnippet
-
-snippet "\B('.+')\B\.sprintf" "sprintf postfix code" wr
-sprintf(`!p snip.rv = match.group(1)`, ${0})
-endsnippet

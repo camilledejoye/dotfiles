@@ -1,3 +1,5 @@
+local icons = require('cdejoye.icons')
+
 local condition = {
   width = {
     gt = function(ceiling)
@@ -36,12 +38,10 @@ end
 local fileicon = { 'filetype', icon_only = true, padding = { left = 1, right = 0 } }
 local filename = {
   'filename',
-  symbols = { modified = ' ●', readonly = ' ' },
+  symbols = { modified = ' ●', readonly = ' ' },
   path = 1, -- relative path
   shorting_target = 0, -- do not shorten filenames
 }
-
-local icons = require('cdejoye.icons')
 
 local diagnostics = {
   'diagnostics',
@@ -54,17 +54,6 @@ local diagnostics = {
 }
 
 local branch = { 'branch', icon = icons.git.branch }
-
-local loaded, search_results = pcall(function()
-  return {
-    require('noice').api.status.search.get,
-    cond = require('noice').api.status.search.has,
-    color = { fg = 'ff9e64' },
-  }
-end)
-if not loaded then
-  search_results = ''
-end
 
 --- @module lazy
 --- @type LazySpec
@@ -92,7 +81,7 @@ return {
       },
       lualine_b = { truncate, branch },
       lualine_c = { fileicon, filename },
-      lualine_x = { search_results, diagnostics },
+      lualine_x = { diagnostics },
       lualine_y = {
         { percent, condition = condition.width.gt(50) },
         { maxline, condition = condition.width.gt(100) },

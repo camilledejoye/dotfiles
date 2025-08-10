@@ -19,14 +19,14 @@ local icons = {
     thin = '',
     thick = '',
     circle = {
-      default = '',
-      empty = '',
+      default = '',
+      empty = '',
       full = '',
     },
     square = {
-      default = '',
-      empty = '',
-      full = '',
+      default = '',
+      empty = '',
+      full = '', -- didn't find any
     },
   },
   arrow = {
@@ -47,7 +47,7 @@ local icons = {
 
 return vim.tbl_extend('force', icons, {
   git = {
-    program = "",
+    program = "", -- not in my font at this time :'(
     branch = "",
     conflict = "",
     add = "",
